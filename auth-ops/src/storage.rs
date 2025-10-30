@@ -2,9 +2,9 @@
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use tracing::{info, warn};
+use tracing::info;
 
-use crate::models::{User, Group, Role, Client};
+use crate::models::{User, Group, Client};
 
 // File format structures
 #[derive(Debug, Serialize, Deserialize)]

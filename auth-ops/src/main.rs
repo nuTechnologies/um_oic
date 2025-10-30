@@ -11,7 +11,7 @@ mod password;
 mod backup;
 
 use storage::FileStorage;
-use models::{User, UserStatus, Group, Role, Client, ClientType};
+use models::{User, UserStatus, Group, Client, ClientType};
 
 #[derive(Parser)]
 #[command(name = "auth-ops")]
@@ -264,7 +264,6 @@ async fn handle_user_command(cmd: UserCommands, data_dir: &str) -> Result<()> {
                 status: UserStatus::Active,
                 roles,
                 group_memberships: vec![],
-                custom_claims: HashMap::new(),
                 mfa_secret: None,
                 created_at: now,
                 updated_at: now,
@@ -381,8 +380,8 @@ async fn handle_client_command(cmd: ClientCommands, data_dir: &str) -> Result<()
     Ok(())
 }
 
-async fn archive_old_logs(data_dir: &str, older_than_days: u32) -> Result<()> {
-    println!("🗂️  Archiving audit logs older than {} days...", older_than_days);
+async fn archive_old_logs(_data_dir: &str, _older_than_days: u32) -> Result<()> {
+    println!("🗂️  Archiving audit logs older than {} days...", _older_than_days);
 
     // TODO: Implement audit log archival
     // - Scan audit/ directory

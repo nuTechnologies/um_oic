@@ -24,7 +24,7 @@ import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useSystemStore } from '@/stores/system'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import LoginView from '@/views/auth/LoginView.vue'
+import LoginView from '@/views/auth/Login.vue'
 import LoadingScreen from '@/components/ui/LoadingScreen.vue'
 import NotificationContainer from '@/components/ui/NotificationContainer.vue'
 import GlobalModals from '@/components/ui/GlobalModals.vue'
@@ -36,7 +36,7 @@ const isInitializing = ref(true)
 onMounted(async () => {
   try {
     // Initialize authentication
-    await authStore.initializeAuth()
+    await authStore.checkAuth()
 
     // Load system status if authenticated
     if (authStore.isAuthenticated) {

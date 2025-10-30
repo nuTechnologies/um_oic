@@ -1,0 +1,12 @@
+[build]
+target-dir = "target"
+
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "link-arg=-s"]
+
+[install]
+root = "bin"
+
+[alias]
+build-all = "build --release --workspace"
+install-all = "install --path . --root ../bin --bins"

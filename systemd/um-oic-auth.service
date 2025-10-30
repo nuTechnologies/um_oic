@@ -1,0 +1,26 @@
+[Unit]
+Description=UM-OIC Authentication Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=um-oic
+Group=um-oic
+WorkingDirectory=/opt/um-oic
+ExecStart=/opt/um-oic/bin/auth-service
+Restart=always
+RestartSec=5
+Environment=RUST_LOG=info
+Environment=UM_OIC_DATA_DIR=/opt/um-oic/data
+Environment=UM_OIC_WEB_DIR=/opt/um-oic/data/web
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/um-oic/data
+
+[Install]
+WantedBy=multi-user.target

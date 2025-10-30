@@ -1,0 +1,27 @@
+[Unit]
+Description=UM-OIC Admin Service
+After=network.target um-oic-auth.service
+Wants=network.target
+Requires=um-oic-auth.service
+
+[Service]
+Type=simple
+User=um-oic
+Group=um-oic
+WorkingDirectory=/opt/um-oic
+ExecStart=/opt/um-oic/bin/admin-service
+Restart=always
+RestartSec=5
+Environment=RUST_LOG=info
+Environment=UM_OIC_DATA_DIR=/opt/um-oic/data
+Environment=UM_OIC_AUTH_SERVICE_URL=http://localhost:8000
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/um-oic/data
+
+[Install]
+WantedBy=multi-user.target

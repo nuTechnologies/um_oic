@@ -38,7 +38,7 @@ pub async fn backup_data(data_dir: &str, output_dir: &str) -> Result<()> {
             Ok(_) => {
                 // Calculate checksum
                 let checksum = calculate_file_checksum(&dst).await?;
-                checksums.insert(file.clone(), checksum);
+                checksums.insert(file.to_string(), checksum);
                 println!("✅ Backed up: {}", file);
             }
             Err(e) => {
@@ -153,7 +153,8 @@ async fn calculate_file_checksum(path: &str) -> Result<String> {
     Ok(format!("{:x}", result))
 }
 
-async fn copy_dir_recursive(src: &str, dst: &str) -> Result<()> {
+fn copy_dir_recursive(src: &str, dst: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<()>> + Send>> {
+    Box::pin(async move {
     tokio::fs::create_dir_all(dst).await
         .context("Failed to create destination directory")?;
 
@@ -174,4 +175,5 @@ async fn copy_dir_recursive(src: &str, dst: &str) -> Result<()> {
     }
 
     Ok(())
+    })
 }
