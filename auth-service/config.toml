@@ -1,0 +1,19 @@
+# Auth Service Configuration
+
+jwt_secret = "your-secret-key-change-in-production-make-it-very-long-and-random"
+
+[instance]
+name = "Grundschule Brandis Auth"
+logo_url = "/img/logo.png"
+primary_color = "#00529F"
+issuer = "https://auth.example.com"
+
+[security]
+password_min_length = 12
+access_token_ttl = 3600        # 1 hour
+refresh_token_ttl = 2592000    # 30 days
+require_mfa = false
+
+[features]
+allow_registration = false
+allow_password_reset = true

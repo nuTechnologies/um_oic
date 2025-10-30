@@ -1,0 +1,43 @@
+{
+  "users": [
+    {
+      "id": "user-550e8400",
+      "email": "admin@example.com",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$8qwOOxUlm7OQgVzggDL5WA$Nqs4AuB6c2QeFlcv9l5gQz8hHwP9iZQ+YLkQbA+F9nY",
+      "first_name": "Max",
+      "last_name": "Mustermann",
+      "status": "active",
+      "roles": ["admin"],
+      "group_memberships": ["group-7a", "group-fachschaft-mathe"],
+      "mfa_secret": null,
+      "created_at": "2024-01-15T10:00:00Z",
+      "updated_at": "2025-10-30T12:00:00Z"
+    },
+    {
+      "id": "user-660e8400",
+      "email": "viewer@example.com",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$8qwOOxUlm7OQgVzggDL5WA$Nqs4AuB6c2QeFlcv9l5gQz8hHwP9iZQ+YLkQbA+F9nY",
+      "first_name": "Anna",
+      "last_name": "Schmidt",
+      "status": "active",
+      "roles": ["adminread"],
+      "group_memberships": ["group-7a"],
+      "mfa_secret": null,
+      "created_at": "2024-02-01T10:00:00Z",
+      "updated_at": "2025-10-30T12:00:00Z"
+    },
+    {
+      "id": "user-770e8400",
+      "email": "user@example.com",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$8qwOOxUlm7OQgVzggDL5WA$Nqs4AuB6c2QeFlcv9l5gQz8hHwP9iZQ+YLkQbA+F9nY",
+      "first_name": "Thomas",
+      "last_name": "Mueller",
+      "status": "active",
+      "roles": [],
+      "group_memberships": [],
+      "mfa_secret": null,
+      "created_at": "2024-03-01T10:00:00Z",
+      "updated_at": "2025-10-30T12:00:00Z"
+    }
+  ]
+}

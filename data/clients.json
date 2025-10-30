@@ -1,0 +1,43 @@
+{
+  "clients": [
+    {
+      "client_id": "frontend-app",
+      "client_secret_hash": null,
+      "name": "Web Application",
+      "client_type": "public",
+      "redirect_uris": [
+        "https://app.example.com/auth/callback",
+        "http://localhost:3000/auth/callback"
+      ],
+      "allowed_scopes": [
+        "openid",
+        "profile",
+        "email",
+        "participants:read",
+        "attendance:*"
+      ],
+      "require_pkce": true,
+      "grant_types": ["authorization_code", "refresh_token"],
+      "created_at": "2025-01-01T00:00:00Z"
+    },
+    {
+      "client_id": "mobile-app",
+      "client_secret_hash": null,
+      "name": "Mobile Application",
+      "client_type": "public",
+      "redirect_uris": [
+        "com.example.app://auth/callback"
+      ],
+      "allowed_scopes": [
+        "openid",
+        "profile",
+        "email",
+        "participants:read_own",
+        "attendance:read_own"
+      ],
+      "require_pkce": true,
+      "grant_types": ["authorization_code", "refresh_token"],
+      "created_at": "2025-01-01T00:00:00Z"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+# Development configuration
+# For production, replace with actual domains
+
+localhost:8080 {
+    reverse_proxy auth:8000
+
+    # Rate limiting
+    rate_limit {
+        zone auth {
+            key {remote_host}
+            events 10
+            window 1m
+        }
+    }
+
+    # Security headers
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+}
+
+localhost:8081 {
+    reverse_proxy admin:8001
+
+    # IP whitelist for admin (development only)
+    @local {
+        remote_ip 127.0.0.1 ::1 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+    }
+
+    handle @local {
+        reverse_proxy admin:8001
+    }
+
+    respond 403
+
+    # Security headers
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+}
+
+# Production example (commented out)
+# auth.example.com {
+#     reverse_proxy auth:8000
+#
+#     rate_limit {
+#         zone auth {
+#             key {remote_host}
+#             events 10
+#             window 1m
+#         }
+#     }
+# }
+#
+# admin.example.com {
+#     reverse_proxy admin:8001
+#
+#     @allowed {
+#         remote_ip 10.0.0.0/8 192.168.0.0/16
+#     }
+#     handle @allowed {
+#         reverse_proxy admin:8001
+#     }
+#     respond 403
+# }

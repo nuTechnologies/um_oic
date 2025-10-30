@@ -1,0 +1,21 @@
+{
+  "id": "user-660e8400",
+  "email": "teacher@example.com",
+  "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$8qwOOxUlm7OQgVzggDL5WA$Nqs4AuB6c2QeFlcv9l5gQz8hHwP9iZQ+YLkQbA+F9nY",
+  "first_name": "Anna",
+  "last_name": "Schmidt",
+  "status": "active",
+  "verified": true,
+  "authenticated": "2025-02-01",
+  "admin": [],
+  "org": "group-7a",
+  "claims": {
+    "roles": ["staff"],
+    "cohorts": ["7a", "7b"],
+    "employee_id": "EMP-2025-002",
+    "department": "Lehrkräfte"
+  },
+  "mfa_secret": null,
+  "created_at": "2024-02-01T10:00:00Z",
+  "updated_at": "2025-10-30T12:00:00Z"
+}

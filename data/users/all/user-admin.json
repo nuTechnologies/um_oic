@@ -1,0 +1,20 @@
+{
+  "id": "user-admin",
+  "email": "admin@example.com",
+  "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$8qwOOxUlm7OQgVzggDL5WA$Nqs4AuB6c2QeFlcv9l5gQz8hHwP9iZQ+YLkQbA+F9nY",
+  "first_name": "System",
+  "last_name": "Administrator",
+  "status": "active",
+  "verified": true,
+  "authenticated": "2025-01-01",
+  "admin": ["all"],
+  "org": "all",
+  "claims": {
+    "roles": ["master"],
+    "department": "System Administration",
+    "permissions": ["*"]
+  },
+  "mfa_secret": null,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2025-10-30T12:00:00Z"
+}

@@ -1,0 +1,23 @@
+{
+  "groups": [
+    {
+      "id": "group-7a",
+      "name": "Klasse 7a",
+      "description": "Schuljahr 2025/26",
+      "metadata": {
+        "raum": "R204",
+        "klassenleitung": "Anna Schmidt"
+      },
+      "created_at": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": "group-fachschaft-mathe",
+      "name": "Fachschaft Mathematik",
+      "description": "Mathematik-Lehrkräfte",
+      "metadata": {
+        "fachbereich": "MINT"
+      },
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ]
+}

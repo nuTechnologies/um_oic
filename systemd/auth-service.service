@@ -1,0 +1,61 @@
+[Unit]
+Description=Auth Service - Minimalistic OAuth2/OIDC Provider
+Documentation=https://github.com/your-org/um_oic
+After=network.target
+Wants=admin-service.service
+
+[Service]
+Type=simple
+User=auth
+Group=auth
+WorkingDirectory=/var/lib/auth
+
+# Service configuration
+ExecStart=/usr/local/bin/auth-service \
+  --data-dir /var/lib/auth/data \
+  --cert-dir /etc/ssl/auth \
+  --config /etc/auth/config.toml \
+  --bind 0.0.0.0:8000 \
+  --pid-file /var/run/auth-service.pid
+
+# Reload configuration
+ExecReload=/bin/kill -HUP $MAINPID
+
+# Stop service
+ExecStop=/bin/kill -TERM $MAINPID
+ExecStopPost=/bin/rm -f /var/run/auth-service.pid
+
+# PID file management
+PIDFile=/var/run/auth-service.pid
+
+# Restart policy
+Restart=always
+RestartSec=10
+KillMode=mixed
+TimeoutStopSec=30
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=auth-service
+
+# Security hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/auth/data /var/run
+ReadOnlyPaths=/var/lib/auth /etc/auth /etc/ssl/auth
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Environment
+Environment=RUST_LOG=info
+Environment=AUTH_DATA_DIR=/var/lib/auth/data
+Environment=AUTH_CERT_DIR=/etc/ssl/auth
+Environment=AUTH_PID_FILE=/var/run/auth-service.pid
+
+[Install]
+WantedBy=multi-user.target

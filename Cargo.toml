@@ -1,0 +1,53 @@
+[workspace]
+members = [
+    "auth-service",
+    "admin-service",
+    "auth-ops"
+]
+resolver = "2"
+
+[workspace.dependencies]
+# Web Framework
+axum = { version = "0.7", features = ["macros"] }
+tokio = { version = "1", features = ["full"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["fs", "cors", "trace", "request-id"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+
+# Auth/Crypto
+argon2 = "0.5"
+jsonwebtoken = "9.2"
+rand = "0.8"
+totp-rs = "5.4"
+sha2 = "0.10"
+
+# Utilities
+uuid = { version = "1.6", features = ["serde", "v4"] }
+time = { version = "0.3", features = ["serde", "formatting", "parsing"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
+anyhow = "1.0"
+thiserror = "1.0"
+clap = { version = "4.4", features = ["derive", "env"] }
+
+# HTTP Client (for admin->auth communication)
+reqwest = { version = "0.11", features = ["json"] }
+
+# System
+libc = "0.2"
+notify = "6.1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[profile.dev]
+opt-level = 0
+debug = true

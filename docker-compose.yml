@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  auth:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    container_name: um_oic_auth
+    environment:
+      AUTH_DATA_DIR: /data
+      AUTH_CERT_DIR: /certs
+      AUTH_DEBUG: "false"
+      AUTH_BIND: "0.0.0.0:8000"
+      AUTH_PID_FILE: /tmp/auth-service.pid
+      RUST_LOG: info
+    volumes:
+      - ./data:/data:ro
+      - ./certs:/certs:ro
+      - auth_tmp:/tmp
+    ports:
+      - "8000:8000"
+    networks:
+      - auth_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  admin:
+    build:
+      context: .
+      dockerfile: admin-service/Dockerfile
+    container_name: um_oic_admin
+    environment:
+      ADMIN_DATA_DIR: /data
+      ADMIN_CERT_DIR: /certs
+      ADMIN_DEBUG: "false"
+      ADMIN_BIND: "0.0.0.0:8001"
+      AUTH_PID_FILE: /tmp/auth-service.pid
+      RUST_LOG: info
+    volumes:
+      - ./data:/data
+      - ./certs:/certs:ro
+      - auth_tmp:/tmp
+    ports:
+      - "8001:8001"
+    networks:
+      - auth_network
+    depends_on:
+      - auth
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # Optional: Reverse Proxy with Caddy
+  caddy:
+    image: caddy:2-alpine
+    container_name: um_oic_caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - auth_network
+    depends_on:
+      - auth
+      - admin
+    restart: unless-stopped
+    profiles:
+      - with-proxy
+
+volumes:
+  auth_tmp:
+  caddy_data:
+  caddy_config:
+
+networks:
+  auth_network:
+    driver: bridge
