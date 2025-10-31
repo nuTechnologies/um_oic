@@ -28,8 +28,8 @@ struct UsersFile {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-struct GroupsFile {
-    groups: Vec<Group>,
+struct OrgsFile {
+    orgs: Vec<Group>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -304,8 +304,8 @@ async fn load_users_file(data_dir: &str) -> LoadResult<Vec<User>> {
 }
 
 async fn load_groups_file(data_dir: &str) -> LoadResult<Vec<Group>> {
-    match load_json_file::<GroupsFile>(&format!("{}/groups.json", data_dir)).await {
-        Ok(groups_file) => LoadResult::Success(groups_file.groups),
+    match load_json_file::<OrgsFile>(&format!("{}/orgs.json", data_dir)).await {
+        Ok(orgs_file) => LoadResult::Success(orgs_file.orgs),
         Err(e) => LoadResult::CorruptData {
             error: e.to_string(),
             fallback: Vec::new(),
@@ -323,14 +323,9 @@ async fn load_roles_file(data_dir: &str) -> LoadResult<Vec<Role>> {
     }
 }
 
-async fn load_clients_file(data_dir: &str) -> LoadResult<Vec<Client>> {
-    match load_json_file::<ClientsFile>(&format!("{}/clients.json", data_dir)).await {
-        Ok(clients_file) => LoadResult::Success(clients_file.clients),
-        Err(e) => LoadResult::CorruptData {
-            error: e.to_string(),
-            fallback: Vec::new(),
-        },
-    }
+async fn load_clients_file(_data_dir: &str) -> LoadResult<Vec<Client>> {
+    // clients.json was removed - return empty list
+    LoadResult::Success(Vec::new())
 }
 
 async fn load_json_file<T: for<'de> Deserialize<'de>>(path: &str) -> Result<T> {
