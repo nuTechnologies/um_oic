@@ -7,7 +7,7 @@ use uuid::Uuid;
 
 use crate::models::{Claims, User, ClaimsRegistry};
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct JwtService {
     encoding_key: EncodingKey,
     decoding_key: DecodingKey,

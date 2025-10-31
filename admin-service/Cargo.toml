@@ -18,6 +18,8 @@ toml = { workspace = true }
 # Crypto (für JWT verification)
 jsonwebtoken = { workspace = true }
 sha2 = { workspace = true }
+argon2 = { workspace = true }
+rand_core = { workspace = true }
 
 # Utilities
 uuid = { workspace = true }
@@ -26,6 +28,7 @@ tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
+urlencoding = "2.1"
 clap = { workspace = true }
 
 # System

@@ -1,0 +1,34 @@
+{
+  "users": [
+    {
+      "id": "user-f11e6a7ee18f4f66b91def735be54870",
+      "email": "admin@test.local",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$Y6I9pjpIohjj5YIGcvhJiA$hdHJTd7bBxviXgWkiAZ4QVvNwqACnnaWKXC3lCbKJ4Q",
+      "first_name": "Admin",
+      "last_name": "User",
+      "status": "active",
+      "roles": [
+        "admin"
+      ],
+      "group_memberships": [],
+      "mfa_secret": null,
+      "created_at": "+002025-10-30T21:35:55.510115262Z",
+      "updated_at": "+002025-10-30T21:35:55.510115262Z"
+    },
+    {
+      "id": "user-5e13b9791dda4f8db7b9e25815164b55",
+      "email": "admin@test.local",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$RHdXoloMMKdky0rRp/IMmg$N9mm0wj13RJAb6Zm/M3DGDB5uSUS3C6uuDt6SpRSXag",
+      "first_name": "Admin",
+      "last_name": "User",
+      "status": "active",
+      "roles": [
+        "admin"
+      ],
+      "group_memberships": [],
+      "mfa_secret": null,
+      "created_at": "+002025-10-30T21:13:41.080485732Z",
+      "updated_at": "+002025-10-30T21:13:41.080485732Z"
+    }
+  ]
+}

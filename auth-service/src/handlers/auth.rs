@@ -125,8 +125,12 @@ pub async fn login(
     }
 
     // Create JWT tokens
+    let claims_registry = crate::models::ClaimsRegistry {
+        claims: std::collections::HashMap::new(),
+    };
     let access_token = match jwt_service.create_token(
         user,
+        &claims_registry,
         vec!["auth-service".to_string()],
         &config.instance.issuer,
         config.security.access_token_ttl,
@@ -145,6 +149,7 @@ pub async fn login(
 
     let refresh_token = match jwt_service.create_token(
         user,
+        &claims_registry,
         vec!["auth-service".to_string()],
         &config.instance.issuer,
         config.security.refresh_token_ttl,
@@ -184,7 +189,7 @@ pub async fn login(
 pub async fn logout(
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     State(_): State<AppState>,
-    Json(payload): Json<Value>,
+    Json(_payload): Json<Value>,
 ) -> Result<Json<Value>, StatusCode> {
     // In a stateless JWT system, logout is primarily client-side
     // We just log the event and return success
@@ -204,7 +209,7 @@ pub async fn logout(
 pub async fn forgot_password(
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     State(_): State<AppState>,
-    Json(payload): Json<Value>,
+    Json(_payload): Json<Value>,
 ) -> Result<Json<Value>, StatusCode> {
     // TODO: Implement password reset functionality
     info!(
@@ -222,7 +227,7 @@ pub async fn forgot_password(
 pub async fn reset_password(
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     State(_): State<AppState>,
-    Json(payload): Json<Value>,
+    Json(_payload): Json<Value>,
 ) -> Result<Json<Value>, StatusCode> {
     // TODO: Implement password reset functionality
     info!(

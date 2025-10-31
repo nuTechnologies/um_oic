@@ -1,13 +1,17 @@
 use anyhow::{Context, Result};
 use axum::{
-    routing::{delete, get, patch, post},
+    routing::{get, post},
     Router,
+    middleware::{self, Next},
+    response::Response,
+    extract::Request,
+    http::HeaderValue,
 };
 use clap::Parser;
-use std::{net::SocketAddr, sync::Arc, time::SystemTime};
+use std::{net::SocketAddr, sync::Arc};
 use tokio::{net::TcpListener, sync::RwLock};
 use tower_http::services::ServeDir;
-use tracing::{info, error};
+use tracing::info;
 
 mod config;
 mod storage;
@@ -16,6 +20,7 @@ mod handlers;
 mod middleware;
 mod logging;
 mod jwt;
+mod password;
 
 use config::Config;
 use storage::AdminStorage;
@@ -41,7 +46,7 @@ struct Args {
     config: String,
 
     /// Bind address
-    #[arg(long, env = "ADMIN_BIND", default_value = "0.0.0.0:8001")]
+    #[arg(long, env = "ADMIN_BIND", default_value = "0.0.0.0:8444")]
     bind: String,
 
     /// Auth service PID file (für SIGHUP reload trigger)
@@ -107,10 +112,8 @@ async fn create_app(
 ) -> Result<Router> {
     let jwt_verifier = Arc::new(jwt::JwtVerifier::new(&config.jwt_public_key));
 
-    let app = Router::new()
-        // Static files (admin UI)
-        .nest_service("/", ServeDir::new("data/web/mgmt"))
-
+    // Create API routes with authentication middleware
+    let api_routes = Router::new()
         // Users API
         .route("/api/users", get(handlers::users::list).post(handlers::users::create))
         .route("/api/users/:id", get(handlers::users::get).patch(handlers::users::update).delete(handlers::users::delete))
@@ -136,19 +139,44 @@ async fn create_app(
         // Audit API
         .route("/api/audit", get(handlers::audit::query))
 
-        // Health check
-        .route("/health", get(handlers::health::health))
-
-        // Global admin authentication middleware
+        // Admin authentication middleware for API routes only
         .layer(axum::middleware::from_fn_with_state(
             (jwt_verifier.clone(), config.clone()),
             middleware::auth::require_admin
-        ))
+        ));
+
+    let app = Router::new()
+        // Login redirect route for Vue.js client-side routing
+        .route("/login", get(handlers::auth::login_redirect))
+
+        // Static files (admin UI) - no authentication required
+        .nest_service("/", ServeDir::new("../data/web/mgmt"))
+
+        // API routes with authentication
+        .merge(api_routes)
+
+        // Health check - no authentication required
+        .route("/health", get(handlers::health::health))
+
+        // Add cache-control headers to prevent stale auth data
+        .layer(middleware::from_fn(add_cache_headers))
 
         // Shared state
         .with_state((storage, jwt_verifier, config));
 
     Ok(app)
+}
+
+async fn add_cache_headers(req: Request, next: Next) -> Response {
+    let mut response = next.run(req).await;
+
+    // Add cache-control headers for API endpoints
+    let headers = response.headers_mut();
+    headers.insert("Cache-Control", HeaderValue::from_static("no-cache, no-store, must-revalidate"));
+    headers.insert("Pragma", HeaderValue::from_static("no-cache"));
+    headers.insert("Expires", HeaderValue::from_static("0"));
+
+    response
 }
 
 fn setup_shutdown_handler() {

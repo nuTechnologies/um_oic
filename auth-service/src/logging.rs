@@ -1,4 +1,4 @@
-use tracing_subscriber::{fmt, prelude::*};
+use tracing_subscriber::fmt;
 
 pub fn setup_logging(debug: bool) {
     if debug {

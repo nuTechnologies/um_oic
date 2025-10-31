@@ -3,7 +3,7 @@ use jsonwebtoken::{decode, Algorithm, DecodingKey, Validation};
 
 use crate::models::Claims;
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct JwtVerifier {
     decoding_key: DecodingKey,
     algorithm: Algorithm,
@@ -28,13 +28,11 @@ impl JwtVerifier {
     }
 
     pub fn has_admin_role(&self, claims: &Claims) -> bool {
-        claims.roles.contains(&"admin".to_string()) ||
-        claims.roles.contains(&"adminread".to_string()) ||
-        claims.permissions.contains(&"*".to_string())
+        claims.admin.contains(&"all".to_string()) ||
+        !claims.admin.is_empty()
     }
 
     pub fn has_write_permission(&self, claims: &Claims) -> bool {
-        claims.roles.contains(&"admin".to_string()) ||
-        claims.permissions.contains(&"*".to_string())
+        claims.admin.contains(&"all".to_string())
     }
 }

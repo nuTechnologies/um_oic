@@ -1,0 +1,316 @@
+# GitHub Actions CI/CD Pipeline for UM-OIC
+# Place this file at: .github/workflows/test.yml
+
+name: UM-OIC Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  # Rust code quality checks
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+
+    - name: Cache Cargo
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Check formatting
+      run: cargo fmt --all -- --check
+
+    - name: Clippy
+      run: cargo clippy --all-targets --all-features -- -D warnings
+
+    - name: Check documentation
+      run: cargo doc --no-deps --document-private-items
+
+  # Build and test
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    needs: quality
+
+    strategy:
+      matrix:
+        rust-version: [stable, beta]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust ${{ matrix.rust-version }}
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: ${{ matrix.rust-version }}
+
+    - name: Cache Cargo
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target/
+        key: ${{ runner.os }}-${{ matrix.rust-version }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq curl apache2-utils
+
+    - name: Build
+      run: cargo build --verbose
+
+    - name: Run unit tests
+      run: cargo test --verbose
+
+    - name: Start services for integration tests
+      run: |
+        # Setup test data
+        mkdir -p test/data/auth test/data/admin
+        cp test/fixtures/* test/data/auth/
+        cp test/fixtures/* test/data/admin/
+
+        # Start auth-service
+        RUST_LOG=info PORT=8080 DATA_DIR="test/data/auth" \
+          ./target/debug/auth-service &
+        AUTH_PID=$!
+        echo "AUTH_PID=$AUTH_PID" >> $GITHUB_ENV
+
+        # Start admin-service
+        RUST_LOG=info PORT=8081 DATA_DIR="test/data/admin" \
+          AUTH_SERVICE_URL="http://localhost:8080" \
+          ./target/debug/admin-service &
+        ADMIN_PID=$!
+        echo "ADMIN_PID=$ADMIN_PID" >> $GITHUB_ENV
+
+        # Wait for services to start
+        sleep 5
+
+        # Health check
+        curl -f http://localhost:8080/health
+        curl -f http://localhost:8081/health
+
+    - name: Run auth-service tests
+      run: |
+        cd test
+        ./auth-service/test-auth.sh
+
+    - name: Run admin-service tests
+      run: |
+        cd test
+        ./admin-service/test-admin.sh
+
+    - name: Run integration tests
+      run: |
+        cd test
+        ./integration/test-integration.sh
+
+    - name: Stop services
+      if: always()
+      run: |
+        kill $AUTH_PID || true
+        kill $ADMIN_PID || true
+
+  # Security tests
+  security:
+    name: Security Tests
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache Cargo
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Install security tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq curl
+        cargo install cargo-audit
+
+    - name: Cargo audit
+      run: cargo audit
+
+    - name: Build services
+      run: cargo build
+
+    - name: Start services for security tests
+      run: |
+        mkdir -p test/data/auth test/data/admin
+        cp test/fixtures/* test/data/auth/
+        cp test/fixtures/* test/data/admin/
+
+        RUST_LOG=warn PORT=8080 DATA_DIR="test/data/auth" \
+          ./target/debug/auth-service &
+        RUST_LOG=warn PORT=8081 DATA_DIR="test/data/admin" \
+          AUTH_SERVICE_URL="http://localhost:8080" \
+          ./target/debug/admin-service &
+
+        sleep 5
+
+    - name: Run security tests
+      run: |
+        cd test
+        ./security/security-tests.sh
+
+    - name: Stop services
+      if: always()
+      run: |
+        pkill -f auth-service || true
+        pkill -f admin-service || true
+
+  # Performance tests
+  performance:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Cache Cargo
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - name: Install performance tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y apache2-utils bc
+
+    - name: Build release
+      run: cargo build --release
+
+    - name: Start services for performance tests
+      run: |
+        mkdir -p test/data/auth test/data/admin
+        cp test/fixtures/* test/data/auth/
+        cp test/fixtures/* test/data/admin/
+
+        RUST_LOG=warn PORT=8080 DATA_DIR="test/data/auth" \
+          ./target/release/auth-service &
+        RUST_LOG=warn PORT=8081 DATA_DIR="test/data/admin" \
+          AUTH_SERVICE_URL="http://localhost:8080" \
+          ./target/release/admin-service &
+
+        sleep 5
+
+    - name: Run performance benchmarks
+      run: |
+        cd test
+        ./performance/bench.sh -c 5 -n 20
+
+    - name: Stop services
+      if: always()
+      run: |
+        pkill -f auth-service || true
+        pkill -f admin-service || true
+
+  # Docker tests
+  docker:
+    name: Docker Tests
+    runs-on: ubuntu-latest
+    needs: quality
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Install test dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq curl
+
+    - name: Prepare test data
+      run: |
+        mkdir -p test/data/auth test/data/admin
+        cp test/fixtures/* test/data/auth/
+        cp test/fixtures/* test/data/admin/
+
+    - name: Run Docker tests
+      run: |
+        cd test
+        docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
+        docker-compose -f docker-compose.test.yml down
+
+  # Deploy to staging (only on main branch)
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [test, security, performance]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: staging
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Deploy notification
+      run: |
+        echo "Deploying to staging environment..."
+        # Add actual deployment steps here
+        # e.g., deploy to staging server, update Docker images, etc.
+
+    - name: Post-deployment tests
+      run: |
+        echo "Running post-deployment verification..."
+        # Add staging environment verification tests
+
+# Workflow summary
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [quality, test, security]
+    if: always()
+
+    steps:
+    - name: Summary
+      run: |
+        echo "## Test Results Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- Quality: ${{ needs.quality.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Tests: ${{ needs.test.result }}" >> $GITHUB_STEP_SUMMARY
+        echo "- Security: ${{ needs.security.result }}" >> $GITHUB_STEP_SUMMARY
+
+        if [[ "${{ needs.quality.result }}" == "success" && "${{ needs.test.result }}" == "success" && "${{ needs.security.result }}" == "success" ]]; then
+          echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ Some tests failed!" >> $GITHUB_STEP_SUMMARY
+        fi

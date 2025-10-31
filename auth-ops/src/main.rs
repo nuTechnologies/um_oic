@@ -303,7 +303,7 @@ async fn handle_user_command(cmd: UserCommands, data_dir: &str) -> Result<()> {
                 updated_user.password_hash = password::hash_password(&new_password)?;
                 updated_user.updated_at = OffsetDateTime::now_utc();
 
-                storage.update_user(&updated_user.id, updated_user).await?;
+                storage.update_user(&updated_user.id.clone(), updated_user).await?;
                 storage.persist(data_dir).await?;
                 println!("✅ Password reset for: {}", email);
             } else {

@@ -1,0 +1,43 @@
+{
+  "clients": [
+    {
+      "client_id": "test-client-1",
+      "name": "Test Application 1",
+      "client_type": "Confidential",
+      "client_secret": "test-secret-123",
+      "redirect_uris": [
+        "http://localhost:3000/callback",
+        "https://test.local/auth/callback"
+      ],
+      "allowed_scopes": [
+        "openid",
+        "profile",
+        "email",
+        "read",
+        "write"
+      ],
+      "grant_types": [
+        "authorization_code",
+        "refresh_token"
+      ],
+      "require_pkce": true
+    },
+    {
+      "client_id": "test-client-public",
+      "name": "Test Public App",
+      "client_type": "Public",
+      "client_secret": null,
+      "redirect_uris": [
+        "http://localhost:8080/callback"
+      ],
+      "allowed_scopes": [
+        "openid",
+        "profile"
+      ],
+      "grant_types": [
+        "authorization_code"
+      ],
+      "require_pkce": true
+    }
+  ]
+}

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tracing::info;
 
-use crate::models::{User, Group, Client};
+use crate::models::{User, Group, Client, Role};
 
 // File format structures
 #[derive(Debug, Serialize, Deserialize)]

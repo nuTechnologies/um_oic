@@ -1,0 +1,57 @@
+{
+  "users": [
+    {
+      "id": "user-test001",
+      "email": "admin@test.local",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$VVVVVVVVVVVVVVVVVVVVVg$QvE1dXe/GUXbYYXwHU94jg",
+      "first_name": "Test",
+      "last_name": "Admin",
+      "status": "Active",
+      "verified": true,
+      "authenticated": null,
+      "admin": ["all"],
+      "org": "test-org",
+      "claims": {
+        "custom_role": "super_admin",
+        "test_claim": "test_value"
+      },
+      "mfa_secret": null,
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-01-01T10:00:00Z"
+    },
+    {
+      "id": "user-test002",
+      "email": "user@test.local",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$VVVVVVVVVVVVVVVVVVVVVg$QvE1dXe/GUXbYYXwHU94jg",
+      "first_name": "Test",
+      "last_name": "User",
+      "status": "Active",
+      "verified": true,
+      "authenticated": null,
+      "admin": [],
+      "org": "test-org",
+      "claims": {
+        "department": "engineering"
+      },
+      "mfa_secret": null,
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-01-01T10:00:00Z"
+    },
+    {
+      "id": "user-test003",
+      "email": "inactive@test.local",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$VVVVVVVVVVVVVVVVVVVVVg$QvE1dXe/GUXbYYXwHU94jg",
+      "first_name": "Inactive",
+      "last_name": "User",
+      "status": "Inactive",
+      "verified": false,
+      "authenticated": null,
+      "admin": [],
+      "org": "test-org-2",
+      "claims": {},
+      "mfa_secret": null,
+      "created_at": "2024-01-01T10:00:00Z",
+      "updated_at": "2024-01-01T10:00:00Z"
+    }
+  ]
+}

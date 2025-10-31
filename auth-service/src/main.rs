@@ -1,13 +1,15 @@
 use anyhow::{Context, Result};
 use axum::{
+    extract::connect_info::ConnectInfo,
     routing::{get, post},
     Router,
 };
+use axum_server::tls_rustls::RustlsConfig;
 use clap::Parser;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::{net::TcpListener, signal::unix::{signal, SignalKind}, sync::RwLock};
 use tower_http::services::ServeDir;
-use tracing::{info, error};
+use tracing::{info, error, warn};
 
 mod config;
 mod storage;
@@ -17,9 +19,11 @@ mod middleware;
 mod logging;
 mod jwt;
 mod password;
+mod tls;
 
 use config::Config;
 use storage::FileStorage;
+use tls::TlsManager;
 
 #[derive(Parser)]
 #[command(name = "auth-service")]
@@ -48,6 +52,30 @@ struct Args {
     /// PID file location
     #[arg(long, env = "AUTH_PID_FILE", default_value = "/var/run/auth-service.pid")]
     pid_file: String,
+
+    /// Enable TLS
+    #[arg(long, env = "AUTH_TLS_ENABLE", default_value = "false")]
+    tls_enable: bool,
+
+    /// TLS bind address (HTTPS)
+    #[arg(long, env = "AUTH_TLS_BIND", default_value = "0.0.0.0:8443")]
+    tls_bind: String,
+
+    /// TLS certificate path
+    #[arg(long, env = "TLS_CERT_PATH", default_value = "./certs/cert.pem")]
+    tls_cert: String,
+
+    /// TLS private key path
+    #[arg(long, env = "TLS_KEY_PATH", default_value = "./certs/key.pem")]
+    tls_key: String,
+
+    /// Domain for TLS certificate
+    #[arg(long, env = "DOMAIN", default_value = "localhost")]
+    domain: String,
+
+    /// Auto-generate self-signed certificates
+    #[arg(long, env = "TLS_AUTO_GENERATE", default_value = "true")]
+    tls_auto_generate: bool,
 }
 
 #[tokio::main]
@@ -88,22 +116,20 @@ async fn main() -> Result<()> {
     // Create application router
     let app = create_app(storage, config).await?;
 
-    // Parse bind address
-    let addr: SocketAddr = args.bind.parse()
-        .context("Invalid bind address")?;
-
-    // Start server
-    let listener = TcpListener::bind(&addr).await
-        .context("Failed to bind listener")?;
-
     info!(
         service = "auth-service",
-        event = "listening",
-        addr = %addr
+        event = "startup",
+        version = env!("CARGO_PKG_VERSION"),
+        tls_enabled = args.tls_enable
     );
 
-    axum::serve(listener, app).await
-        .context("Server error")?;
+    if args.tls_enable {
+        // Start HTTPS server
+        start_tls_server(app, &args).await?;
+    } else {
+        // Start HTTP server
+        start_http_server(app, &args).await?;
+    }
 
     Ok(())
 }
@@ -116,7 +142,7 @@ async fn create_app(
 
     let app = Router::new()
         // Static files (login UI, assets)
-        .nest_service("/", ServeDir::new("data/web/auth"))
+        .nest_service("/", ServeDir::new("../data/web/auth"))
 
         // Authentication API
         .route("/api/auth/login", post(handlers::auth::login))
@@ -140,6 +166,60 @@ async fn create_app(
         .with_state((storage, jwt_service, config));
 
     Ok(app)
+}
+
+async fn start_tls_server(app: Router, args: &Args) -> Result<()> {
+    // Configure TLS
+    let tls_config = tls::TlsConfig {
+        cert_path: args.tls_cert.clone(),
+        key_path: args.tls_key.clone(),
+        domain: args.domain.clone(),
+        auto_generate: args.tls_auto_generate,
+    };
+
+    let tls_manager = TlsManager::new(tls_config);
+    let rustls_config = tls_manager.create_rustls_config().await?;
+
+    // Parse bind addresses
+    let tls_addr: SocketAddr = args.tls_bind.parse()
+        .context("Invalid TLS bind address")?;
+
+    info!(
+        service = "auth-service",
+        event = "tls_server_starting",
+        addr = %tls_addr,
+        domain = %args.domain
+    );
+
+    // Start HTTPS server
+    axum_server::bind_rustls(tls_addr, rustls_config)
+        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
+        .await
+        .context("TLS server error")?;
+
+    Ok(())
+}
+
+async fn start_http_server(app: Router, args: &Args) -> Result<()> {
+    let addr: SocketAddr = args.bind.parse()
+        .context("Invalid bind address")?;
+
+    info!(
+        service = "auth-service",
+        event = "http_server_starting",
+        addr = %addr
+    );
+
+    warn!("Running in HTTP mode - not suitable for production!");
+
+    // Start HTTP server
+    let listener = tokio::net::TcpListener::bind(&addr).await
+        .context("Failed to bind listener")?;
+
+    axum::serve(listener, app.into_make_service_with_connect_info::<SocketAddr>()).await
+        .context("HTTP server error")?;
+
+    Ok(())
 }
 
 fn write_pid_file(pid_file: &str) -> Result<()> {

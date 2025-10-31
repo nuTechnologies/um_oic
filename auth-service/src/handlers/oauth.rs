@@ -18,7 +18,7 @@ type AppState = (Arc<RwLock<FileStorage>>, Arc<JwtService>, Config);
 
 pub async fn authorize(
     Query(params): Query<OAuth2AuthorizeRequest>,
-    State((storage, _, config)): State<AppState>,
+    State((_storage, _, _config)): State<AppState>,
 ) -> Result<Json<Value>, StatusCode> {
     // TODO: Implement full OAuth2 authorization flow
     // For now, return a placeholder response
@@ -40,7 +40,7 @@ pub async fn authorize(
 }
 
 pub async fn token(
-    State((storage, jwt_service, config)): State<AppState>,
+    State((_storage, _jwt_service, config)): State<AppState>,
     Json(request): Json<OAuth2TokenRequest>,
 ) -> Result<Json<OAuth2TokenResponse>, StatusCode> {
     // TODO: Implement full OAuth2 token exchange
@@ -64,7 +64,7 @@ pub async fn token(
 }
 
 pub async fn userinfo(
-    State((storage, jwt_service, config)): State<AppState>,
+    State((_storage, _jwt_service, _config)): State<AppState>,
 ) -> Result<Json<UserInfo>, StatusCode> {
     // TODO: Extract and validate Bearer token from Authorization header
     // For now, return a placeholder response
@@ -80,9 +80,9 @@ pub async fn userinfo(
         name: "Placeholder User".to_string(),
         given_name: "Placeholder".to_string(),
         family_name: "User".to_string(),
-        roles: vec!["user".to_string()],
-        permissions: vec!["read".to_string()],
-        custom_claims: std::collections::HashMap::new(),
+        org: "placeholder-org".to_string(),
+        verified: true,
+        claims: std::collections::HashMap::new(),
     }))
 }
 

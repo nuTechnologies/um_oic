@@ -4,16 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UM-OIC Authentication</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        .container { max-width: 400px; margin: 0 auto; padding: 20px; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>UM-OIC Authentication</h1>
-        <p>OAuth2/OIDC Authentication Service</p>
-        <p><a href="/mgmt/">Management Interface</a></p>
+        <div class="login-card">
+            <div class="header">
+                <h1>UM-OIC</h1>
+                <p>User Management & OpenID Connect</p>
+            </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">E-Mail</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Passwort</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="login-btn">Anmelden</button>
+            </form>
+
+            <div class="error-message" id="errorMessage" style="display: none;"></div>
+
+            <div class="footer">
+                <a href="/.well-known/openid-configuration">OIDC Discovery</a>
+            </div>
+        </div>
     </div>
+
+    <script src="login.js"></script>
 </body>
 </html>

@@ -24,9 +24,21 @@ pub async fn list(
 ) -> Result<Json<Vec<Role>>, StatusCode> {
     let storage_guard = storage.read().await;
 
-    let roles: Vec<Role> = storage_guard.get_all_roles()
-        .cloned()
-        .collect();
+    // For now, return predefined roles since roles are not fully implemented in current data model
+    let roles: Vec<Role> = vec![
+        Role {
+            id: "admin".to_string(),
+            name: "Administrator".to_string(),
+            description: "Full system administration access".to_string(),
+            permissions: vec!["*".to_string()],
+        },
+        Role {
+            id: "adminread".to_string(),
+            name: "Read-only Administrator".to_string(),
+            description: "Read-only administration access".to_string(),
+            permissions: vec!["read:*".to_string()],
+        },
+    ];
 
     info!(
         service = "admin-service",
@@ -41,7 +53,7 @@ pub async fn list(
 pub async fn create(
     State(_): State<AppState>,
     Extension(claims): Extension<Claims>,
-    Json(payload): Json<Value>,
+    Json(_payload): Json<Value>,
 ) -> Result<Json<Value>, StatusCode> {
     // TODO: Implement role creation
     info!(
@@ -60,7 +72,7 @@ pub async fn update(
     Path(role_id): Path<String>,
     State(_): State<AppState>,
     Extension(claims): Extension<Claims>,
-    Json(payload): Json<Value>,
+    Json(_payload): Json<Value>,
 ) -> Result<Json<Value>, StatusCode> {
     // TODO: Implement role update
     info!(

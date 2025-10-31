@@ -5,12 +5,169 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UM-OIC Administration</title>
-    <script type="module" crossorigin src="/assets/index-CZa0XmFX.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-CFtzkAeN.js">
-    <link rel="modulepreload" crossorigin href="/assets/ui-Dc3WzFEt.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-BItft0bE.css">
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      .loading {
+        text-align: center;
+        color: #666;
+      }
+      .error {
+        background: #fee;
+        color: #c33;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+      .admin-panel {
+        display: none;
+      }
+      .cache-info {
+        font-size: 0.7rem;
+        color: #999;
+        text-align: center;
+        margin-top: 10px;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div class="container">
+      <h1>UM-OIC Administration</h1>
+
+      <div id="loading" class="loading">
+        Authentifizierung wird überprüft...
+      </div>
+
+      <div id="error" class="error" style="display: none;"></div>
+
+      <div id="admin-panel" class="admin-panel">
+        <h2>Willkommen im Management-Interface</h2>
+        <p>Token erfolgreich validiert. Sie sind als Administrator angemeldet.</p>
+
+        <div>
+          <h3>Verfügbare Funktionen:</h3>
+          <ul>
+            <li>Benutzerverwaltung</li>
+            <li>Gruppenverwaltung</li>
+            <li>Client-Management</li>
+            <li>System-Status</li>
+            <li>Audit-Logs</li>
+          </ul>
+        </div>
+
+        <button onclick="logout()" style="margin-top: 20px; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+          Abmelden
+        </button>
+
+        <div class="cache-info">
+          Cache-Buster: <span id="cache-version">v1.0</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Check authentication on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        checkAuthentication();
+      });
+
+      function checkAuthentication() {
+        console.log('Checking authentication...');
+
+        // Check for token in URL parameters (from auth service redirect)
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenFromUrl = urlParams.get('token');
+
+        if (tokenFromUrl) {
+          console.log('Token found in URL, storing...');
+          localStorage.setItem('auth_token', tokenFromUrl);
+          // Clean URL
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Check for stored token
+        const token = localStorage.getItem('auth_token');
+
+        if (!token) {
+          console.log('No token found, redirecting to auth service...');
+          redirectToAuth();
+          return;
+        }
+
+        console.log('Token found, validating...');
+        validateToken(token);
+      }
+
+      function redirectToAuth() {
+        const currentUrl = encodeURIComponent(window.location.href);
+        const authUrl = `https://localhost:8443/?redirect=${currentUrl}`;
+        console.log('Redirecting to:', authUrl);
+        window.location.href = authUrl;
+      }
+
+      async function validateToken(token) {
+        try {
+          const timestamp = Date.now();
+          const response = await fetch(`/api/system/status?_cb=${timestamp}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            }
+          });
+
+          if (response.ok) {
+            console.log('✅ Token valid, showing admin panel');
+            showAdminPanel();
+          } else {
+            const errorText = await response.text().catch(() => 'Unknown error');
+            console.warn('❌ Token invalid:', response.status, response.statusText, errorText);
+            showError(`Token ungültig (${response.status}): ${response.statusText}. Sie werden zum Login weitergeleitet...`);
+            localStorage.removeItem('auth_token');
+            setTimeout(() => redirectToAuth(), 2000);
+          }
+        } catch (error) {
+          console.error('🔥 Token validation error:', error);
+          showError('Verbindungsfehler bei der Token-Validierung: ' + error.message + '. Versuche erneut...');
+          setTimeout(() => redirectToAuth(), 3000);
+        }
+      }
+
+      function showAdminPanel() {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'block';
+
+        // Update cache buster version to show successful login
+        const cacheVersion = document.getElementById('cache-version');
+        if (cacheVersion) {
+          cacheVersion.textContent = `v${Date.now()}`;
+        }
+      }
+
+      function showError(message) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').textContent = message;
+        document.getElementById('error').style.display = 'block';
+      }
+
+      function logout() {
+        localStorage.removeItem('auth_token');
+        window.location.href = 'https://localhost:8443/';
+      }
+    </script>
   </body>
 </html>

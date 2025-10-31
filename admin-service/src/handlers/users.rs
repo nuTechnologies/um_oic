@@ -16,7 +16,6 @@ use crate::{
     config::Config,
     jwt::JwtVerifier,
     models::{Claims, CreateUserRequest, UpdateUserRequest, User, UserResponse, UserStatus, AddUserToGroupRequest},
-    password,
     storage::AdminStorage,
 };
 
@@ -54,14 +53,14 @@ pub async fn list(
         });
     }
 
-    // Filter by role
+    // Filter by role (using admin field)
     if let Some(role) = &query.role {
-        users.retain(|u| u.roles.contains(role));
+        users.retain(|u| u.admin.contains(role) || u.admin.contains(&"all".to_string()));
     }
 
-    // Filter by group
+    // Filter by group (using org field)
     if let Some(group) = &query.group {
-        users.retain(|u| u.group_memberships.contains(group));
+        users.retain(|u| u.org == *group);
     }
 
     // Apply limit
@@ -111,7 +110,7 @@ pub async fn create(
     Json(request): Json<CreateUserRequest>,
 ) -> Result<Json<UserResponse>, StatusCode> {
     // Hash password
-    let password_hash = password::hash_password(&request.password)
+    let password_hash = crate::password::hash_password(&request.password)
         .map_err(|e| {
             warn!(
                 service = "admin-service",
@@ -130,8 +129,11 @@ pub async fn create(
         first_name: request.first_name,
         last_name: request.last_name,
         status: UserStatus::Active,
-        roles: request.roles.unwrap_or_default(),
-        group_memberships: request.group_memberships.unwrap_or_default(),
+        verified: false,
+        authenticated: None,
+        admin: request.admin.unwrap_or_default(),
+        org: request.org,
+        claims: request.claims.unwrap_or_default(),
         mfa_secret: None,
         created_at: now,
         updated_at: now,
@@ -183,14 +185,14 @@ pub async fn update(
     if let Some(status) = request.status {
         user.status = status;
     }
-    if let Some(roles) = request.roles {
-        user.roles = roles;
+    if let Some(admin) = request.admin {
+        user.admin = admin;
     }
-    if let Some(group_memberships) = request.group_memberships {
-        user.group_memberships = group_memberships;
+    if let Some(org) = request.org {
+        user.org = org;
     }
-    if let Some(custom_claims) = request.custom_claims {
-        user.custom_claims = custom_claims;
+    if let Some(claims) = request.claims {
+        user.claims = claims;
     }
 
     user.updated_at = OffsetDateTime::now_utc();
@@ -281,7 +283,7 @@ pub async fn add_group(
         service = "admin-service",
         event = "user_group_added",
         user_id = %user_id,
-        group_id = %request.group_id,
+        target_user_id = %request.user_id,
         added_by = %claims.sub
     );
 
@@ -305,33 +307,4 @@ pub async fn remove_group(
     Ok(StatusCode::NO_CONTENT)
 }
 
-// Password hashing utilities (copied from auth-service)
-mod password {
-    use anyhow::Result;
-    use argon2::{
-        password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
-        Argon2,
-    };
-
-    pub fn hash_password(password: &str) -> Result<String> {
-        let salt = SaltString::generate(&mut OsRng);
-        let argon2 = Argon2::default();
-
-        let password_hash = argon2
-            .hash_password(password.as_bytes(), &salt)?
-            .to_string();
-
-        Ok(password_hash)
-    }
-
-    pub fn verify_password(password: &str, hash: &str) -> Result<bool> {
-        let parsed_hash = PasswordHash::new(hash)?;
-        let argon2 = Argon2::default();
-
-        match argon2.verify_password(password.as_bytes(), &parsed_hash) {
-            Ok(()) => Ok(true),
-            Err(argon2::password_hash::Error::Password) => Ok(false),
-            Err(e) => Err(e.into()),
-        }
-    }
-}
+// Use password utilities from separate module

@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::path::Path;
 use tracing::{info, warn, error};
 
-use crate::models::{User, Group, Client, ClaimsRegistry};
+use crate::models::{User, Group, Role, Client, ClaimsRegistry};
 
 #[derive(Debug, Clone)]
 pub struct FileStorage {
@@ -143,9 +143,10 @@ impl FileStorage {
         let group_members: HashMap<String, Vec<String>> = {
             let mut members = HashMap::new();
             for (user_id, user) in &users_map {
-                for group_id in &user.group_memberships {
+                // Use org field as group membership
+                if !user.org.is_empty() {
                     members
-                        .entry(group_id.clone())
+                        .entry(user.org.clone())
                         .or_insert_with(Vec::new)
                         .push(user_id.clone());
                 }
@@ -254,18 +255,51 @@ impl FileStorage {
     pub fn find_users_by_role(&self, role: &str) -> Vec<&User> {
         self.users
             .values()
-            .filter(|u| u.roles.contains(&role.to_string()))
+            .filter(|u| u.admin.contains(&role.to_string()) || u.admin.contains(&"all".to_string()))
             .collect()
     }
 }
 
 async fn load_users_file(data_dir: &str) -> LoadResult<Vec<User>> {
-    match load_json_file::<UsersFile>(&format!("{}/users.json", data_dir)).await {
-        Ok(users_file) => LoadResult::Success(users_file.users),
-        Err(e) => LoadResult::CorruptData {
-            error: e.to_string(),
-            fallback: Vec::new(),
-        },
+    let users_dir = format!("{}/users", data_dir);
+    let mut all_users = Vec::new();
+
+    // Read all organization directories
+    if let Ok(entries) = tokio::fs::read_dir(&users_dir).await {
+        let mut entries = entries;
+        while let Ok(Some(entry)) = entries.next_entry().await {
+            if entry.file_type().await.map(|ft| ft.is_dir()).unwrap_or(false) {
+                let org_dir = entry.path();
+
+                // Read all user files in organization directory
+                if let Ok(user_entries) = tokio::fs::read_dir(&org_dir).await {
+                    let mut user_entries = user_entries;
+                    while let Ok(Some(user_entry)) = user_entries.next_entry().await {
+                        if let Some(file_name) = user_entry.file_name().to_str() {
+                            if file_name.starts_with("user-") && file_name.ends_with(".json") {
+                                match load_json_file::<User>(&user_entry.path().to_string_lossy()).await {
+                                    Ok(user) => all_users.push(user),
+                                    Err(e) => warn!("Failed to load user file {}: {}", file_name, e),
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if all_users.is_empty() {
+        // Try fallback to old users.json format
+        match load_json_file::<UsersFile>(&format!("{}/users.json", data_dir)).await {
+            Ok(users_file) => LoadResult::Success(users_file.users),
+            Err(e) => LoadResult::CorruptData {
+                error: format!("No users found in {} and fallback users.json failed: {}", users_dir, e),
+                fallback: Vec::new(),
+            },
+        }
+    } else {
+        LoadResult::Success(all_users)
     }
 }
 

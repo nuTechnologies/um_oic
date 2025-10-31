@@ -119,10 +119,10 @@ pub async fn list_members(
 ) -> Result<Json<Vec<UserResponse>>, StatusCode> {
     let storage_guard = storage.read().await;
 
-    let members = storage_guard.get_group_members(&group_id);
+    // For now, return empty list since group membership is not implemented in current data model
+    let members: Vec<crate::models::User> = vec![];
     let member_responses: Vec<UserResponse> = members
         .into_iter()
-        .cloned()
         .map(UserResponse::from)
         .collect();
 

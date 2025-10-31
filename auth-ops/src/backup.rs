@@ -153,7 +153,7 @@ async fn calculate_file_checksum(path: &str) -> Result<String> {
     Ok(format!("{:x}", result))
 }
 
-fn copy_dir_recursive(src: &str, dst: &str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<()>> + Send>> {
+fn copy_dir_recursive<'a>(src: &'a str, dst: &'a str) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<()>> + Send + 'a>> {
     Box::pin(async move {
     tokio::fs::create_dir_all(dst).await
         .context("Failed to create destination directory")?;

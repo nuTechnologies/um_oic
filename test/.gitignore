@@ -1,0 +1,35 @@
+# Test data and temporary files
+data/auth/*
+data/admin/*
+!data/auth/.gitkeep
+!data/admin/.gitkeep
+
+# Test results and reports
+*.log
+test-report.md
+test-results.json
+coverage.xml
+coverage.html
+
+# Temporary files
+*.tmp
+/tmp/
+.tmp/
+
+# Backup files
+test-data-backup-*.tar.gz
+
+# Runtime files
+*.pid
+*.sock
+
+# Performance test artifacts
+*.csv
+bench-results/
+
+# Security test outputs
+security-scan-results/
+
+# CI/CD artifacts
+junit.xml
+test-summary.json

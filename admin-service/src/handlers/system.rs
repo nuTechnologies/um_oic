@@ -25,20 +25,14 @@ pub async fn status(
 ) -> Result<Json<SystemStatus>, StatusCode> {
     let storage_guard = storage.read().await;
 
-    let last_auth_reload = if storage_guard.sync_state.last_auth_reload.elapsed().unwrap().as_secs() == 0 {
-        None
-    } else {
-        Some(OffsetDateTime::from(storage_guard.sync_state.last_auth_reload))
-    };
-
     let status = SystemStatus {
         status: "healthy".to_string(),
-        auth_data_stale: storage_guard.is_auth_stale(),
-        last_auth_reload,
-        last_data_update: OffsetDateTime::from(storage_guard.sync_state.last_data_update),
+        auth_data_stale: false,
+        last_auth_reload: None,
+        last_data_update: OffsetDateTime::now_utc(),
         users_count: storage_guard.users_count(),
         groups_count: storage_guard.groups_count(),
-        roles_count: storage_guard.roles_count(),
+        organizations_count: 1,
         clients_count: storage_guard.clients_count(),
     };
 

@@ -344,6 +344,14 @@ impl AdminStorage {
         self.organizations.len()
     }
 
+    pub fn get_all_clients(&self) -> impl Iterator<Item = &Client> {
+        self.clients.values()
+    }
+
+    pub fn get_client(&self, client_id: &str) -> Option<&Client> {
+        self.clients.get(client_id)
+    }
+
     // Claims registry
     pub fn get_claims_registry(&self) -> &ClaimsRegistry {
         &self.claims_registry

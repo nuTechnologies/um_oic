@@ -1,7 +1,7 @@
 {
   "id": "user-admin",
   "email": "admin@example.com",
-  "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$8qwOOxUlm7OQgVzggDL5WA$Nqs4AuB6c2QeFlcv9l5gQz8hHwP9iZQ+YLkQbA+F9nY",
+  "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$Sv1BnO7Gufb19gEB4CsxDA$QFTcmT5emtr9eUNP7bYmi4fkxtm5XuORaRW7VFA9BWE",
   "first_name": "System",
   "last_name": "Administrator",
   "status": "active",

@@ -1,0 +1,26 @@
+{
+  "created_at": [
+    2025,
+    303,
+    21,
+    14,
+    7,
+    749422570,
+    0,
+    0,
+    0
+  ],
+  "version": "0.1.0",
+  "files": [
+    "users.json",
+    "groups.json",
+    "roles.json",
+    "clients.json"
+  ],
+  "checksums": {
+    "clients.json": "859551234d0d71ac3ad936e70b66338ac20f250cbc97678fb4cc23b7f940c9d2",
+    "groups.json": "e02f1d52f7ed6906c3717dd46713f026237cd259a91e8f66d52892fc2c689617",
+    "users.json": "cb1bb1b550cbb02deacecb9589aae93557e010f2efa4b7dd606929bf57697121",
+    "roles.json": "e72e51ac644db924c581d1e7d79e1d57c3d56e8e81ac69315d13b43e8ddbc490"
+  }
+}

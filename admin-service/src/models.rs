@@ -5,9 +5,6 @@ use time::OffsetDateTime;
 use uuid::Uuid;
 
 // Include shared models from auth-service
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use time::OffsetDateTime;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
@@ -45,6 +42,14 @@ pub struct Group {
     pub metadata: HashMap<String, serde_json::Value>,
     #[serde(with = "time::serde::iso8601")]
     pub created_at: OffsetDateTime,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Role {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub permissions: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -179,6 +184,11 @@ pub struct UpdateGroupRequest {
     pub name: Option<String>,
     pub description: Option<String>,
     pub metadata: Option<HashMap<String, serde_json::Value>>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct AddUserToGroupRequest {
+    pub user_id: String,
 }
 
 

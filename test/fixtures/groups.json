@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "id": "group-admins",
+      "name": "Administrators",
+      "description": "System administrators",
+      "metadata": {
+        "permissions": ["admin", "read", "write"],
+        "priority": "high"
+      }
+    },
+    {
+      "id": "group-users",
+      "name": "Regular Users",
+      "description": "Standard system users",
+      "metadata": {
+        "permissions": ["read"],
+        "priority": "normal"
+      }
+    }
+  ]
+}

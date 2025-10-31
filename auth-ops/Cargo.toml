@@ -14,6 +14,7 @@ toml = { workspace = true }
 
 # Crypto (for password hashing)
 argon2 = { workspace = true }
+rand_core = { workspace = true }
 sha2 = { workspace = true }
 
 # Utilities

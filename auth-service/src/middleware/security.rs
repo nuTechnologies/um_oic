@@ -1,13 +1,14 @@
 use axum::{
-    http::{header, HeaderValue, Request, Response},
+    body::Body,
+    http::{header, HeaderValue, Request},
     middleware::Next,
-    response::Response as AxumResponse,
+    response::Response,
 };
 
-pub async fn security_headers<B>(
-    request: Request<B>,
-    next: Next<B>,
-) -> AxumResponse {
+pub async fn security_headers(
+    request: Request<Body>,
+    next: Next,
+) -> Response {
     let mut response = next.run(request).await;
 
     let headers = response.headers_mut();

@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  auth-service-test:
+    build:
+      context: ../
+      dockerfile: auth-service/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - RUST_LOG=debug
+      - PORT=8080
+      - DATA_DIR=/app/data
+      - JWT_SECRET=test-secret-key-for-testing-only
+    volumes:
+      - ./data/auth:/app/data
+      - ./fixtures:/app/fixtures:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  admin-service-test:
+    build:
+      context: ../
+      dockerfile: admin-service/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - RUST_LOG=debug
+      - PORT=8081
+      - DATA_DIR=/app/data
+      - AUTH_SERVICE_URL=http://auth-service-test:8080
+      - JWT_SECRET=test-secret-key-for-testing-only
+    volumes:
+      - ./data/admin:/app/data
+      - ./fixtures:/app/fixtures:ro
+    depends_on:
+      auth-service-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+  test-runner:
+    image: curlimages/curl:latest
+    depends_on:
+      auth-service-test:
+        condition: service_healthy
+      admin-service-test:
+        condition: service_healthy
+    volumes:
+      - .:/tests:ro
+    working_dir: /tests
+    command: |
+      sh -c "
+        echo 'Starting test suite...'
+
+        # Wait for services to be ready
+        sleep 5
+
+        # Run auth-service tests
+        echo 'Running auth-service tests...'
+        ./auth-service/test-auth.sh
+
+        # Run admin-service tests
+        echo 'Running admin-service tests...'
+        ./admin-service/test-admin.sh
+
+        # Run integration tests
+        echo 'Running integration tests...'
+        ./integration/test-integration.sh
+
+        echo 'All tests completed!'
+      "
+
+  # Optional: Database for persistent storage testing
+  postgres-test:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=um_oic_test
+      - POSTGRES_USER=um_oic
+      - POSTGRES_PASSWORD=test_password
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    profiles:
+      - database
+
+  # Optional: Redis for session storage testing
+  redis-test:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass test_password
+    profiles:
+      - cache
+
+volumes:
+  postgres_test_data:
+
+networks:
+  default:
+    name: um-oic-test-network
