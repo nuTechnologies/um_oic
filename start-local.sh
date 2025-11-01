@@ -29,7 +29,7 @@ warn() {
 
 # Configuration
 AUTH_PORT=8443
-ADMIN_PORT=8001
+ADMIN_PORT=8444
 DATA_DIR="./data"
 PID_FILE="./dev-pids.txt"
 
@@ -78,16 +78,6 @@ success "Build completed"
 mkdir -p "$DATA_DIR"
 mkdir -p certs
 
-# Initialize minimal data if not exists
-if [[ ! -f "$DATA_DIR/users.json" ]]; then
-    log "Initializing test data..."
-    echo '{"users":[]}' > "$DATA_DIR/users.json"
-    echo '{"groups":[]}' > "$DATA_DIR/groups.json"
-    echo '{"roles":[]}' > "$DATA_DIR/roles.json"
-    echo '{"clients":[]}' > "$DATA_DIR/clients.json"
-    echo '{"claims_registry":{"definitions":{}}}' > "$DATA_DIR/claims_registry.json"
-    success "Test data initialized"
-fi
 
 # Start auth-service with TLS
 log "Starting auth-service on https://localhost:$AUTH_PORT..."
@@ -123,16 +113,18 @@ for i in {1..10}; do
     sleep 1
 done
 
-# Start admin-service
-log "Starting admin-service on http://localhost:$ADMIN_PORT..."
+# Start admin-service with TLS
+log "Starting admin-service on https://localhost:$ADMIN_PORT..."
 cd admin-service
 ADMIN_BIND="0.0.0.0:$ADMIN_PORT" \
+ADMIN_TLS_ENABLE=true \
 ADMIN_PID_FILE="../admin-service.pid" \
 AUTH_SERVICE_URL="https://localhost:$AUTH_PORT" \
 RUST_LOG=debug \
 cargo run -- \
     --data-dir "../$DATA_DIR" \
     --config config.toml \
+    --tls-enable \
     --debug &
 
 ADMIN_PID=$!
@@ -143,7 +135,7 @@ log "Admin service PID: $ADMIN_PID"
 # Wait for admin service
 log "Waiting for admin service to start..."
 for i in {1..10}; do
-    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:$ADMIN_PORT/health" 2>/dev/null || echo "000")
+    HTTP_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" "https://localhost:$ADMIN_PORT/health" 2>/dev/null || echo "000")
     if [[ $HTTP_STATUS -eq 401 ]]; then
         success "Admin service is ready (auth required)"
         break
@@ -159,7 +151,7 @@ done
 echo
 log "=== Service Status ==="
 echo "🔒 Auth Service:  https://localhost:$AUTH_PORT (TLS enabled)"
-echo "🔧 Admin Service: http://localhost:$ADMIN_PORT (HTTP)"
+echo "🔧 Admin Service: https://localhost:$ADMIN_PORT (HTTPS)"
 echo "📁 Data Directory: $DATA_DIR"
 echo
 
@@ -168,7 +160,7 @@ log "=== Quick Tests ==="
 AUTH_HEALTH=$(curl -k -s "https://localhost:$AUTH_PORT/health" 2>/dev/null || echo '{"status":"error"}')
 AUTH_STATUS=$(echo "$AUTH_HEALTH" | jq -r .status 2>/dev/null || echo "error")
 
-ADMIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:$ADMIN_PORT/health" 2>/dev/null || echo "000")
+ADMIN_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" "https://localhost:$ADMIN_PORT/health" 2>/dev/null || echo "000")
 
 if [[ "$AUTH_STATUS" == "healthy" ]]; then
     success "Auth service: $AUTH_STATUS"
@@ -194,8 +186,8 @@ log "=== Development URLs ==="
 echo "📊 Health Check:      https://localhost:$AUTH_PORT/health"
 echo "🔐 OIDC Discovery:    https://localhost:$AUTH_PORT/.well-known/openid-configuration"
 echo "🔑 OAuth2 Authorize:  https://localhost:$AUTH_PORT/oauth2/authorize"
-echo "👤 Admin Health:      http://localhost:$ADMIN_PORT/health"
-echo "👥 Admin Users:       http://localhost:$ADMIN_PORT/api/users"
+echo "👤 Admin Health:      https://localhost:$ADMIN_PORT/health"
+echo "👥 Admin Users:       https://localhost:$ADMIN_PORT/api/users"
 
 # Sample commands
 echo
