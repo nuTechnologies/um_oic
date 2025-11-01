@@ -19,7 +19,6 @@ use crate::{
 type AppState = (Arc<RwLock<FileStorage>>, Arc<JwtService>, Config);
 
 pub async fn login(
-    ConnectInfo(addr): ConnectInfo<SocketAddr>,
     State((storage, jwt_service, config)): State<AppState>,
     Json(request): Json<LoginRequest>,
 ) -> Result<Json<LoginResponse>, StatusCode> {
@@ -34,8 +33,7 @@ pub async fn login(
                 event = "login",
                 email = %request.email,
                 success = false,
-                reason = "user_not_found",
-                ip = %addr.ip()
+                reason = "user_not_found"
             );
             return Ok(Json(LoginResponse {
                 success: false,
@@ -56,8 +54,7 @@ pub async fn login(
             event = "login",
             email = %request.email,
             success = false,
-            reason = "user_inactive",
-            ip = %addr.ip()
+            reason = "user_inactive"
         );
         return Ok(Json(LoginResponse {
             success: false,
@@ -78,7 +75,6 @@ pub async fn login(
                 service = "auth-service",
                 event = "password_verification_error",
                 error = %e,
-                ip = %addr.ip()
             );
             return Err(StatusCode::INTERNAL_SERVER_ERROR);
         }
@@ -90,8 +86,7 @@ pub async fn login(
             event = "login",
             email = %request.email,
             success = false,
-            reason = "invalid_password",
-            ip = %addr.ip()
+            reason = "invalid_password"
         );
         return Ok(Json(LoginResponse {
             success: false,
@@ -111,7 +106,6 @@ pub async fn login(
             service = "auth-service",
             event = "mfa_required",
             user_id = %user.id,
-            ip = %addr.ip()
         );
         return Ok(Json(LoginResponse {
             success: true,
@@ -171,8 +165,7 @@ pub async fn login(
         event = "login",
         email = %request.email,
         user_id = %user.id,
-        success = true,
-        ip = %addr.ip()
+        success = true
     );
 
     Ok(Json(LoginResponse {
@@ -197,7 +190,6 @@ pub async fn logout(
     info!(
         service = "auth-service",
         event = "logout",
-        ip = %addr.ip()
     );
 
     Ok(Json(json!({
@@ -215,7 +207,6 @@ pub async fn forgot_password(
     info!(
         service = "auth-service",
         event = "forgot_password",
-        ip = %addr.ip()
     );
 
     Ok(Json(json!({
@@ -233,7 +224,6 @@ pub async fn reset_password(
     info!(
         service = "auth-service",
         event = "reset_password",
-        ip = %addr.ip()
     );
 
     Ok(Json(json!({

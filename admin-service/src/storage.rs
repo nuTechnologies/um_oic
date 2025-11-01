@@ -8,13 +8,13 @@ use tracing::{info, warn, error};
 use uuid::Uuid;
 
 // Import shared models from our models module
-use crate::models::{User, Group, Client, ClaimsRegistry, ClaimDefinition, UserStatus, ClientType, AuditEvent};
+use crate::models::{User, Client, Organization, ClaimsRegistry, ClaimDefinition, UserStatus, ClientType, AuditEvent};
 
 
 // File format structures
 #[derive(Debug, Serialize, Deserialize)]
-struct GroupsFile {
-    groups: Vec<Group>,
+struct OrganizationsFile {
+    orgs: Vec<Organization>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -32,8 +32,7 @@ pub struct DataSyncState {
 pub struct AdminStorage {
     // Primary data (read-write)
     users: HashMap<String, User>, // user_id -> User
-    organizations: HashMap<String, Vec<String>>, // org -> [user_ids]
-    groups: HashMap<String, Group>,
+    organizations: HashMap<String, Organization>, // org_id -> Organization
     clients: HashMap<String, Client>,
     claims_registry: ClaimsRegistry,
 
@@ -56,11 +55,13 @@ impl AdminStorage {
         // Load claims registry first (required)
         let claims_registry = load_claims_registry(data_dir).await?;
 
-        // Load users from org-based directories
-        let (users, organizations) = load_org_based_users(data_dir, &claims_registry).await?;
+        // Load organizations from orgs.json
+        let organizations = load_organizations_file(data_dir).await?;
 
-        // Load groups and clients
-        let groups = load_groups_file(data_dir).await?;
+        // Load users from org-based directories
+        let users = load_org_based_users(data_dir, &claims_registry).await?;
+
+        // Load clients
         let clients = load_clients_file(data_dir).await?;
 
         // Convert to HashMaps
@@ -69,14 +70,14 @@ impl AdminStorage {
             .map(|u| (u.id.clone(), u))
             .collect();
 
-        let groups_map: HashMap<String, Group> = groups
-            .into_iter()
-            .map(|g| (g.id.clone(), g))
-            .collect();
-
         let clients_map: HashMap<String, Client> = clients
             .into_iter()
             .map(|c| (c.client_id.clone(), c))
+            .collect();
+
+        let organizations_map: HashMap<String, Organization> = organizations
+            .into_iter()
+            .map(|o| (o.id.clone(), o))
             .collect();
 
         // Build email index
@@ -94,15 +95,13 @@ impl AdminStorage {
         info!(
             event = "admin_storage_loaded",
             users_count = users_map.len(),
-            organizations_count = organizations.len(),
-            groups_count = groups_map.len(),
+            organizations_count = organizations_map.len(),
             clients_count = clients_map.len()
         );
 
         Ok(Self {
             users: users_map,
-            organizations,
-            groups: groups_map,
+            organizations: organizations_map,
             clients: clients_map,
             claims_registry,
             email_index,
@@ -164,11 +163,6 @@ impl AdminStorage {
         // Update memory
         self.email_index.insert(user.email.clone(), user.id.clone());
 
-        // Update organization index
-        self.organizations
-            .entry(user.org.clone())
-            .or_insert_with(Vec::new)
-            .push(user.id.clone());
 
         self.users.insert(user.id.clone(), user.clone());
 
@@ -191,21 +185,10 @@ impl AdminStorage {
         // Remove old user from indices
         if let Some(old_user) = self.users.get(user_id) {
             self.email_index.remove(&old_user.email);
-
-            // Remove from old org
-            if let Some(org_users) = self.organizations.get_mut(&old_user.org) {
-                org_users.retain(|id| id != user_id);
-            }
         }
 
         // Update indices
         self.email_index.insert(user.email.clone(), user.id.clone());
-
-        // Add to new org
-        self.organizations
-            .entry(user.org.clone())
-            .or_insert_with(Vec::new)
-            .push(user.id.clone());
 
         self.users.insert(user_id.to_string(), user.clone());
 
@@ -228,10 +211,6 @@ impl AdminStorage {
             // Remove from indices
             self.email_index.remove(&user.email);
 
-            // Remove from organization
-            if let Some(org_users) = self.organizations.get_mut(&user.org) {
-                org_users.retain(|id| id != user_id);
-            }
 
             // Delete user file
             self.delete_user_file(&user).await?;
@@ -263,15 +242,10 @@ impl AdminStorage {
     }
 
     pub fn get_users_by_org(&self, org: &str) -> Vec<&User> {
-        self.organizations
-            .get(org)
-            .map(|user_ids| {
-                user_ids
-                    .iter()
-                    .filter_map(|id| self.users.get(id))
-                    .collect()
-            })
-            .unwrap_or_default()
+        self.users
+            .values()
+            .filter(|user| user.org == org)
+            .collect()
     }
 
     pub fn search_users(&self, query: &str) -> Vec<&User> {
@@ -303,28 +277,6 @@ impl AdminStorage {
             .collect()
     }
 
-    // Group operations
-    pub async fn create_group(&mut self, group: Group) -> Result<Group> {
-        self.groups.insert(group.id.clone(), group.clone());
-        self.persist_groups().await?;
-        self.sync_state.last_data_update = SystemTime::now();
-
-        info!(
-            service = "admin-service",
-            event = "group_created",
-            group_id = %group.id
-        );
-
-        Ok(group)
-    }
-
-    pub fn get_group(&self, group_id: &str) -> Option<&Group> {
-        self.groups.get(group_id)
-    }
-
-    pub fn get_all_groups(&self) -> impl Iterator<Item = &Group> {
-        self.groups.values()
-    }
 
 
     // Statistics
@@ -332,9 +284,6 @@ impl AdminStorage {
         self.users.len()
     }
 
-    pub fn groups_count(&self) -> usize {
-        self.groups.len()
-    }
 
     pub fn clients_count(&self) -> usize {
         self.clients.len()
@@ -342,6 +291,14 @@ impl AdminStorage {
 
     pub fn organizations_count(&self) -> usize {
         self.organizations.len()
+    }
+
+    pub fn get_all_organizations(&self) -> impl Iterator<Item = &Organization> {
+        self.organizations.values()
+    }
+
+    pub fn get_organization(&self, org_id: &str) -> Option<&Organization> {
+        self.organizations.get(org_id)
     }
 
     pub fn get_all_clients(&self) -> impl Iterator<Item = &Client> {
@@ -353,8 +310,21 @@ impl AdminStorage {
     }
 
     // Claims registry
-    pub fn get_claims_registry(&self) -> &ClaimsRegistry {
+    pub fn get_claims(&self) -> &ClaimsRegistry {
         &self.claims_registry
+    }
+
+    // Audit log operations
+    pub fn query_audit_events(
+        &self,
+        user_id: Option<&str>,
+        event_type: Option<&str>,
+        from: Option<&str>,
+        to: Option<&str>,
+        limit: u32
+    ) -> Vec<AuditEvent> {
+        // Return empty for now - in production this would read from JSONL files
+        Vec::new()
     }
 
     // Persistence operations
@@ -390,29 +360,11 @@ impl AdminStorage {
         Ok(())
     }
 
-    async fn persist_groups(&self) -> Result<()> {
-        let groups_file = GroupsFile {
-            groups: self.groups.values().cloned().collect(),
-        };
-
-        let temp_path = format!("{}/groups.json.tmp", self.data_dir);
-        let final_path = format!("{}/groups.json", self.data_dir);
-
-        tokio::fs::write(&temp_path, serde_json::to_string_pretty(&groups_file)?)
-            .await
-            .context("Failed to write groups temp file")?;
-
-        tokio::fs::rename(temp_path, final_path)
-            .await
-            .context("Failed to rename groups file")?;
-
-        Ok(())
-    }
 }
 
 // File loading functions
 async fn load_claims_registry(data_dir: &str) -> Result<ClaimsRegistry> {
-    let path = format!("{}/claims.conf", data_dir);
+    let path = format!("{}/claims.json", data_dir);
     let content = tokio::fs::read_to_string(&path).await
         .context("Failed to read claims registry")?;
 
@@ -422,7 +374,7 @@ async fn load_claims_registry(data_dir: &str) -> Result<ClaimsRegistry> {
     Ok(registry)
 }
 
-async fn load_org_based_users(data_dir: &str, claims_registry: &ClaimsRegistry) -> Result<(Vec<User>, HashMap<String, Vec<String>>)> {
+async fn load_org_based_users(data_dir: &str, claims_registry: &ClaimsRegistry) -> Result<Vec<User>> {
     let users_dir = format!("{}/users", data_dir);
     let mut all_users = Vec::new();
     let mut organizations = HashMap::new();
@@ -430,7 +382,7 @@ async fn load_org_based_users(data_dir: &str, claims_registry: &ClaimsRegistry) 
     // Check if users directory exists
     if !Path::new(&users_dir).exists() {
         warn!("Users directory not found: {}", users_dir);
-        return Ok((all_users, organizations));
+        return Ok(all_users);
     }
 
     // Read all organization directories
@@ -456,7 +408,7 @@ async fn load_org_based_users(data_dir: &str, claims_registry: &ClaimsRegistry) 
         }
     }
 
-    Ok((all_users, organizations))
+    Ok(all_users)
 }
 
 async fn load_users_from_org_dir(org_dir: &Path, org_name: &str, claims_registry: &ClaimsRegistry) -> Result<Vec<User>> {
@@ -490,6 +442,29 @@ async fn load_users_from_org_dir(org_dir: &Path, org_name: &str, claims_registry
     }
 
     Ok(users)
+}
+
+async fn load_organizations_file(data_dir: &str) -> Result<Vec<Organization>> {
+    let path = format!("{}/orgs.json", data_dir);
+
+    if !Path::new(&path).exists() {
+        warn!("Organizations file not found: {}", path);
+        return Ok(Vec::new());
+    }
+
+    let content = tokio::fs::read_to_string(&path).await
+        .context("Failed to read organizations file")?;
+
+    let organizations_file: OrganizationsFile = serde_json::from_str(&content)
+        .context("Failed to parse organizations file")?;
+
+    info!(
+        event = "organizations_loaded",
+        count = organizations_file.orgs.len(),
+        path = %path
+    );
+
+    Ok(organizations_file.orgs)
 }
 
 async fn load_user_file(path: &Path, claims_registry: &ClaimsRegistry) -> Result<User> {
@@ -531,10 +506,6 @@ fn validate_user_claims(user: &mut User, registry: &ClaimsRegistry) -> Result<()
     Ok(())
 }
 
-async fn load_groups_file(data_dir: &str) -> Result<Vec<Group>> {
-    let groups_file: GroupsFile = load_json_file(&format!("{}/groups.json", data_dir)).await?;
-    Ok(groups_file.groups)
-}
 
 async fn load_clients_file(data_dir: &str) -> Result<Vec<Client>> {
     let clients_file: ClientsFile = load_json_file(&format!("{}/clients.json", data_dir)).await?;

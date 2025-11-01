@@ -10,13 +10,11 @@ use crate::models::{User, Group, Role, Client, ClaimsRegistry};
 pub struct FileStorage {
     // Primary data
     users: HashMap<String, User>,
-    groups: HashMap<String, Group>,
     roles: HashMap<String, Role>,
     clients: HashMap<String, Client>,
 
     // Computed indices for O(1) lookups
     email_index: HashMap<String, String>, // email -> user_id
-    group_members: HashMap<String, Vec<String>>, // group_id -> [user_ids]
 
     data_dir: String,
 }
@@ -57,22 +55,7 @@ impl FileStorage {
 
         // Load all JSON files
         let users_result = load_users_file(data_dir).await;
-        let groups_result = load_groups_file(data_dir).await;
-        let roles_result = load_roles_file(data_dir).await;
         let clients_result = load_clients_file(data_dir).await;
-
-        // Handle system-critical data (roles must exist)
-        let roles = match roles_result {
-            LoadResult::Success(roles) => roles,
-            LoadResult::CorruptData { error, .. } => {
-                error!(
-                    event = "critical_data_corrupt",
-                    file = "roles.json",
-                    error = error
-                );
-                return Err(anyhow::anyhow!("System critical data corrupt: roles.json - {}", error));
-            }
-        };
 
         // Handle user data (can be corrupt, use fallback)
         let users = match users_result {
@@ -87,18 +70,6 @@ impl FileStorage {
             }
         };
 
-        // Handle group data
-        let groups = match groups_result {
-            LoadResult::Success(groups) => groups,
-            LoadResult::CorruptData { error, fallback } => {
-                warn!(
-                    event = "group_data_corrupt",
-                    error = error,
-                    fallback_count = fallback.len()
-                );
-                fallback
-            }
-        };
 
         // Handle client data
         let clients = match clients_result {
@@ -119,15 +90,7 @@ impl FileStorage {
             .map(|u| (u.id.clone(), u))
             .collect();
 
-        let groups_map: HashMap<String, Group> = groups
-            .into_iter()
-            .map(|g| (g.id.clone(), g))
-            .collect();
 
-        let roles_map: HashMap<String, Role> = roles
-            .into_iter()
-            .map(|r| (r.id.clone(), r))
-            .collect();
 
         let clients_map: HashMap<String, Client> = clients
             .into_iter()
@@ -140,35 +103,18 @@ impl FileStorage {
             .map(|(id, user)| (user.email.clone(), id.clone()))
             .collect();
 
-        let group_members: HashMap<String, Vec<String>> = {
-            let mut members = HashMap::new();
-            for (user_id, user) in &users_map {
-                // Use org field as group membership
-                if !user.org.is_empty() {
-                    members
-                        .entry(user.org.clone())
-                        .or_insert_with(Vec::new)
-                        .push(user_id.clone());
-                }
-            }
-            members
-        };
 
         info!(
             event = "storage_loaded",
             users_count = users_map.len(),
-            groups_count = groups_map.len(),
-            roles_count = roles_map.len(),
             clients_count = clients_map.len()
         );
 
         Ok(Self {
             users: users_map,
-            groups: groups_map,
-            roles: roles_map,
+            roles: HashMap::new(),
             clients: clients_map,
             email_index,
-            group_members,
             data_dir: data_dir.to_string(),
         })
     }
@@ -187,26 +133,6 @@ impl FileStorage {
         self.users.values()
     }
 
-    // Group operations
-    pub fn get_group(&self, group_id: &str) -> Option<&Group> {
-        self.groups.get(group_id)
-    }
-
-    pub fn get_group_members(&self, group_id: &str) -> Vec<&User> {
-        self.group_members
-            .get(group_id)
-            .map(|member_ids| {
-                member_ids
-                    .iter()
-                    .filter_map(|id| self.users.get(id))
-                    .collect()
-            })
-            .unwrap_or_default()
-    }
-
-    pub fn get_all_groups(&self) -> impl Iterator<Item = &Group> {
-        self.groups.values()
-    }
 
     // Role operations
     pub fn get_role(&self, role_id: &str) -> Option<&Role> {
@@ -231,9 +157,6 @@ impl FileStorage {
         self.users.len()
     }
 
-    pub fn groups_count(&self) -> usize {
-        self.groups.len()
-    }
 
     pub fn roles_count(&self) -> usize {
         self.roles.len()
@@ -303,15 +226,6 @@ async fn load_users_file(data_dir: &str) -> LoadResult<Vec<User>> {
     }
 }
 
-async fn load_groups_file(data_dir: &str) -> LoadResult<Vec<Group>> {
-    match load_json_file::<OrgsFile>(&format!("{}/orgs.json", data_dir)).await {
-        Ok(orgs_file) => LoadResult::Success(orgs_file.orgs),
-        Err(e) => LoadResult::CorruptData {
-            error: e.to_string(),
-            fallback: Vec::new(),
-        },
-    }
-}
 
 async fn load_roles_file(data_dir: &str) -> LoadResult<Vec<Role>> {
     match load_json_file::<RolesFile>(&format!("{}/roles.json", data_dir)).await {

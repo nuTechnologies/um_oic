@@ -105,7 +105,6 @@ async fn main() -> Result<()> {
         event = "storage_loaded",
         data_dir = %args.data_dir,
         users_loaded = storage.read().await.users_count(),
-        groups_loaded = storage.read().await.groups_count()
     );
 
     // Setup signal handlers
@@ -287,7 +286,6 @@ fn setup_reload_handler(storage: Arc<RwLock<FileStorage>>, data_dir: String) {
             match FileStorage::load(&data_dir).await {
                 Ok(new_storage) => {
                     let users_count = new_storage.users_count();
-                    let groups_count = new_storage.groups_count();
 
                     {
                         let mut storage_guard = storage.write().await;
@@ -299,7 +297,6 @@ fn setup_reload_handler(storage: Arc<RwLock<FileStorage>>, data_dir: String) {
                         event = "data_reloaded",
                         trigger = "sighup",
                         users_count = users_count,
-                        groups_count = groups_count,
                         duration_ms = start_time.elapsed().as_millis()
                     );
                 }

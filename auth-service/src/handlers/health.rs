@@ -16,8 +16,6 @@ pub async fn health(State((storage, _, _)): State<AppState>) -> Json<Value> {
         "version": env!("CARGO_PKG_VERSION"),
         "uptime_seconds": get_uptime_seconds(),
         "users_loaded": storage_guard.users_count(),
-        "groups_loaded": storage_guard.groups_count(),
-        "roles_loaded": storage_guard.roles_count(),
         "timestamp": OffsetDateTime::now_utc()
     }))
 }

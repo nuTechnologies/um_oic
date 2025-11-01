@@ -10,12 +10,17 @@
   "admin": [],
   "org": "group-7a",
   "claims": {
-    "roles": ["staff"],
-    "cohorts": ["7a", "7b"],
     "employee_id": "EMP-2025-002",
-    "department": "Lehrkräfte"
+    "department": "Lehrkräfte",
+    "cohorts": [
+      "7a",
+      "7b"
+    ],
+    "roles": [
+      "staff"
+    ]
   },
   "mfa_secret": null,
-  "created_at": "2024-02-01T10:00:00Z",
-  "updated_at": "2025-10-30T12:00:00Z"
+  "created_at": "+002024-02-01T10:00:00.000000000Z",
+  "updated_at": "+002025-10-31T20:25:51.533191388Z"
 }

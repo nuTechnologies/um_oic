@@ -1,8 +1,8 @@
 use anyhow::{Context, Result};
 use axum::{
-    routing::{get, post},
+    routing::{get, post, patch, delete},
     Router,
-    middleware::{self, Next},
+    middleware::Next,
     response::Response,
     extract::Request,
     http::HeaderValue,
@@ -21,6 +21,7 @@ mod middleware;
 mod logging;
 mod jwt;
 mod password;
+mod tls;
 
 use config::Config;
 use storage::AdminStorage;
@@ -48,6 +49,10 @@ struct Args {
     /// Bind address
     #[arg(long, env = "ADMIN_BIND", default_value = "0.0.0.0:8444")]
     bind: String,
+
+    /// Enable TLS
+    #[arg(long, env = "ADMIN_TLS_ENABLE")]
+    tls_enable: bool,
 
     /// Auth service PID file (für SIGHUP reload trigger)
     #[arg(long, env = "AUTH_PID_FILE", default_value = "/var/run/auth-service.pid")]
@@ -90,18 +95,52 @@ async fn main() -> Result<()> {
     let addr: SocketAddr = args.bind.parse()
         .context("Invalid bind address")?;
 
-    // Start server
-    let listener = TcpListener::bind(&addr).await
-        .context("Failed to bind listener")?;
+    if args.tls_enable {
+        // TLS mode
+        info!(
+            service = "admin-service",
+            event = "startup",
+            version = env!("CARGO_PKG_VERSION"),
+            tls_enabled = true
+        );
 
-    info!(
-        service = "admin-service",
-        event = "listening",
-        addr = %addr
-    );
+        let tls_config = tls::TlsConfig {
+            cert_path: "./certs/admin-cert.pem".to_string(),
+            key_path: "./certs/admin-key.pem".to_string(),
+            domain: "localhost".to_string(),
+            auto_generate: true,
+        };
 
-    axum::serve(listener, app).await
-        .context("Server error")?;
+        let tls_manager = tls::TlsManager::new(tls_config);
+
+        let rustls_config = tls_manager.create_rustls_config().await
+            .context("Failed to configure TLS")?;
+
+        info!(
+            service = "admin-service",
+            event = "tls_server_starting",
+            addr = %addr,
+            domain = "localhost"
+        );
+
+        let server = axum_server::bind_rustls(addr, rustls_config)
+            .serve(app.into_make_service());
+
+        server.await.context("TLS server error")?;
+    } else {
+        // HTTP mode
+        let listener = TcpListener::bind(&addr).await
+            .context("Failed to bind listener")?;
+
+        info!(
+            service = "admin-service",
+            event = "listening",
+            addr = %addr
+        );
+
+        axum::serve(listener, app).await
+            .context("Server error")?;
+    }
 
     Ok(())
 }
@@ -120,12 +159,10 @@ async fn create_app(
         .route("/api/users/:id/reset-password", post(handlers::users::reset_password))
 
         // Organizations API
-        .route("/api/organizations", get(handlers::organizations::list))
+        .route("/api/organizations", get(handlers::organizations::list).post(handlers::organizations::create))
+        .route("/api/organizations/:id", patch(handlers::organizations::update).delete(handlers::organizations::delete))
         .route("/api/organizations/:org/users", get(handlers::organizations::list_users))
 
-        // Groups API
-        .route("/api/groups", get(handlers::groups::list).post(handlers::groups::create))
-        .route("/api/groups/:id", get(handlers::groups::get).patch(handlers::groups::update).delete(handlers::groups::delete))
 
         // Clients API
         .route("/api/clients", get(handlers::clients::list).post(handlers::clients::create))
@@ -134,10 +171,15 @@ async fn create_app(
 
         // System API
         .route("/api/system/status", get(handlers::system::status))
+        .route("/api/system/stats", get(handlers::system::stats))
         .route("/api/system/reload-auth", post(handlers::system::reload_auth))
 
         // Audit API
         .route("/api/audit", get(handlers::audit::query))
+
+        // Claims API
+        .route("/api/claims", get(handlers::claims::list).post(handlers::claims::create))
+        .route("/api/claims/:key", patch(handlers::claims::update).delete(handlers::claims::delete))
 
         // Admin authentication middleware for API routes only
         .layer(axum::middleware::from_fn_with_state(
@@ -151,6 +193,7 @@ async fn create_app(
 
         // Static files (admin UI) - no authentication required
         .nest_service("/", ServeDir::new("../data/web/mgmt"))
+        .nest_service("/mgmt", ServeDir::new("../data/web/mgmt"))
 
         // API routes with authentication
         .merge(api_routes)
@@ -159,7 +202,7 @@ async fn create_app(
         .route("/health", get(handlers::health::health))
 
         // Add cache-control headers to prevent stale auth data
-        .layer(middleware::from_fn(add_cache_headers))
+        .layer(axum::middleware::from_fn(add_cache_headers))
 
         // Shared state
         .with_state((storage, jwt_verifier, config));

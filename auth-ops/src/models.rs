@@ -72,11 +72,4 @@ impl User {
         format!("{} {}", self.first_name, self.last_name)
     }
 
-    pub fn has_role(&self, role: &str) -> bool {
-        self.roles.contains(&role.to_string())
-    }
-
-    pub fn is_active(&self) -> bool {
-        matches!(self.status, UserStatus::Active)
-    }
 }

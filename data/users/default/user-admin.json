@@ -4,23 +4,23 @@
   "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$Sv1BnO7Gufb19gEB4CsxDA$QFTcmT5emtr9eUNP7bYmi4fkxtm5XuORaRW7VFA9BWE",
   "first_name": "System",
   "last_name": "Administrator",
-  "status": "inactive",
+  "status": "active",
   "verified": true,
   "authenticated": "2025-01-01",
   "admin": [
     "all"
   ],
-  "org": "all",
+  "org": "default",
   "claims": {
+    "roles": [
+      "master"
+    ],
     "department": "System Administration",
     "permissions": [
       "*"
-    ],
-    "roles": [
-      "master"
     ]
   },
   "mfa_secret": null,
   "created_at": "+002024-01-01T00:00:00.000000000Z",
-  "updated_at": "+002025-10-31T19:49:50.811832499Z"
+  "updated_at": "+002025-10-31T20:25:48.327808107Z"
 }

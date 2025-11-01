@@ -85,8 +85,10 @@ async fn main() -> Result<()> {
     // Setup logging
     logging::setup_logging(args.debug);
 
-    // Write PID file
-    write_pid_file(&args.pid_file)?;
+    // Write PID file (optional)
+    if let Err(e) = write_pid_file(&args.pid_file) {
+        warn!("Could not write PID file: {}", e);
+    }
 
     // Load configuration
     let config = Config::load(&args.config).await
@@ -255,7 +257,6 @@ fn setup_reload_handler(storage: Arc<RwLock<FileStorage>>, data_dir: String) {
             match FileStorage::load(&data_dir).await {
                 Ok(new_storage) => {
                     let users_count = new_storage.users_count();
-                    let groups_count = new_storage.groups_count();
 
                     {
                         let mut storage_guard = storage.write().await;
@@ -267,7 +268,6 @@ fn setup_reload_handler(storage: Arc<RwLock<FileStorage>>, data_dir: String) {
                         event = "data_reloaded",
                         trigger = "sighup",
                         users_count = users_count,
-                        groups_count = groups_count,
                         duration_ms = start_time.elapsed().as_millis()
                     );
                 }

@@ -7,15 +7,22 @@
   "status": "active",
   "verified": true,
   "authenticated": "2025-01-15",
-  "admin": ["group-7a"],
+  "admin": [
+    "group-7a"
+  ],
   "org": "group-7a",
   "claims": {
-    "roles": ["editor", "staff"],
-    "cohorts": ["7a"],
     "employee_id": "EMP-2025-001",
-    "department": "Lehrkräfte"
+    "cohorts": [
+      "7a"
+    ],
+    "department": "Lehrkräfte",
+    "roles": [
+      "editor",
+      "staff"
+    ]
   },
   "mfa_secret": null,
-  "created_at": "2024-01-15T10:00:00Z",
-  "updated_at": "2025-10-30T12:00:00Z"
+  "created_at": "+002024-01-15T10:00:00.000000000Z",
+  "updated_at": "+002025-10-31T19:50:18.213226137Z"
 }

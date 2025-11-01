@@ -87,7 +87,6 @@ const getBreadcrumbLabel = (segment: string, params: any): string => {
     'edit': 'Bearbeiten',
     'import': 'Import',
     'organizations': 'Organisationen',
-    'groups': 'Gruppen',
     'clients': 'OAuth2 Clients',
     'claims': 'Claims Registry',
     'audit': 'Audit-Log',

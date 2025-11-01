@@ -175,7 +175,6 @@ export interface SystemStatus {
   last_auth_reload?: string
   last_data_update: string
   users_count: number
-  groups_count: number
   clients_count: number
   organizations_count: number
   version: string

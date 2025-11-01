@@ -45,6 +45,16 @@ pub struct Group {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Organization {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub metadata: HashMap<String, serde_json::Value>,
+    #[serde(with = "time::serde::iso8601")]
+    pub created_at: OffsetDateTime,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Role {
     pub id: String,
     pub name: String,
@@ -229,7 +239,6 @@ pub struct SystemStatus {
     pub last_auth_reload: Option<OffsetDateTime>,
     pub last_data_update: OffsetDateTime,
     pub users_count: usize,
-    pub groups_count: usize,
     pub clients_count: usize,
     pub organizations_count: usize,
 }

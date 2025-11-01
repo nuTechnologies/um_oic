@@ -145,7 +145,6 @@ import {
 
 import { useAuthStore } from '@/stores/auth'
 import { useUsersStore } from '@/stores/users'
-import { useGroupsStore } from '@/stores/groups'
 import { useSystemStore } from '@/stores/system'
 import Avatar from '@/components/ui/Avatar.vue'
 import Badge from '@/components/ui/Badge.vue'
@@ -165,7 +164,6 @@ const emit = defineEmits<{
 const route = useRoute()
 const authStore = useAuthStore()
 const usersStore = useUsersStore()
-const groupsStore = useGroupsStore()
 const systemStore = useSystemStore()
 
 // Icon mapping
@@ -219,15 +217,6 @@ const navigationItems = [
         description: 'Alle Organisationen anzeigen'
       }
     ]
-  },
-  {
-    title: 'Gruppen',
-    icon: 'UserGroupIcon',
-    href: '/groups',
-    badge: {
-      count: 'activeGroups',
-      color: 'blue'
-    }
   },
   {
     title: 'OAuth2 Clients',
@@ -340,8 +329,6 @@ const getSubItemClasses = (subItem: any) => [
 
 const getBadgeCount = (badge: any) => {
   switch (badge.count) {
-    case 'activeGroups':
-      return groupsStore.activeGroupsCount
     default:
       return 0
   }

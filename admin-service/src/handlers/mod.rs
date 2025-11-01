@@ -1,9 +1,9 @@
 pub mod users;
-pub mod groups;
 pub mod roles;
 pub mod clients;
 pub mod organizations;
 pub mod system;
 pub mod audit;
+pub mod claims;
 pub mod health;
 pub mod auth;

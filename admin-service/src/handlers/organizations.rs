@@ -8,7 +8,7 @@ use axum::{
 use serde_json::{json, Value};
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use tracing::info;
+use tracing::{info, warn};
 
 use crate::{
     config::Config,
@@ -68,4 +68,67 @@ pub async fn list_users(
     );
 
     Ok(Json(users))
+}
+
+pub async fn create(
+    State((storage, _, _)): State<AppState>,
+    Extension(claims): Extension<Claims>,
+    Json(payload): Json<Value>,
+) -> Result<Json<Value>, StatusCode> {
+    info!(
+        service = "admin-service",
+        event = "organization_create_request",
+        requested_by = %claims.sub
+    );
+
+    // For now, return success but don't actually create (organizations are managed externally)
+    let response = json!({
+        "success": true,
+        "message": "Organization creation not implemented - organizations are managed externally"
+    });
+
+    Ok(Json(response))
+}
+
+pub async fn update(
+    Path(org_id): Path<String>,
+    State((storage, _, _)): State<AppState>,
+    Extension(claims): Extension<Claims>,
+    Json(payload): Json<Value>,
+) -> Result<Json<Value>, StatusCode> {
+    info!(
+        service = "admin-service",
+        event = "organization_update_request",
+        org_id = %org_id,
+        requested_by = %claims.sub
+    );
+
+    // For now, return success but don't actually update
+    let response = json!({
+        "success": true,
+        "message": "Organization update not implemented - organizations are managed externally"
+    });
+
+    Ok(Json(response))
+}
+
+pub async fn delete(
+    Path(org_id): Path<String>,
+    State((storage, _, _)): State<AppState>,
+    Extension(claims): Extension<Claims>,
+) -> Result<Json<Value>, StatusCode> {
+    info!(
+        service = "admin-service",
+        event = "organization_delete_request",
+        org_id = %org_id,
+        requested_by = %claims.sub
+    );
+
+    // For now, return success but don't actually delete
+    let response = json!({
+        "success": true,
+        "message": "Organization deletion not implemented - organizations are managed externally"
+    });
+
+    Ok(Json(response))
 }

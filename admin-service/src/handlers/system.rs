@@ -31,7 +31,6 @@ pub async fn status(
         last_auth_reload: None,
         last_data_update: OffsetDateTime::now_utc(),
         users_count: storage_guard.users_count(),
-        groups_count: storage_guard.groups_count(),
         organizations_count: 1,
         clients_count: storage_guard.clients_count(),
     };
@@ -44,6 +43,28 @@ pub async fn status(
     );
 
     Ok(Json(status))
+}
+
+pub async fn stats(
+    State((storage, _, _)): State<AppState>,
+    Extension(claims): Extension<Claims>,
+) -> Result<Json<Value>, StatusCode> {
+    let storage_guard = storage.read().await;
+
+    let stats = json!({
+        "users": storage_guard.users_count(),
+        "organizations": 1,
+        "clients": storage_guard.clients_count(),
+        "status": "healthy"
+    });
+
+    info!(
+        service = "admin-service",
+        event = "system_stats_requested",
+        requested_by = %claims.sub
+    );
+
+    Ok(Json(stats))
 }
 
 pub async fn reload_auth(

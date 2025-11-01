@@ -18,9 +18,6 @@ import UserImport from '@/views/users/UserImport.vue'
 import OrganizationList from '@/views/organizations/OrganizationList.vue'
 import OrganizationDetail from '@/views/organizations/OrganizationDetail.vue'
 
-// Groups
-import GroupList from '@/views/groups/GroupList.vue'
-import GroupDetail from '@/views/groups/GroupDetail.vue'
 
 // OAuth2 Clients
 import ClientList from '@/views/clients/ClientList.vue'
@@ -156,32 +153,6 @@ const router = createRouter({
           ]
         },
 
-        // Groups
-        {
-          path: 'groups',
-          children: [
-            {
-              path: '',
-              name: 'GroupList',
-              component: GroupList,
-              meta: {
-                breadcrumb: [{ name: 'Gruppen' }]
-              }
-            },
-            {
-              path: ':id',
-              name: 'GroupDetail',
-              component: GroupDetail,
-              props: true,
-              meta: {
-                breadcrumb: [
-                  { name: 'Gruppen', href: '/groups' },
-                  { name: 'Details' }
-                ]
-              }
-            }
-          ]
-        },
 
         // OAuth2 Clients
         {

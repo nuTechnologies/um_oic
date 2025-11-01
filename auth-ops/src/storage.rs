@@ -151,9 +151,6 @@ impl FileStorage {
         self.users.get(user_id)
     }
 
-    pub fn get_user(&self, user_id: &str) -> Option<&User> {
-        self.users.get(user_id)
-    }
 
     pub fn get_all_users(&self) -> impl Iterator<Item = &User> {
         self.users.values()
@@ -177,9 +174,6 @@ impl FileStorage {
         Ok(())
     }
 
-    pub fn get_group(&self, group_id: &str) -> Option<&Group> {
-        self.groups.get(group_id)
-    }
 
     pub fn get_all_groups(&self) -> impl Iterator<Item = &Group> {
         self.groups.values()
@@ -207,10 +201,6 @@ impl FileStorage {
         self.clients.values()
     }
 
-    // Role operations
-    pub fn get_all_roles(&self) -> impl Iterator<Item = &Role> {
-        self.roles.values()
-    }
 
     // Statistics
     pub fn users_count(&self) -> usize {
