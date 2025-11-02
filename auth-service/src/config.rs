@@ -15,6 +15,7 @@ pub struct InstanceConfig {
     pub logo_url: String,
     pub primary_color: String,
     pub issuer: String,
+    pub admin_client_url: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -48,6 +49,7 @@ impl Default for Config {
                 logo_url: "/img/logo.png".to_string(),
                 primary_color: "#00529F".to_string(),
                 issuer: "https://auth.example.com".to_string(),
+                admin_client_url: "https://localhost:8445/".to_string(),
             },
             security: SecurityConfig {
                 password_min_length: 12,

@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build:
+      context: ../
+      dockerfile: auth-service/Dockerfile.tls
+    container_name: um-oic-auth-tls
+    restart: unless-stopped
+    ports:
+      - "443:8443"    # HTTPS
+      - "80:8080"     # HTTP (für ACME challenges)
+    environment:
+      - RUST_LOG=info
+      - PORT=8443
+      - HTTP_PORT=8080
+      - DATA_DIR=/app/data
+      - TLS_CERT_PATH=/app/certs/cert.pem
+      - TLS_KEY_PATH=/app/certs/key.pem
+      - ACME_ENABLED=true
+      - ACME_EMAIL=admin@yourdomain.com
+      - DOMAIN=auth.yourdomain.com
+      - BIND_ADDR=0.0.0.0
+    volumes:
+      - auth-data:/app/data
+      - auth-certs:/app/certs
+    networks:
+      - web
+      - internal
+
+  admin-service:
+    build:
+      context: ../
+      dockerfile: admin-service/Dockerfile.tls
+    container_name: um-oic-admin-tls
+    restart: unless-stopped
+    ports:
+      - "8443:8443"   # HTTPS
+      - "8080:8080"   # HTTP (für ACME challenges)
+    environment:
+      - RUST_LOG=info
+      - PORT=8443
+      - HTTP_PORT=8080
+      - DATA_DIR=/app/data
+      - AUTH_SERVICE_URL=https://auth-service:8443
+      - TLS_CERT_PATH=/app/certs/cert.pem
+      - TLS_KEY_PATH=/app/certs/key.pem
+      - ACME_ENABLED=true
+      - ACME_EMAIL=admin@yourdomain.com
+      - DOMAIN=admin.yourdomain.com
+      - BIND_ADDR=0.0.0.0
+    volumes:
+      - admin-data:/app/data
+      - admin-certs:/app/certs
+    networks:
+      - web
+      - internal
+    depends_on:
+      - auth-service
+
+  # Optional: Certificate management service
+  cert-manager:
+    build: ../cert-manager
+    container_name: cert-manager
+    restart: unless-stopped
+    environment:
+      - ACME_EMAIL=admin@yourdomain.com
+      - DOMAINS=auth.yourdomain.com,admin.yourdomain.com
+    volumes:
+      - auth-certs:/certs/auth
+      - admin-certs:/certs/admin
+    networks:
+      - internal
+
+volumes:
+  auth-data:
+  admin-data:
+  auth-certs:
+  admin-certs:
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false

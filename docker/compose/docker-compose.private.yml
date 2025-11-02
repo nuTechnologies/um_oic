@@ -1,0 +1,89 @@
+version: '3.8'
+
+# Private Docker Setup for UM-OIC Services
+# For local development and private deployment
+
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+    container_name: um-oic-auth
+    ports:
+      - "8443:8443"  # HTTPS
+    volumes:
+      - ./data:/data
+      - ./certs:/certs
+    environment:
+      - RUST_LOG=info
+      - AUTH_TLS_ENABLE=true
+      - TLS_AUTO_GENERATE=true
+      - DOMAIN=localhost
+      - TLS_CERT_PATH=/certs/cert.pem
+      - TLS_KEY_PATH=/certs/key.pem
+      - AUTH_TLS_BIND=0.0.0.0:8443
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-check-certificate", "--quiet", "--tries=1", "--spider", "https://localhost:8443/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - um-oic-network
+
+  admin-service:
+    build:
+      context: .
+      dockerfile: admin-service/Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+    container_name: um-oic-admin
+    ports:
+      - "8445:8445"  # HTTPS for admin
+    volumes:
+      - ./data:/data
+      - ./certs:/certs
+    environment:
+      - RUST_LOG=info
+      - ADMIN_TLS_ENABLE=true
+      - TLS_AUTO_GENERATE=true
+      - DOMAIN=admin.localhost
+      - TLS_CERT_PATH=/certs/admin-cert.pem
+      - TLS_KEY_PATH=/certs/admin-key.pem
+      - ADMIN_BIND=0.0.0.0:8445
+      - AUTH_SERVICE_URL=https://auth-service:8443
+    depends_on:
+      auth-service:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-check-certificate", "--quiet", "--tries=1", "--spider", "https://localhost:8445/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - um-oic-network
+
+  # Optional: Redis for session storage (if needed)
+  redis:
+    image: redis:7-alpine
+    container_name: um-oic-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - um-oic-network
+
+networks:
+  um-oic-network:
+    driver: bridge
+    name: um-oic-network
+
+volumes:
+  redis-data:
+    driver: local

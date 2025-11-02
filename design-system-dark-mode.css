@@ -1,0 +1,111 @@
+/* NU Xworks Design System - Dark Mode Extension */
+/* Da das offizielle NU Xworks Design System nur Light Mode hat,
+   hier eine Dark Mode Variante basierend auf den Light Mode Farben */
+
+:root[data-theme="dark"] {
+  /* Icon Colors - bleiben meist gleich */
+  --nu-color-icon-archive: rgb(251, 190, 84);
+  --nu-color-icon-audio: rgb(112, 4, 96);
+  --nu-color-icon-code: #FFFFFF;
+  --nu-color-icon-document: rgb(100, 120, 200);
+  --nu-color-icon-drawio: rgb(255, 111, 0);
+  --nu-color-icon-epub: rgb(244, 187, 68);
+  --nu-color-icon-file: #FFFFFF;
+  --nu-color-icon-folder: rgb(120, 160, 210);
+  --nu-color-icon-form: rgb(130, 190, 180);
+  --nu-color-icon-graphic: rgb(255, 220, 100);
+  --nu-color-icon-ifc: rgb(220, 100, 255);
+  --nu-color-icon-image: rgb(255, 140, 90);
+  --nu-color-icon-jupyter: rgb(255, 150, 70);
+  --nu-color-icon-markdown: rgb(120, 140, 180);
+  --nu-color-icon-medical: rgb(50, 160, 255);
+  --nu-color-icon-pdf: rgb(255, 80, 120);
+  --nu-color-icon-presentation: rgb(255, 140, 90);
+  --nu-color-icon-root: rgb(50, 220, 255);
+  --nu-color-icon-spreadsheet: rgb(60, 220, 160);
+  --nu-color-icon-text: #FFFFFF;
+  --nu-color-icon-video: rgb(50, 120, 140);
+
+  /* Font Family bleibt gleich */
+  --nu-font-family: xwork, Inter, sans-serif;
+
+  /* Dark Mode Semantic Colors */
+  --nu-role-background: #121212;
+  --nu-role-chrome: #1F1F1F;
+  --nu-role-error: #CF6679;
+  --nu-role-error-container: #3A1A1B;
+  --nu-role-inverse-on-surface: #121212;
+  --nu-role-inverse-primary: #004D5C;
+  --nu-role-inverse-surface: #E6E1E5;
+  --nu-role-on-background: #E6E1E5;
+  --nu-role-on-chrome: #E6E1E5;
+  --nu-role-on-error: #000000;
+  --nu-role-on-error-container: #FFDAD6;
+  --nu-role-on-primary: #000000;
+  --nu-role-on-primary-container: #B7EAFF;
+  --nu-role-on-primary-fixed: #B7EAFF;
+  --nu-role-on-secondary: #000000;
+  --nu-role-on-secondary-container: #CFE6F1;
+  --nu-role-on-secondary-fixed: #CFE6F1;
+  --nu-role-on-surface: #E6E1E5;
+  --nu-role-on-surface-variant: #CAC4D0;
+  --nu-role-on-tertiary: #000000;
+  --nu-role-on-tertiary-container: #E0E0FF;
+  --nu-role-on-tertiary-fixed: #E0E0FF;
+  --nu-role-outline: #938F99;
+  --nu-role-outline-variant: #49454F;
+  --nu-role-primary: #5CD5FB;
+  --nu-role-primary-container: #004D5C;
+  --nu-role-primary-fixed: #B7EAFF;
+  --nu-role-scrim: #000000;
+  --nu-role-secondary: #CFE6F1;
+  --nu-role-secondary-container: #2A3F4A;
+  --nu-role-secondary-fixed: #CFE6F1;
+  --nu-role-shadow: #000000;
+  --nu-role-surface: #1F1F1F;
+  --nu-role-surface-bright: #383838;
+  --nu-role-surface-container: #2B2B2B;
+  --nu-role-surface-container-high: #323232;
+  --nu-role-surface-container-highest: #3A3A3A;
+  --nu-role-surface-container-low: #262626;
+  --nu-role-surface-container-lowest: #1A1A1A;
+  --nu-role-surface-dim: #141218;
+  --nu-role-surface-tint: #A495C0;
+  --nu-role-surface-variant: #49454F;
+  --nu-role-tertiary: #E0E0FF;
+  --nu-role-tertiary-container: #3D3F61;
+  --nu-role-tertiary-fixed: #E0E0FF;
+}
+
+/* Theme Toggle Button Styles */
+.theme-toggle {
+  background: var(--nu-role-secondary);
+  color: var(--nu-role-on-secondary);
+  border: 1px solid var(--nu-role-outline);
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--nu-font-family);
+  font-size: 0.9rem;
+}
+
+.theme-toggle:hover {
+  filter: brightness(85%);
+}
+
+/* Responsive Dark Mode Media Query */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    /* Auto-enable dark mode if system preference is dark */
+    --nu-role-background: #121212;
+    --nu-role-chrome: #1F1F1F;
+    --nu-role-on-background: #E6E1E5;
+    --nu-role-on-chrome: #E6E1E5;
+    --nu-role-surface: #1F1F1F;
+    --nu-role-on-surface: #E6E1E5;
+    --nu-role-surface-container: #2B2B2B;
+    --nu-role-outline: #938F99;
+    --nu-role-outline-variant: #49454F;
+  }
+}

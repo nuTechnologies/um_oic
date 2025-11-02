@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - web
+    depends_on:
+      - auth-service
+      - admin-service
+
+  auth-service:
+    build: ../auth-service
+    container_name: um-oic-auth
+    restart: unless-stopped
+    environment:
+      - RUST_LOG=info
+      - PORT=8000
+      - DATA_DIR=/app/data
+    volumes:
+      - auth-data:/app/data
+    networks:
+      - web
+      - internal
+    expose:
+      - "8000"
+
+  admin-service:
+    build: ../admin-service
+    container_name: um-oic-admin
+    restart: unless-stopped
+    environment:
+      - RUST_LOG=info
+      - PORT=8001
+      - DATA_DIR=/app/data
+      - AUTH_SERVICE_URL=http://auth-service:8000
+    volumes:
+      - admin-data:/app/data
+    networks:
+      - web
+      - internal
+    expose:
+      - "8001"
+
+volumes:
+  caddy-data:
+  caddy-config:
+  auth-data:
+  admin-data:
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false

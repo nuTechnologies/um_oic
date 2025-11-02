@@ -1,0 +1,101 @@
+@reference '@xwork-eu/design-system/tailwind';
+
+@layer theme {
+  html {
+    @apply text-sm;
+  }
+
+  body {
+    @apply overflow-hidden;
+  }
+}
+
+@layer base {
+  h1 {
+    @apply text-3xl font-bold my-4;
+  }
+
+  h2 {
+    @apply text-2xl font-bold my-4;
+  }
+
+  h3 {
+    @apply text-xl font-bold my-4;
+  }
+
+  h4 {
+    @apply text-base font-bold my-4;
+  }
+
+  h5 {
+    @apply text-sm font-bold my-4;
+  }
+
+  h5 {
+    @apply text-xs font-bold my-4;
+  }
+
+  p {
+    @apply my-2;
+  }
+
+  ol,
+  ul {
+    @apply pl-5 my-2;
+  }
+
+  a {
+    @apply text-role-secondary;
+  }
+
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  a:hover {
+    @apply text-role-on-surface;
+  }
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    /* default border color */
+    border-color: var(--nu-role-surface-container-highest);
+  }
+
+}
+
+@layer components {
+
+  /* sidebar */
+  .sidebar-actions-panel li a,
+  .sidebar-actions-panel li button {
+    @apply p-2 mb-1;
+  }
+
+  .nu-tooltip .tippy-content {
+    @apply text-sm break-all;
+  }
+}
+
+@layer utilities {
+
+  /* outline for visible focus (via tab) */
+  *:focus-visible:not(input[type=text]):not(input[type=textarea]):not(input[type=search]):not(input[type=password]):not(input[type=email]):not(input[type=date]):not([type=number]):not(textarea):not(.nu-search-input):not(.cm-content) {
+    outline: 2px var(--nu-role-on-secondary) solid;
+    outline-offset: 0;
+    box-shadow: 0 0 0 4px var(--nu-role-secondary);
+  }
+
+  /* inner outline for visible focus on resource names. outer outlines don't work because of the hidden overflow (due to text truncation) */
+  .nu-resource-details a:focus-visible,
+  .nu-resource-details button:focus-visible {
+    box-shadow: inset 0px 0px 0px 2px var(--nu-role-secondary) !important;
+  }
+}

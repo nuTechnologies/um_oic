@@ -1,0 +1,137 @@
+{
+  "name": "@xwork-eu/design-system",
+  "version": "4.0.0",
+  "description": "xwork Design System is used to design xwork UI components",
+  "keywords": [
+    "vue design system",
+    "design system",
+    "vue.js",
+    "vue",
+    "design",
+    "system"
+  ],
+  "homepage": "https://docs.xwork.cloud/design-system/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xwork-eu/web",
+    "directory": "packages/design-system"
+  },
+  "type": "module",
+  "license": "AGPL-3.0",
+  "author": "xwork",
+  "main": "src/index.ts",
+  "private": false,
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "vite": "vite",
+    "prepublishOnly": "rm -rf ./package && clean-publish && find package && cat package/package.json",
+    "postpublish": "rm -rf ./package"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not Explorer > 0",
+    "not ExplorerMobile > 0",
+    "not BlackBerry > 0",
+    "not OperaMini all",
+    "not OperaMobile > 0"
+  ],
+  "files": [
+    "dist/"
+  ],
+  "publishConfig": {
+    "directory": "package",
+    "linkDirectory": false,
+    "exports": {
+      ".": {
+        "default": "./dist/design-system.js",
+        "require": "./dist/design-system.cjs",
+        "types": "./dist/src/index.d.ts"
+      },
+      "./components": {
+        "default": "./dist/design-system/components.js",
+        "require": "./dist/design-system/components.cjs",
+        "types": "./dist/src/components/index.d.ts"
+      },
+      "./composables": {
+        "default": "./dist/design-system/composables.js",
+        "require": "./dist/design-system/composables.cjs",
+        "types": "./dist/src/composables/index.d.ts"
+      },
+      "./helpers": {
+        "default": "./dist/design-system/helpers.js",
+        "require": "./dist/design-system/helpers.cjs",
+        "types": "./dist/src/helpers/index.d.ts"
+      },
+      "./dist/design-system.css": {
+        "default": "./dist/design-system.css"
+      },
+      "./dist/translations.json": {
+        "default": "./dist/translations.json"
+      },
+      "./dist/tailwind.css": {
+        "default": "./dist/tailwind.css"
+      },
+      "./types": {
+        "types": "./dist/types.d.ts"
+      }
+    }
+  },
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./components": {
+      "default": "./src/components/index.ts"
+    },
+    "./composables": {
+      "default": "./src/composables/index.ts"
+    },
+    "./helpers": {
+      "default": "./src/helpers/index.ts"
+    },
+    "./l10n": {
+      "default": "./l10n/translations.json"
+    },
+    "./tailwind": {
+      "default": "./src/styles/tailwind.css"
+    }
+  },
+  "dependencies": {
+    "@emoji-mart/data": "^1.2.1",
+    "@popperjs/core": "^2.11.5",
+    "@vueuse/core": "^13.5.0",
+    "deepmerge": "^4.2.2",
+    "emoji-mart": "^5.6.0",
+    "focus-trap": "^7.6.0",
+    "focus-trap-vue": "^4.0.1",
+    "fuse.js": "^7.0.0",
+    "lodash-es": "^4.17.21",
+    "luxon": "^3.5.0",
+    "portal-vue": "^3.0.0",
+    "tippy.js": "^6.3.7",
+    "vue-inline-svg": "^4.0.0",
+    "vue-router": "^4.2.5",
+    "vue-select": "^4.0.0-beta.6",
+    "vue3-gettext": "^2.4.0"
+  },
+  "devDependencies": {
+    "@xwork-eu/web-test-helpers": "workspace:*",
+    "@tailwindcss/vite": "^4.1.11",
+    "@vitejs/plugin-vue": "6.0.1",
+    "clean-publish": "^5.0.0",
+    "glob": "^11.0.0",
+    "markdown-it-container": "^4.0.0",
+    "postcss": "^8.5.2",
+    "process": "^0.11.10",
+    "tailwindcss": "^4.1.11",
+    "url": "^0.11.3",
+    "vite": "^7.0.0",
+    "vite-plugin-dts": "^4.2.3",
+    "vite-plugin-node-polyfills": "^0.24.0",
+    "vitepress": "^1.6.3",
+    "yaml": "^2.3.4"
+  }
+}

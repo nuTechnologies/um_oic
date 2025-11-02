@@ -1,0 +1,16 @@
+
+PMX=10.30.10.1
+PID=303
+PNAME=schoolcloud
+PNFS=nfs-hdd-cloud-school
+
+
+DOMAIN=xwork.cloud
+#DOMAIN=brandis.eu
+
+HOST=87.121.229.133
+
+#HOST=cloud.$DOMAIN
+APP=ucm-viewer
+INSTANCE=opencloud_full-xwork-1
+

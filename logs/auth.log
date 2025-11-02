@@ -1,0 +1,363 @@
+warning: unused import: `extract::connect_info::ConnectInfo`
+ --> auth-service/src/main.rs:3:5
+  |
+3 |     extract::connect_info::ConnectInfo,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `axum_server::tls_rustls::RustlsConfig`
+ --> auth-service/src/main.rs:7:5
+  |
+7 | use axum_server::tls_rustls::RustlsConfig;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `net::TcpListener`
+  --> auth-service/src/main.rs:10:13
+   |
+10 | use tokio::{net::TcpListener, signal::unix::{signal, SignalKind}, sync::RwLock};
+   |             ^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::path::Path`
+ --> auth-service/src/storage.rs:4:5
+  |
+4 | use std::path::Path;
+  |     ^^^^^^^^^^^^^^^
+
+warning: unused import: `error`
+ --> auth-service/src/storage.rs:5:27
+  |
+5 | use tracing::{info, warn, error};
+  |                           ^^^^^
+
+warning: unused import: `ClaimsRegistry`
+ --> auth-service/src/storage.rs:7:48
+  |
+7 | use crate::models::{User, Group, Role, Client, ClaimsRegistry};
+  |                                                ^^^^^^^^^^^^^^
+
+warning: unused import: `UserStatus`
+  --> auth-service/src/handlers/auth.rs:14:43
+   |
+14 |     models::{LoginRequest, LoginResponse, UserStatus},
+   |                                           ^^^^^^^^^^
+
+warning: unused imports: `Deserialize` and `Serialize`
+ --> auth-service/src/jwt.rs:3:13
+  |
+3 | use serde::{Deserialize, Serialize};
+  |             ^^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused variable: `addr`
+   --> auth-service/src/handlers/auth.rs:183:17
+    |
+183 |     ConnectInfo(addr): ConnectInfo<SocketAddr>,
+    |                 ^^^^ help: if this is intentional, prefix it with an underscore: `_addr`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `addr`
+   --> auth-service/src/handlers/auth.rs:202:17
+    |
+202 |     ConnectInfo(addr): ConnectInfo<SocketAddr>,
+    |                 ^^^^ help: if this is intentional, prefix it with an underscore: `_addr`
+
+warning: unused variable: `addr`
+   --> auth-service/src/handlers/auth.rs:219:17
+    |
+219 |     ConnectInfo(addr): ConnectInfo<SocketAddr>,
+    |                 ^^^^ help: if this is intentional, prefix it with an underscore: `_addr`
+
+warning: fields `roles`, `clients`, and `data_dir` are never read
+  --> auth-service/src/storage.rs:13:5
+   |
+10 | pub struct FileStorage {
+   |            ----------- fields in this struct
+...
+13 |     roles: HashMap<String, Role>,
+   |     ^^^^^
+14 |     clients: HashMap<String, Client>,
+   |     ^^^^^^^
+...
+19 |     data_dir: String,
+   |     ^^^^^^^^
+   |
+   = note: `FileStorage` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: multiple methods are never used
+   --> auth-service/src/storage.rs:128:12
+    |
+49  | impl FileStorage {
+    | ---------------- methods in this implementation
+...
+128 |     pub fn get_user(&self, user_id: &str) -> Option<&User> {
+    |            ^^^^^^^^
+...
+132 |     pub fn get_all_users(&self) -> impl Iterator<Item = &User> {
+    |            ^^^^^^^^^^^^^
+...
+138 |     pub fn get_role(&self, role_id: &str) -> Option<&Role> {
+    |            ^^^^^^^^
+...
+142 |     pub fn get_all_roles(&self) -> impl Iterator<Item = &Role> {
+    |            ^^^^^^^^^^^^^
+...
+147 |     pub fn get_client(&self, client_id: &str) -> Option<&Client> {
+    |            ^^^^^^^^^^
+...
+151 |     pub fn get_all_clients(&self) -> impl Iterator<Item = &Client> {
+    |            ^^^^^^^^^^^^^^^
+...
+161 |     pub fn roles_count(&self) -> usize {
+    |            ^^^^^^^^^^^
+...
+166 |     pub fn search_users(&self, query: &str) -> Vec<&User> {
+    |            ^^^^^^^^^^^^
+...
+178 |     pub fn find_users_by_role(&self, role: &str) -> Vec<&User> {
+    |            ^^^^^^^^^^^^^^^^^^
+
+warning: function `load_roles_file` is never used
+   --> auth-service/src/storage.rs:230:10
+    |
+230 | async fn load_roles_file(data_dir: &str) -> LoadResult<Vec<Role>> {
+    |          ^^^^^^^^^^^^^^^
+
+warning: function `default_roles` is never used
+   --> auth-service/src/storage.rs:253:4
+    |
+253 | fn default_roles() -> Vec<Role> {
+    |    ^^^^^^^^^^^^^
+
+warning: fields `scope`, `code_challenge`, and `code_challenge_method` are never read
+   --> auth-service/src/models.rs:145:9
+    |
+141 | pub struct OAuth2AuthorizeRequest {
+    |            ---------------------- fields in this struct
+...
+145 |     pub scope: Option<String>,
+    |         ^^^^^
+146 |     pub state: Option<String>,
+147 |     pub code_challenge: Option<String>,
+    |         ^^^^^^^^^^^^^^
+148 |     pub code_challenge_method: Option<String>,
+    |         ^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `OAuth2AuthorizeRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: fields `code`, `redirect_uri`, `client_secret`, `code_verifier`, and `refresh_token` are never read
+   --> auth-service/src/models.rs:154:9
+    |
+152 | pub struct OAuth2TokenRequest {
+    |            ------------------ fields in this struct
+153 |     pub grant_type: String,
+154 |     pub code: Option<String>,
+    |         ^^^^
+155 |     pub redirect_uri: Option<String>,
+    |         ^^^^^^^^^^^^
+156 |     pub client_id: String,
+157 |     pub client_secret: Option<String>,
+    |         ^^^^^^^^^^^^^
+158 |     pub code_verifier: Option<String>,
+    |         ^^^^^^^^^^^^^
+159 |     pub refresh_token: Option<String>,
+    |         ^^^^^^^^^^^^^
+    |
+    = note: `OAuth2TokenRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: associated items `new`, `is_admin_for_org`, and `get_roles` are never used
+   --> auth-service/src/models.rs:185:12
+    |
+184 | impl User {
+    | --------- associated items in this implementation
+185 |     pub fn new(email: String, password_hash: String, first_name: String, last_name: String, org: String) -> Self {
+    |            ^^^
+...
+213 |     pub fn is_admin_for_org(&self, org: &str) -> bool {
+    |            ^^^^^^^^^^^^^^^^
+...
+221 |     pub fn get_roles(&self) -> Vec<String> {
+    |            ^^^^^^^^^
+
+warning: associated function `new` is never used
+   --> auth-service/src/models.rs:230:12
+    |
+229 | impl AuditEvent {
+    | --------------- associated function in this implementation
+230 |     pub fn new(event_type: String, user_id: Option<String>, org: Option<String>) -> Self {
+    |            ^^^
+
+warning: field `decoding_key` is never read
+  --> auth-service/src/jwt.rs:13:5
+   |
+11 | pub struct JwtService {
+   |            ---------- field in this struct
+12 |     encoding_key: EncodingKey,
+13 |     decoding_key: DecodingKey,
+   |     ^^^^^^^^^^^^
+   |
+   = note: `JwtService` has a derived impl for the trait `Clone`, but this is intentionally ignored during dead code analysis
+
+warning: methods `verify_token` and `refresh_token` are never used
+  --> auth-service/src/jwt.rs:60:12
+   |
+17 | impl JwtService {
+   | --------------- methods in this implementation
+...
+60 |     pub fn verify_token(&self, token: &str) -> Result<Claims> {
+   |            ^^^^^^^^^^^^
+...
+70 |     pub fn refresh_token(
+   |            ^^^^^^^^^^^^^
+
+warning: function `hash_password` is never used
+ --> auth-service/src/password.rs:7:8
+  |
+7 | pub fn hash_password(password: &str) -> Result<String> {
+  |        ^^^^^^^^^^^^^
+
+warning: associated function `from_env` is never used
+   --> auth-service/src/tls.rs:102:12
+    |
+32  | impl TlsManager {
+    | --------------- associated function in this implementation
+...
+102 |     pub fn from_env() -> Self {
+    |            ^^^^^^^^
+
+warning: `auth-service` (bin "auth-service") generated 23 warnings (run `cargo fix --bin "auth-service"` to apply 8 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.22s
+     Running `/data/source/gitapps/um_oic/target/debug/auth-service --tls-enable --data-dir ../data --config config.toml --debug`
+{"timestamp":"2025-11-02T11:17:34.322911Z","level":"WARN","fields":{"message":"Could not write PID file: Failed to write PID file"},"target":"auth_service"}
+{"timestamp":"2025-11-02T11:17:34.323560Z","level":"INFO","fields":{"event":"storage_load_start","data_dir":"../data"},"target":"auth_service::storage"}
+{"timestamp":"2025-11-02T11:17:34.324743Z","level":"INFO","fields":{"event":"storage_loaded","users_count":4,"clients_count":0},"target":"auth_service::storage"}
+{"timestamp":"2025-11-02T11:17:34.324826Z","level":"INFO","fields":{"service":"auth-service","event":"startup","bind":"0.0.0.0:8000","data_dir":"../data","users_loaded":4,"version":"0.1.0"},"target":"auth_service"}
+{"timestamp":"2025-11-02T11:17:34.325269Z","level":"INFO","fields":{"service":"auth-service","event":"startup","version":"0.1.0","tls_enabled":true},"target":"auth_service"}
+{"timestamp":"2025-11-02T11:17:34.325813Z","level":"INFO","fields":{"message":"TLS configured successfully - cert: ./certs/cert.pem, key: ./certs/key.pem"},"target":"auth_service::tls"}
+{"timestamp":"2025-11-02T11:17:34.325864Z","level":"INFO","fields":{"service":"auth-service","event":"tls_server_starting","addr":"0.0.0.0:8443","domain":"localhost"},"target":"auth_service"}
+{"timestamp":"2025-11-02T11:19:39.351821Z","level":"DEBUG","fields":{"message":"decided upon suite TLS13_AES_256_GCM_SHA384","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":380},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:19:39.352549Z","level":"DEBUG","fields":{"message":"Chosen ALPN protocol [104, 50]","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":93},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:19:39.355036Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::codec::framed_write"}
+{"timestamp":"2025-11-02T11:19:39.355280Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x0), enable_push: 0, max_concurrent_streams: 100, initial_window_size: 10485760 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:39.355354Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:39.355408Z","level":"DEBUG","fields":{"message":"received","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 1048510465 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:39.355619Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:39.355731Z","level":"DEBUG","fields":{"message":"send","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 983041 }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:39.356506Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:39.395948Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:39.396068Z","level":"DEBUG","fields":{"message":"received settings ACK; applying Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::proto::settings","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:39.396147Z","level":"DEBUG","fields":{"message":"Sending warning alert CloseNotify","log.target":"rustls::common_state","log.module_path":"rustls::common_state","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/common_state.rs","log.line":498},"target":"rustls::common_state","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.242217Z","level":"DEBUG","fields":{"message":"decided upon suite TLS13_AES_256_GCM_SHA384","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":380},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:19:46.243376Z","level":"DEBUG","fields":{"message":"Chosen ALPN protocol [104, 50]","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":93},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:19:46.245816Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::codec::framed_write"}
+{"timestamp":"2025-11-02T11:19:46.245997Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x0), enable_push: 0, max_concurrent_streams: 100, initial_window_size: 10485760 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.246057Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.246099Z","level":"DEBUG","fields":{"message":"received","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 1048510465 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.246267Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.246360Z","level":"DEBUG","fields":{"message":"send","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 983041 }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.247157Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.247298Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.288211Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.288996Z","level":"DEBUG","fields":{"message":"received settings ACK; applying Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::proto::settings","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:19:46.289450Z","level":"DEBUG","fields":{"message":"Sending warning alert CloseNotify","log.target":"rustls::common_state","log.module_path":"rustls::common_state","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/common_state.rs","log.line":498},"target":"rustls::common_state","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:28.247418Z","level":"DEBUG","fields":{"message":"decided upon suite TLS13_AES_256_GCM_SHA384","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":380},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:41:28.248132Z","level":"DEBUG","fields":{"message":"Chosen ALPN protocol [104, 50]","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":93},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:41:28.250059Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::codec::framed_write"}
+{"timestamp":"2025-11-02T11:41:28.250236Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x0), enable_push: 0, max_concurrent_streams: 100, initial_window_size: 10485760 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:28.250321Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:28.250387Z","level":"DEBUG","fields":{"message":"received","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 1048510465 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:28.250612Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:28.250732Z","level":"DEBUG","fields":{"message":"send","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 983041 }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:28.251370Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:28.291885Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:28.292008Z","level":"DEBUG","fields":{"message":"received settings ACK; applying Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::proto::settings","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:28.292124Z","level":"DEBUG","fields":{"message":"Sending warning alert CloseNotify","log.target":"rustls::common_state","log.module_path":"rustls::common_state","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/common_state.rs","log.line":498},"target":"rustls::common_state","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:39.259051Z","level":"DEBUG","fields":{"message":"decided upon suite TLS13_AES_256_GCM_SHA384","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":380},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:41:39.259613Z","level":"DEBUG","fields":{"message":"Chosen ALPN protocol [104, 50]","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":93},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:41:39.260764Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::codec::framed_write"}
+{"timestamp":"2025-11-02T11:41:39.260896Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x0), enable_push: 0, max_concurrent_streams: 100, initial_window_size: 10485760 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:39.260955Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:39.260997Z","level":"DEBUG","fields":{"message":"received","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 1048510465 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:39.261129Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:39.261223Z","level":"DEBUG","fields":{"message":"send","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 983041 }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:39.261836Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:39.302614Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:39.302898Z","level":"DEBUG","fields":{"message":"received settings ACK; applying Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::proto::settings","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:41:39.303180Z","level":"DEBUG","fields":{"message":"Sending warning alert CloseNotify","log.target":"rustls::common_state","log.module_path":"rustls::common_state","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/common_state.rs","log.line":498},"target":"rustls::common_state","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.720896Z","level":"DEBUG","fields":{"message":"decided upon suite TLS13_AES_256_GCM_SHA384","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":380},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:47:09.721365Z","level":"DEBUG","fields":{"message":"Chosen ALPN protocol [104, 50]","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":93},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:47:09.722627Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::codec::framed_write"}
+{"timestamp":"2025-11-02T11:47:09.722750Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x0), enable_push: 0, max_concurrent_streams: 100, initial_window_size: 10485760 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.722806Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.722848Z","level":"DEBUG","fields":{"message":"received","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 1048510465 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.722985Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.723069Z","level":"DEBUG","fields":{"message":"send","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 983041 }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.723356Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.723486Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.763478Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.763810Z","level":"DEBUG","fields":{"message":"received settings ACK; applying Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::proto::settings","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:09.764460Z","level":"DEBUG","fields":{"message":"Sending warning alert CloseNotify","log.target":"rustls::common_state","log.module_path":"rustls::common_state","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/common_state.rs","log.line":498},"target":"rustls::common_state","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.059030Z","level":"DEBUG","fields":{"message":"decided upon suite TLS13_AES_256_GCM_SHA384","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":380},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:47:16.059708Z","level":"DEBUG","fields":{"message":"Chosen ALPN protocol [104, 50]","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":93},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:47:16.061160Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::codec::framed_write"}
+{"timestamp":"2025-11-02T11:47:16.061340Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x0), enable_push: 0, max_concurrent_streams: 100, initial_window_size: 10485760 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.061422Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.061494Z","level":"DEBUG","fields":{"message":"received","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 1048510465 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.061780Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.061895Z","level":"DEBUG","fields":{"message":"received","frame":"Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.061980Z","level":"DEBUG","fields":{"message":"send","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 983041 }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.514604Z","level":"INFO","fields":{"service":"auth-service","event":"login","email":"admin@example.com","user_id":"user-admin","success":true},"target":"auth_service::handlers::auth"}
+{"timestamp":"2025-11-02T11:47:16.514887Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.515047Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.515261Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.515344Z","level":"DEBUG","fields":{"message":"received settings ACK; applying Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::proto::settings","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:16.515518Z","level":"DEBUG","fields":{"message":"Sending warning alert CloseNotify","log.target":"rustls::common_state","log.module_path":"rustls::common_state","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/common_state.rs","log.line":498},"target":"rustls::common_state","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.816578Z","level":"DEBUG","fields":{"message":"decided upon suite TLS13_AES_256_GCM_SHA384","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":380},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:47:42.817065Z","level":"DEBUG","fields":{"message":"Chosen ALPN protocol [104, 50]","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":93},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:47:42.818448Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::codec::framed_write"}
+{"timestamp":"2025-11-02T11:47:42.818640Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x0), enable_push: 0, max_concurrent_streams: 100, initial_window_size: 10485760 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.818753Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.818795Z","level":"DEBUG","fields":{"message":"received","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 1048510465 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.818921Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(1), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.819009Z","level":"DEBUG","fields":{"message":"send","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 983041 }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.819683Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.819935Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(1) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.820164Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.858971Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.859062Z","level":"DEBUG","fields":{"message":"received settings ACK; applying Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::proto::settings","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:47:42.859130Z","level":"DEBUG","fields":{"message":"Sending warning alert CloseNotify","log.target":"rustls::common_state","log.module_path":"rustls::common_state","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/common_state.rs","log.line":498},"target":"rustls::common_state","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:25.967450Z","level":"DEBUG","fields":{"message":"decided upon suite TLS13_AES_128_GCM_SHA256","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":380},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:49:25.968387Z","level":"DEBUG","fields":{"message":"Chosen ALPN protocol [104, 50]","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":93},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:49:25.977308Z","level":"DEBUG","fields":{"message":"decided upon suite TLS13_AES_128_GCM_SHA256","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":380},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:49:25.978302Z","level":"DEBUG","fields":{"message":"Chosen ALPN protocol [104, 50]","log.target":"rustls::server::hs","log.module_path":"rustls::server::hs","log.file":"/home/flash/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/rustls-0.21.12/src/server/hs.rs","log.line":93},"target":"rustls::server::hs"}
+{"timestamp":"2025-11-02T11:49:25.980563Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::codec::framed_write"}
+{"timestamp":"2025-11-02T11:49:25.980806Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x0), header_table_size: 65536, enable_push: 0, initial_window_size: 6291456, max_header_list_size: 262144 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:25.980876Z","level":"DEBUG","fields":{"message":"send","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:25.980922Z","level":"DEBUG","fields":{"message":"received","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 15663105 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:25.982548Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(1), flags: (0x25: END_HEADERS | END_STREAM | PRIORITY), stream_dep: StreamDependency { dependency_id: StreamId(0), weight: 255, is_exclusive: true } }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:25.983123Z","level":"DEBUG","fields":{"message":"send","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 983041 }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:25.985049Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(1), flags: (0x4: END_HEADERS) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:25.985686Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(1) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:25.986005Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(1), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.021943Z","level":"DEBUG","fields":{"message":"received","frame":"Settings { flags: (0x1: ACK) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.022041Z","level":"DEBUG","fields":{"message":"received settings ACK; applying Settings { flags: (0x0), max_concurrent_streams: 200, initial_window_size: 1048576, max_frame_size: 16384, max_header_list_size: 16384 }"},"target":"h2::proto::settings","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.038278Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(3), flags: (0x25: END_HEADERS | END_STREAM | PRIORITY), stream_dep: StreamDependency { dependency_id: StreamId(0), weight: 255, is_exclusive: true } }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.038595Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(5), flags: (0x25: END_HEADERS | END_STREAM | PRIORITY), stream_dep: StreamDependency { dependency_id: StreamId(3), weight: 219, is_exclusive: true } }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.039628Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(3), flags: (0x4: END_HEADERS) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.039808Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(5), flags: (0x4: END_HEADERS) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.040195Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(5) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.040328Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(3) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.040462Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(5), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.040685Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(3), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.266076Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(7), flags: (0x25: END_HEADERS | END_STREAM | PRIORITY), stream_dep: StreamDependency { dependency_id: StreamId(0), weight: 219, is_exclusive: true } }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:26.267716Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(7), flags: (0x5: END_HEADERS | END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:31.930422Z","level":"DEBUG","fields":{"message":"received","frame":"Headers { stream_id: StreamId(9), flags: (0x24: END_HEADERS | PRIORITY), stream_dep: StreamDependency { dependency_id: StreamId(0), weight: 219, is_exclusive: true } }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:31.930645Z","level":"DEBUG","fields":{"message":"received","frame":"Data { stream_id: StreamId(9), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:32.386533Z","level":"INFO","fields":{"service":"auth-service","event":"login","email":"admin@example.com","user_id":"user-admin","success":true},"target":"auth_service::handlers::auth"}
+{"timestamp":"2025-11-02T11:49:32.386824Z","level":"DEBUG","fields":{"message":"send","frame":"Headers { stream_id: StreamId(9), flags: (0x4: END_HEADERS) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:32.386936Z","level":"DEBUG","fields":{"message":"send","frame":"Data { stream_id: StreamId(9), flags: (0x1: END_STREAM) }"},"target":"h2::codec::framed_write","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:49:32.389450Z","level":"DEBUG","fields":{"message":"received","frame":"WindowUpdate { stream_id: StreamId(0), size_increment: 11456 }"},"target":"h2::codec::framed_read","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:52:34.648990Z","level":"DEBUG","fields":{"message":"Connection::poll; IO error","error":"UnexpectedEof"},"target":"h2::proto::connection","span":{"peer":"Server","name":"Connection"},"spans":[{"peer":"Server","name":"Connection"}]}
+{"timestamp":"2025-11-02T11:53:15.042602Z","level":"INFO","fields":{"service":"auth-service","event":"shutdown","signal":"SIGTERM"},"target":"auth_service"}
+{"timestamp":"2025-11-02T11:53:15.042674Z","level":"ERROR","fields":{"service":"auth-service","event":"pid_cleanup_failed","error":"No such file or directory (os error 2)","pid_file":"/var/run/auth-service.pid"},"target":"auth_service"}

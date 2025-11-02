@@ -1,0 +1,182 @@
+<template>
+  <div
+    class="nu-filter-chip flex"
+    :class="{ 'nu-filter-chip-toggle': isToggle, 'nu-filter-chip-raw': raw }"
+  >
+    <nu-button
+      :id="id"
+      class="nu-filter-chip-button nu-pill py-1 px-2 text-xs rounded-full h-[26px] max-w-40 gap-1 focus:z-90"
+      :class="{ 'nu-filter-chip-button-selected rounded-l-full rounded-r-none': filterActive }"
+      :appearance="buttonAppearance"
+      :color-role="buttonColorRole"
+      :no-hover="filterActive || !hasActiveState"
+      @click="isToggle ? emit('toggleFilter') : false"
+    >
+      <nu-icon
+        :class="{
+          'transform-[scale(1)] ease-in': filterActive,
+          'transform-[scale(0)] ease-out w-0': !filterActive
+        }"
+        class="transition-all duration-250"
+        name="check"
+        size="small"
+      />
+      <span
+        class="truncate nu-filter-chip-label"
+        v-text="!!selectedItemNames.length ? selectedItemNames[0] : filterLabel"
+      />
+      <span v-if="selectedItemNames.length > 1" v-text="` +${selectedItemNames.length - 1}`" />
+      <nu-icon v-if="!filterActive && !isToggle" name="arrow-down-s" size="small" />
+    </nu-button>
+    <nu-drop
+      v-if="!isToggle"
+      ref="dropRef"
+      :toggle="'#' + id"
+      :title="filterLabel"
+      class="nu-filter-chip-drop"
+      mode="click"
+      padding-size="small"
+      :close-on-click="closeOnClick"
+      @hide-drop="emit('hideDrop')"
+      @show-drop="emit('showDrop')"
+    >
+      <slot />
+    </nu-drop>
+    <nu-button
+      v-if="filterActive"
+      v-nu-tooltip="$gettext('Clear filter')"
+      class="nu-filter-chip-clear px-1 rounded-r-full h-[26px] not-[.nu-filter-chip-toggle_.nu-filter-chip-clear]:ml-[1px] focus:z-90"
+      appearance="filled"
+      color-role="secondaryContainer"
+      :aria-label="$gettext('Clear filter')"
+      :no-hover="filterActive"
+      @click="emit('clearFilter')"
+    >
+      <nu-icon name="close" size="small" />
+    </nu-button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, unref, useTemplateRef } from 'vue'
+import { uniqueId } from '../../helpers'
+import OcDrop from '../OcDrop/OcDrop.vue'
+
+export interface Props {
+  /**
+   * @docs The label of the filter.
+   */
+  filterLabel: string
+  /**
+   * @docs Determines if the drop should close when an item is clicked.
+   * @default false
+   */
+  closeOnClick?: boolean
+  /**
+   * @docs The element ID of the filter.
+   */
+  id?: string
+  /**
+   * @docs Determines if the filter is a binary toggle.
+   * @default false
+   */
+  isToggle?: boolean
+  /**
+   * @docs Determines if the toggle is active.
+   * @default false
+   */
+  isToggleActive?: boolean
+  /**
+   * @docs Determines if the filter has a raw appearance.
+   * @default false
+   */
+  raw?: boolean
+  /**
+   * @docs Determines if the filter has an active state (e.g. if one or more items are selected).
+   * @default true
+   */
+  hasActiveState?: boolean
+  /**
+   * @docs The names of the selected items.
+   */
+  selectedItemNames?: string[]
+}
+
+export interface Emits {
+  /**
+   * @docs Emitted when the filter has been cleared.
+   */
+  (e: 'clearFilter'): void
+  /**
+   * @docs Emitted when the drop has been hidden.
+   */
+  (e: 'hideDrop'): void
+  /**
+   * @docs Emitted when the drop has been displayed.
+   */
+  (e: 'showDrop'): void
+  /**
+   * @docs Emitted when the filter has been toggled.
+   */
+  (e: 'toggleFilter'): void
+}
+
+export interface Slot {
+  /**
+   * @docs The content of the filter chip.
+   */
+  default: () => unknown
+}
+
+const {
+  filterLabel,
+  closeOnClick = false,
+  id = uniqueId('nu-filter-chip-'),
+  isToggle = false,
+  isToggleActive = false,
+  raw = false,
+  hasActiveState = true,
+  selectedItemNames = []
+} = defineProps<Props>()
+
+const emit = defineEmits<Emits>()
+defineSlots<Slot>()
+
+const dropRef = useTemplateRef<typeof OcDrop>('dropRef')
+
+const filterActive = computed(() => {
+  if (!hasActiveState) {
+    return false
+  }
+  if (isToggle) {
+    return isToggleActive
+  }
+  return !!selectedItemNames.length
+})
+
+const hideDrop = () => {
+  unref(dropRef)?.hide()
+}
+
+const buttonAppearance = computed(() => {
+  if (unref(filterActive)) {
+    return 'filled'
+  }
+  if (raw) {
+    return 'raw-inverse'
+  }
+  return 'outline'
+})
+
+const buttonColorRole = computed(() => {
+  if (unref(filterActive)) {
+    return 'secondaryContainer'
+  }
+  if (raw) {
+    return 'surface'
+  }
+  return 'secondary'
+})
+
+defineExpose({ hideDrop })
+</script>

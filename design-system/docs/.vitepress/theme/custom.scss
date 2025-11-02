@@ -1,0 +1,66 @@
+:root {
+  --vp-font-family-base: 'xwork', 'Inter', sans-serif;
+  --vp-c-brand-1: var(--nu-role-secondary);
+}
+
+.vp-doc tr:nth-child(2n) {
+  // disable the color change on table rows
+  background-color: var(--vp-c-bg);
+}
+
+.vp-doc .live-code-block {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    // reset vitepress styling inside live code blocks
+    margin: revert-layer;
+    border: revert-layer;
+    padding: revert-layer;
+    font-size: revert-layer;
+    line-height: revert-layer;
+    letter-spacing: revert-layer;
+  }
+}
+
+// re-apply some basic styling we removed during the build to avoid conflicts with tailwind
+.title span {
+  font-size: 14px;
+}
+
+li::marker {
+  color: var(--nu-role-on-surface);
+}
+
+#VPSidebarNav .VPLink p {
+  padding: 0;
+  margin: 4px 0;
+}
+
+.vp-doc :where(p, li, div):not(.live-code-block :where(p, li, div)) {
+  font-size: 16px;
+}
+
+html * {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow: auto;
+}
+
+@font-face {
+  font-family: xwork;
+  src: url('./../../../src/assets/fonts/OpenCloud500-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: xwork;
+  src: url('./../../../src/assets/fonts/OpenCloud750-Bold.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+}

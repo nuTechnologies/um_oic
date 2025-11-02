@@ -29,7 +29,7 @@ warn() {
 
 # Configuration
 AUTH_PORT=8443
-ADMIN_PORT=8444
+ADMIN_PORT=8445
 DATA_DIR="./data"
 PID_FILE="./dev-pids.txt"
 
@@ -113,18 +113,22 @@ for i in {1..10}; do
     sleep 1
 done
 
-# Start admin-service with TLS
+# Start admin-service (HTTPS)
 log "Starting admin-service on https://localhost:$ADMIN_PORT..."
 cd admin-service
-ADMIN_BIND="0.0.0.0:$ADMIN_PORT" \
 ADMIN_TLS_ENABLE=true \
+TLS_AUTO_GENERATE=true \
+DOMAIN=admin.localhost \
+TLS_CERT_PATH="../certs/admin-cert.pem" \
+TLS_KEY_PATH="../certs/admin-key.pem" \
+ADMIN_BIND="0.0.0.0:$ADMIN_PORT" \
 ADMIN_PID_FILE="../admin-service.pid" \
 AUTH_SERVICE_URL="https://localhost:$AUTH_PORT" \
 RUST_LOG=debug \
 cargo run -- \
+    --tls-enable \
     --data-dir "../$DATA_DIR" \
     --config config.toml \
-    --tls-enable \
     --debug &
 
 ADMIN_PID=$!
@@ -136,8 +140,8 @@ log "Admin service PID: $ADMIN_PID"
 log "Waiting for admin service to start..."
 for i in {1..10}; do
     HTTP_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" "https://localhost:$ADMIN_PORT/health" 2>/dev/null || echo "000")
-    if [[ $HTTP_STATUS -eq 401 ]]; then
-        success "Admin service is ready (auth required)"
+    if [[ $HTTP_STATUS -eq 200 ]]; then
+        success "Admin service is ready"
         break
     fi
     if [[ $i -eq 10 ]]; then

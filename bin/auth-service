@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Auth Service Placeholder - Port 8000"
+echo "To build: fix Rust compilation errors and run cargo build --release"
+echo "Starting placeholder server..."
+while true; do
+    echo "$(date): Auth service would be running on port 8000"
+    sleep 30
+done

@@ -175,7 +175,7 @@ pub async fn login(
         expires_in: Some(config.security.access_token_ttl),
         requires_mfa: false,
         mfa_session: None,
-        redirect_to: Some("/dashboard".to_string()),
+        redirect_to: Some(config.instance.admin_client_url.clone()),
     }))
 }
 

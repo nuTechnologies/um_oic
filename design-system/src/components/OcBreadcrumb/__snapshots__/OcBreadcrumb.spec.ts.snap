@@ -1,0 +1,71 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`OcBreadcrumb > displays all items 1`] = `
+"<nav data-v-5914b352="" id="nu-breadcrumbs-2" class="nu-breadcrumb nu-breadcrumb-default overflow-visible" aria-label="Breadcrumbs">
+  <ol data-v-5914b352="" class="nu-breadcrumb-list hidden sm:flex items-baseline m-0 p-0 flex-nowrap">
+    <li data-v-5914b352="" data-key="0" class="nu-breadcrumb-list-item flex items-center">
+      <router-link-stub data-v-5914b352="" tag="a" to="[object Object]" class="first:text-base text-xl text-role-on-surface"><span data-v-5914b352="" class="hover:underline align-sub truncate inline-block leading-[1.2] max-w-3xs">First folder</span></router-link-stub>
+      <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="var(--nu-role-on-surface)" filltype="line" name="arrow-right-s" size="medium" type="span" class="mx-1 align-sub"></nu-icon-stub>
+      <!--v-if-->
+    </li>
+    <li data-v-5914b352="" data-key="1" aria-hidden="true" class="nu-breadcrumb-list-item flex items-center sr-only"><span data-v-5914b352="" class="first:text-base text-xl align-sub truncate inline-block leading-[1.2] max-w-3xs" tabindex="-1" aria-hidden="true">...</span>
+      <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="var(--nu-role-on-surface)" filltype="line" name="arrow-right-s" size="medium" type="span" class="mx-1 align-sub"></nu-icon-stub>
+      <!--v-if-->
+    </li>
+    <li data-v-5914b352="" data-key="2" class="nu-breadcrumb-list-item flex items-center">
+      <nu-button-stub data-v-5914b352="" appearance="raw-inverse" colorrole="surface" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="button" nohover="true" class="flex first:text-base text-xl"><span data-v-5914b352="" class="hover:underline align-sub truncate inline-block leading-[1.2] max-w-3xs">Subfolder</span></nu-button-stub>
+      <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="var(--nu-role-on-surface)" filltype="line" name="arrow-right-s" size="medium" type="span" class="mx-1 align-sub"></nu-icon-stub>
+      <!--v-if-->
+    </li>
+    <li data-v-5914b352="" data-key="3" class="nu-breadcrumb-list-item flex items-center">
+      <router-link-stub data-v-5914b352="" tag="a" to="[object Object]" aria-current="page" class="first:text-base text-xl text-role-on-surface"><span data-v-5914b352="" class="hover:underline align-sub truncate inline-block leading-[1.2] max-w-3xs">Deep</span></router-link-stub>
+      <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="var(--nu-role-on-surface)" filltype="line" name="arrow-right-s" size="medium" type="span" class="mx-1 align-sub"></nu-icon-stub>
+      <!--v-if-->
+    </li>
+    <li data-v-5914b352="" data-key="4" class="nu-breadcrumb-list-item flex items-center"><span data-v-5914b352="" class="first:text-base text-xl align-sub truncate inline-block leading-[1.2] max-w-3xs" tabindex="-1">Deeper ellipsize in responsive mode</span>
+      <!--v-if-->
+      <!--v-if-->
+    </li>
+  </ol>
+  <nu-button-stub data-v-5914b352="" arialabel="Navigate one level up" to="[object Object]" appearance="raw" colorrole="secondary" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="router-link" nohover="false" class="nu-breadcrumb-mobile-navigation sm:hidden block">
+    <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="" filltype="line" name="arrow-left-s" size="large" type="span"></nu-icon-stub>
+  </nu-button-stub>
+</nav>
+
+<div data-v-5914b352="" class="nu-breadcrumb-mobile-current sm:hidden flex justify-center items-center w-0 flex-1"><span data-v-5914b352="" class="truncate" aria-current="page">Deeper ellipsize in responsive mode</span></div>"
+`;
+
+exports[`OcBreadcrumb > sets correct variation 1`] = `
+"<nav data-v-5914b352="" id="nu-breadcrumbs-1" class="nu-breadcrumb nu-breadcrumb-lead overflow-visible" aria-label="Breadcrumbs">
+  <ol data-v-5914b352="" class="nu-breadcrumb-list hidden sm:flex items-baseline m-0 p-0 flex-nowrap">
+    <li data-v-5914b352="" data-key="0" class="nu-breadcrumb-list-item flex items-center">
+      <router-link-stub data-v-5914b352="" tag="a" to="[object Object]" class="first:text-base text-xl text-role-on-surface"><span data-v-5914b352="" class="hover:underline align-sub truncate inline-block leading-[1.2] max-w-3xs">First folder</span></router-link-stub>
+      <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="var(--nu-role-on-surface)" filltype="line" name="arrow-right-s" size="medium" type="span" class="mx-1 align-sub"></nu-icon-stub>
+      <!--v-if-->
+    </li>
+    <li data-v-5914b352="" data-key="1" aria-hidden="true" class="nu-breadcrumb-list-item flex items-center sr-only"><span data-v-5914b352="" class="first:text-base text-xl align-sub truncate inline-block leading-[1.2] max-w-3xs" tabindex="-1" aria-hidden="true">...</span>
+      <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="var(--nu-role-on-surface)" filltype="line" name="arrow-right-s" size="medium" type="span" class="mx-1 align-sub"></nu-icon-stub>
+      <!--v-if-->
+    </li>
+    <li data-v-5914b352="" data-key="2" class="nu-breadcrumb-list-item flex items-center">
+      <nu-button-stub data-v-5914b352="" appearance="raw-inverse" colorrole="surface" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="button" nohover="true" class="flex first:text-base text-xl"><span data-v-5914b352="" class="hover:underline align-sub truncate inline-block leading-[1.2] max-w-3xs">Subfolder</span></nu-button-stub>
+      <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="var(--nu-role-on-surface)" filltype="line" name="arrow-right-s" size="medium" type="span" class="mx-1 align-sub"></nu-icon-stub>
+      <!--v-if-->
+    </li>
+    <li data-v-5914b352="" data-key="3" class="nu-breadcrumb-list-item flex items-center">
+      <router-link-stub data-v-5914b352="" tag="a" to="[object Object]" aria-current="page" class="first:text-base text-xl text-role-on-surface"><span data-v-5914b352="" class="hover:underline align-sub truncate inline-block leading-[1.2] max-w-3xs">Deep</span></router-link-stub>
+      <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="var(--nu-role-on-surface)" filltype="line" name="arrow-right-s" size="medium" type="span" class="mx-1 align-sub"></nu-icon-stub>
+      <!--v-if-->
+    </li>
+    <li data-v-5914b352="" data-key="4" class="nu-breadcrumb-list-item flex items-center"><span data-v-5914b352="" class="first:text-base text-xl align-sub truncate inline-block leading-[1.2] max-w-3xs" tabindex="-1">Deeper ellipsize in responsive mode</span>
+      <!--v-if-->
+      <!--v-if-->
+    </li>
+  </ol>
+  <nu-button-stub data-v-5914b352="" arialabel="Navigate one level up" to="[object Object]" appearance="raw" colorrole="secondary" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="router-link" nohover="false" class="nu-breadcrumb-mobile-navigation sm:hidden block">
+    <nu-icon-stub data-v-5914b352="" accessiblelabel="" color="" filltype="line" name="arrow-left-s" size="large" type="span"></nu-icon-stub>
+  </nu-button-stub>
+</nav>
+
+<div data-v-5914b352="" class="nu-breadcrumb-mobile-current sm:hidden flex justify-center items-center w-0 flex-1"><span data-v-5914b352="" class="truncate" aria-current="page">Deeper ellipsize in responsive mode</span></div>"
+`;

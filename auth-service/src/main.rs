@@ -144,7 +144,7 @@ async fn create_app(
 
     let app = Router::new()
         // Static files (login UI, assets)
-        .nest_service("/", ServeDir::new("../data/web/auth"))
+        .nest_service("/", ServeDir::new("./data/web/auth"))
 
         // Authentication API
         .route("/api/auth/login", post(handlers::auth::login))

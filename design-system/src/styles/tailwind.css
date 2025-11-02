@@ -1,0 +1,119 @@
+@import 'tailwindcss';
+@import './defaults.css';
+
+@theme {
+  --font-sans: var(--nu-font-family);
+
+  --spacing: 4px;
+  --breakpoint-xs: 580px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 960px;
+  --breakpoint-lg: 1200px;
+  --breakpoint-xl: 1600px;
+
+  --z-index-modal: 9999;
+
+  --color-role-background: var(--nu-role-background);
+  --color-role-chrome: var(--nu-role-chrome);
+  --color-role-error: var(--nu-role-error);
+  --color-role-error-container: var(--nu-role-error-container);
+  --color-role-inverse-on-surface: var(--nu-role-inverse-on-surface);
+  --color-role-inverse-primary: var(--nu-role-inverse-primary);
+  --color-role-inverse-surface: var(--nu-role-inverse-surface);
+  --color-role-on-background: var(--nu-role-on-background);
+  --color-role-on-chrome: var(--nu-role-on-chrome);
+  --color-role-on-error: var(--nu-role-on-error);
+  --color-role-on-error-container: var(--nu-role-on-error-container);
+  --color-role-on-primary: var(--nu-role-on-primary);
+  --color-role-on-primary-container: var(--nu-role-on-primary-container);
+  --color-role-on-primary-fixed: var(--nu-role-on-primary-fixed);
+  --color-role-on-secondary: var(--nu-role-on-secondary);
+  --color-role-on-secondary-container: var(--nu-role-on-secondary-container);
+  --color-role-on-secondary-fixed: var(--nu-role-on-secondary-fixed);
+  --color-role-on-surface: var(--nu-role-on-surface);
+  --color-role-on-surface-variant: var(--nu-role-on-surface-variant);
+  --color-role-on-tertiary: var(--nu-role-on-tertiary);
+  --color-role-on-tertiary-container: var(--nu-role-on-tertiary-container);
+  --color-role-on-tertiary-fixed: var(--nu-role-on-tertiary-fixed);
+  --color-role-outline: var(--nu-role-outline);
+  --color-role-outline-variant: var(--nu-role-outline-variant);
+  --color-role-primary: var(--nu-role-primary);
+  --color-role-primary-container: var(--nu-role-primary-container);
+  --color-role-primary-fixed: var(--nu-role-primary-fixed);
+  --color-role-scrim: var(--nu-role-scrim);
+  --color-role-secondary: var(--nu-role-secondary);
+  --color-role-secondary-container: var(--nu-role-secondary-container);
+  --color-role-secondary-fixed: var(--nu-role-secondary-fixed);
+  --color-role-shadow: var(--nu-role-shadow);
+  --color-role-surface: var(--nu-role-surface);
+  --color-role-surface-bright: var(--nu-role-surface-bright);
+  --color-role-surface-container: var(--nu-role-surface-container);
+  --color-role-surface-container-high: var(--nu-role-surface-container-high);
+  --color-role-surface-container-highest: var(--nu-role-surface-container-highest);
+  --color-role-surface-container-low: var(--nu-role-surface-container-low);
+  --color-role-surface-container-lowest: var(--nu-role-surface-container-lowest);
+  --color-role-surface-dim: var(--nu-role-surface-dim);
+  --color-role-surface-tint: var(--nu-role-surface-tint);
+  --color-role-surface-variant: var(--nu-role-surface-variant);
+  --color-role-tertiary: var(--nu-role-tertiary);
+  --color-role-tertiary-container: var(--nu-role-tertiary-container);
+  --color-role-tertiary-fixed: var(--nu-role-tertiary-fixed);
+
+  /* animations */
+  --animate-shake: shake 0.6s cubic-bezier(0.46, 0.27, 0.59, 0.97) both;
+  --animate-shimmer: shimmer 2s infinite;
+  --animate-loading-bar: loading-bar 1.4s infinite;
+  --animate-fade-in: fade-in 0.3s;
+
+  @keyframes shake {
+
+    10%,
+    20%,
+    50%,
+    60% {
+      transform: translate3d(-1px, 0, 0);
+    }
+
+    30%,
+    40%,
+    70%,
+    80% {
+      transform: translate3d(1px, 0, 0);
+    }
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes loading-bar {
+    0% {
+      left: 0;
+      width: 0;
+    }
+
+    50% {
+      left: 0;
+      width: 66%;
+    }
+
+    100% {
+      left: 100%;
+      width: 10%;
+    }
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+}

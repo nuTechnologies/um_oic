@@ -1,0 +1,6 @@
+{
+  "extends": "@xwork-eu/tsconfig",
+  "vueCompilerOptions": {
+    "vitePressExtensions": [".md"]
+  }
+}

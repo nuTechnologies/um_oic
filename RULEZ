@@ -1,0 +1,54 @@
+
+Sofware style
+- KEINE fallbacks oder alternatie defaults!
+- Explizite Fehlermeldungen statt stiller Defaults
+- Prüfe vor Anlegen neuer Attribute ob bereits Attribute für den Zweck existieren und wie deren Belegung ist
+- Niemals kaschieren von fehlenden kritischen Werten
+- Debugging-freundlicher Code mit aussagekräftigen Fehlern
+- keine DUMMY-Dateien (solang nicht explizit gefordert, wie Skeletons)
+- builds sollten einen build-inkrementor (integer) halten und je build um eins erhöhen. dabei spielt die änderung keine rolle. jeder build erhöht die version. total safe. bsp: lib version 2.0  -> wird zu  2.0.<buildversion>    also   von 2.0.100 nach einem buildlauf zu 2.0.101
+- Immer die vorhandenen Skripte nutzen, nicht manuell rumfummeln! minimalistische Liste TOOLs.md führen.
+- größere Aufgaben immer vorher in TASKS_<aufgabenpaket>.md minimalistisch auflisten in Aufgabengrößen, die Du mit einem run schaffts. je Abarbeitung in DONE_<aufgabenpaket>.md quittieren, welche TASK erledigt wurden.
+
+
+logging:
+- log mit -v, debug mit -debug
+- DJB stye log minimalistic
+
+cert und tls:
+-certs per -cert <dir> wo letsencrypt-like die <domain>-certs liegen
+
+listening ports:
+-p <port>
+
+version:
+-V version
+
+design style (css):
+ im verzeichnis: ./design-system
+
+pipes und filters:
+für cli und dataprocessing immer stdin und stdout default oder per stdout per -c vorsehen
+
+
+skeleton:
+ +bin     programs, project related tools, python/cjs scripts, cli-builts
+ +lib     python libdir
+   +modul1
+   +modul2
+ +src     vue app source
+ +public  static web source
+ +deploy  deploy directory of the app
+   +appdir
+ +dist    contain setup stuff for services and configs 
+ +<...>   go projects, rust projects, cpp projectss
+ +test    testbench
+ +doc     docs
+ +specs   only specs for formats, protocols, interfaces
+ +packages   libs and modules (javascript multi platform libs)
+  +package1  
+  +package2  
+ +appdir1  go/rust app/service/cli
+ +appdir2  go/rust app/service/cli
+ +appdir3  go/rust app/service/cli
+

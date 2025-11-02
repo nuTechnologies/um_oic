@@ -7,6 +7,7 @@ name = "Grundschule Brandis Auth"
 logo_url = "/img/logo.png"
 primary_color = "#00529F"
 issuer = "https://auth.example.com"
+admin_client_url = "https://localhost:8445/"
 
 [security]
 password_min_length = 12

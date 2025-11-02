@@ -192,8 +192,8 @@ async fn create_app(
         .route("/login", get(handlers::auth::login_redirect))
 
         // Static files (admin UI) - no authentication required
-        .nest_service("/", ServeDir::new("../data/web/mgmt"))
-        .nest_service("/mgmt", ServeDir::new("../data/web/mgmt"))
+        .nest_service("/", ServeDir::new("./data/web/mgmt"))
+        .nest_service("/mgmt", ServeDir::new("./data/web/mgmt"))
 
         // API routes with authentication
         .merge(api_routes)

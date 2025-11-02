@@ -1,0 +1,93 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`OcModal > displays input 1`] = `
+"<div class="nu-modal-background fixed left-0 top-0 z-[var(--z-index-modal)] bg-black/40 flex items-center justify-center flex-row flex-wrap size-full">
+  <focus-trap-stub tabbableoptions="[object Object]" active="true" escapedeactivates="true" returnfocusondeactivate="true" allowoutsideclick="true" clickoutsidedeactivates="false" initialfocus="[Function]" delayinitialfocus="true" preventscroll="false" setreturnfocus="false">
+    <div class="nu-modal bg-role-surface border z-[calc(var(--z-index-modal)+1)] border-role-outline rounded-lg focus:outline-0 w-full max-w-xl max-h-[90vh] overflow-auto shadow-2xl" tabindex="0" role="dialog" aria-modal="true" aria-labelledby="nu-modal-title">
+      <div class="nu-modal-title bg-role-surface-container flex items-center flex-row flex-wrap py-3 px-4 rounded-t-sm">
+        <h2 id="nu-modal-title" class="truncate m-0 text-base">Create new folder</h2>
+      </div>
+      <div class="nu-modal-body px-4 pt-4">
+        <!--v-if-->
+        <!--v-if-->
+        <nu-text-input-stub label="Folder name" id="nu-textinput-1" type="text" modelvalue="New folder" clearbuttonenabled="false" clearbuttonaccessiblelabel="" disabled="false" errormessagedebouncedtime="500" fixmessageline="true" readonly="false" requiredmark="false" passwordpolicy="[object Object]" class="nu-modal-body-input -mb-5 pb-4"></nu-text-input-stub>
+      </div>
+      <div class="nu-modal-body-actions flex justify-end p-4 text-right">
+        <div class="nu-modal-body-actions-grid grid grid-flow-col auto-cols-1fr">
+          <nu-button-stub appearance="outline" colorrole="secondary" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="button" nohover="false" class="nu-modal-body-actions-cancel">Cancel</nu-button-stub>
+          <nu-button-stub appearance="filled" colorrole="secondary" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="button" nohover="false" class="nu-modal-body-actions-confirm ml-2">Confirm</nu-button-stub>
+        </div>
+      </div>
+    </div>
+  </focus-trap-stub>
+</div>"
+`;
+
+exports[`OcModal > displays loading state 1`] = `
+"<div class="nu-modal-background fixed left-0 top-0 z-[var(--z-index-modal)] bg-black/40 flex items-center justify-center flex-row flex-wrap size-full">
+  <focus-trap-stub tabbableoptions="[object Object]" active="true" escapedeactivates="true" returnfocusondeactivate="true" allowoutsideclick="true" clickoutsidedeactivates="false" initialfocus="[Function]" delayinitialfocus="true" preventscroll="false" setreturnfocus="false">
+    <div class="nu-modal bg-role-surface border z-[calc(var(--z-index-modal)+1)] border-role-outline rounded-lg focus:outline-0 w-full max-w-xl max-h-[90vh] overflow-auto shadow-2xl" tabindex="0" role="dialog" aria-modal="true" aria-labelledby="nu-modal-title">
+      <div class="nu-modal-title bg-role-surface-container flex items-center flex-row flex-wrap py-3 px-4 rounded-t-sm">
+        <h2 id="nu-modal-title" class="truncate m-0 text-base">Example title</h2>
+      </div>
+      <div class="nu-modal-body px-4 pt-4">
+        <p class="nu-modal-body-message mt-0 mb-0">Example message</p>
+        <!--v-if-->
+        <!--v-if-->
+      </div>
+      <div class="nu-modal-body-actions flex justify-end p-4 text-right">
+        <div class="nu-modal-body-actions-grid grid grid-flow-col auto-cols-1fr"><button type="button" disabled="" class="nu-button-secondary nu-button-outline nu-button-secondary-outline gap-2 justify-center text-base min-h-4 nu-button cursor-pointer disabled:opacity-60 disabled:cursor-default nu-modal-body-actions-cancel">
+            <!--v-if-->
+            <!-- @slot Content of the button --> Cancel
+          </button> <button type="button" disabled="" class="nu-button-secondary nu-button-outline nu-button-secondary-outline gap-2 justify-center text-base min-h-4 nu-button cursor-pointer disabled:opacity-60 disabled:cursor-default nu-modal-body-actions-confirm ml-2"><span class="nu-spinner inline-block after:block after:bg-transparent after:border after:border-current after:rounded-full after:size-full relative after:relative animate-spin after:content-[''] after:border-b-transparent size-4 spinner" aria-hidden="true" tabindex="-1"></span> <!-- @slot Content of the button --> Confirm</button></div>
+      </div>
+    </div>
+  </focus-trap-stub>
+</div>"
+`;
+
+exports[`OcModal > matches snapshot 1`] = `
+"<div class="nu-modal-background fixed left-0 top-0 z-[var(--z-index-modal)] bg-black/40 flex items-center justify-center flex-row flex-wrap size-full">
+  <focus-trap-stub tabbableoptions="[object Object]" active="true" escapedeactivates="true" returnfocusondeactivate="true" allowoutsideclick="true" clickoutsidedeactivates="false" initialfocus="[Function]" delayinitialfocus="true" preventscroll="false" setreturnfocus="false">
+    <div class="nu-modal bg-role-surface border z-[calc(var(--z-index-modal)+1)] border-role-outline rounded-lg focus:outline-0 w-full max-w-xl max-h-[90vh] overflow-auto shadow-2xl" tabindex="0" role="dialog" aria-modal="true" aria-labelledby="nu-modal-title">
+      <div class="nu-modal-title bg-role-surface-container flex items-center flex-row flex-wrap py-3 px-4 rounded-t-sm">
+        <h2 id="nu-modal-title" class="truncate m-0 text-base">Example title</h2>
+      </div>
+      <div class="nu-modal-body px-4 pt-4">
+        <p class="nu-modal-body-message mt-0 mb-0">Example message</p>
+        <!--v-if-->
+        <!--v-if-->
+      </div>
+      <div class="nu-modal-body-actions flex justify-end p-4 text-right">
+        <div class="nu-modal-body-actions-grid grid grid-flow-col auto-cols-1fr">
+          <nu-button-stub appearance="outline" colorrole="secondary" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="button" nohover="false" class="nu-modal-body-actions-cancel">Cancel</nu-button-stub>
+          <nu-button-stub appearance="filled" colorrole="secondary" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="button" nohover="false" class="nu-modal-body-actions-confirm ml-2">Confirm</nu-button-stub>
+        </div>
+      </div>
+    </div>
+  </focus-trap-stub>
+</div>"
+`;
+
+exports[`OcModal > overrides props message with slot 1`] = `
+"<div class="nu-modal-background fixed left-0 top-0 z-[var(--z-index-modal)] bg-black/40 flex items-center justify-center flex-row flex-wrap size-full">
+  <focus-trap-stub tabbableoptions="[object Object]" active="true" escapedeactivates="true" returnfocusondeactivate="true" allowoutsideclick="true" clickoutsidedeactivates="false" initialfocus="[Function]" delayinitialfocus="true" preventscroll="false" setreturnfocus="false">
+    <div class="nu-modal bg-role-surface border z-[calc(var(--z-index-modal)+1)] border-role-outline rounded-lg focus:outline-0 w-full max-w-xl max-h-[90vh] overflow-auto shadow-2xl" tabindex="0" role="dialog" aria-modal="true" aria-labelledby="nu-modal-title">
+      <div class="nu-modal-title bg-role-surface-container flex items-center flex-row flex-wrap py-3 px-4 rounded-t-sm">
+        <h2 id="nu-modal-title" class="truncate m-0 text-base">Example title</h2>
+      </div>
+      <div class="nu-modal-body px-4 pt-4">
+        <div class="nu-modal-body-message mt-2 mb-4">
+          <p>Slot message</p>
+        </div>
+      </div>
+      <div class="nu-modal-body-actions flex justify-end p-4 text-right">
+        <div class="nu-modal-body-actions-grid grid grid-flow-col auto-cols-1fr">
+          <nu-button-stub appearance="outline" colorrole="secondary" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="button" nohover="false" class="nu-modal-body-actions-cancel">Cancel</nu-button-stub>
+          <nu-button-stub appearance="filled" colorrole="secondary" disabled="false" gapsize="medium" justifycontent="center" showspinner="false" size="medium" submit="button" type="button" nohover="false" class="nu-modal-body-actions-confirm ml-2">Confirm</nu-button-stub>
+        </div>
+      </div>
+    </div>
+  </focus-trap-stub>
+</div>"
+`;

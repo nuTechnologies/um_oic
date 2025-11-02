@@ -1,0 +1,415 @@
+   Compiling admin-service v0.1.0 (/data/source/gitapps/um_oic/admin-service)
+warning: unused import: `delete`
+ --> admin-service/src/main.rs:3:33
+  |
+3 |     routing::{get, post, patch, delete},
+  |                                 ^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `time::OffsetDateTime`
+ --> admin-service/src/storage.rs:6:5
+  |
+6 | use time::OffsetDateTime;
+  |     ^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `uuid::Uuid`
+ --> admin-service/src/storage.rs:8:5
+  |
+8 | use uuid::Uuid;
+  |     ^^^^^^^^^^
+
+warning: unused imports: `ClaimDefinition`, `ClientType`, and `UserStatus`
+  --> admin-service/src/storage.rs:11:65
+   |
+11 | use crate::models::{User, Client, Organization, ClaimsRegistry, ClaimDefinition, UserStatus, ClientType, AuditEvent};
+   |                                                                 ^^^^^^^^^^^^^^^  ^^^^^^^^^^  ^^^^^^^^^^
+
+warning: unused import: `uuid::Uuid`
+ --> admin-service/src/models.rs:5:5
+  |
+5 | use uuid::Uuid;
+  |     ^^^^^^^^^^
+
+warning: unused import: `warn`
+  --> admin-service/src/handlers/organizations.rs:11:21
+   |
+11 | use tracing::{info, warn};
+   |                     ^^^^
+
+warning: unused import: `json`
+ --> admin-service/src/handlers/audit.rs:8:18
+  |
+8 | use serde_json::{json, Value};
+  |                  ^^^^
+
+warning: unused import: `AuditEvent`
+  --> admin-service/src/handlers/audit.rs:16:22
+   |
+16 |     models::{Claims, AuditEvent},
+   |                      ^^^^^^^^^^
+
+warning: unused import: `warn`
+ --> admin-service/src/handlers/claims.rs:4:21
+  |
+4 | use tracing::{info, warn};
+  |                     ^^^^
+
+warning: unused imports: `HeaderMap` and `HeaderValue`
+ --> admin-service/src/middleware/auth.rs:3:32
+  |
+3 |     http::{header, StatusCode, HeaderMap, HeaderValue},
+  |                                ^^^^^^^^^  ^^^^^^^^^^^
+
+warning: unused import: `models::Claims`
+  --> admin-service/src/middleware/auth.rs:10:47
+   |
+10 | use crate::{config::Config, jwt::JwtVerifier, models::Claims};
+   |                                               ^^^^^^^^^^^^^^
+
+warning: unused variable: `storage`
+  --> admin-service/src/handlers/organizations.rs:74:12
+   |
+74 |     State((storage, _, _)): State<AppState>,
+   |            ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_storage`
+   |
+   = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `payload`
+  --> admin-service/src/handlers/organizations.rs:76:10
+   |
+76 |     Json(payload): Json<Value>,
+   |          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+
+warning: unused variable: `storage`
+  --> admin-service/src/handlers/organizations.rs:95:12
+   |
+95 |     State((storage, _, _)): State<AppState>,
+   |            ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_storage`
+
+warning: unused variable: `payload`
+  --> admin-service/src/handlers/organizations.rs:97:10
+   |
+97 |     Json(payload): Json<Value>,
+   |          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+
+warning: unused variable: `storage`
+   --> admin-service/src/handlers/organizations.rs:117:12
+    |
+117 |     State((storage, _, _)): State<AppState>,
+    |            ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_storage`
+
+warning: unused variable: `payload`
+  --> admin-service/src/handlers/clients.rs:64:10
+   |
+64 |     Json(payload): Json<Value>,
+   |          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+
+warning: unused variable: `payload`
+  --> admin-service/src/handlers/clients.rs:83:10
+   |
+83 |     Json(payload): Json<Value>,
+   |          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+
+warning: unused variable: `storage`
+  --> admin-service/src/handlers/claims.rs:45:12
+   |
+45 |     State((storage, _, _)): State<AppState>,
+   |            ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_storage`
+
+warning: unused variable: `payload`
+  --> admin-service/src/handlers/claims.rs:47:10
+   |
+47 |     Json(payload): Json<Value>,
+   |          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+
+warning: unused variable: `storage`
+  --> admin-service/src/handlers/claims.rs:66:12
+   |
+66 |     State((storage, _, _)): State<AppState>,
+   |            ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_storage`
+
+warning: unused variable: `payload`
+  --> admin-service/src/handlers/claims.rs:68:10
+   |
+68 |     Json(payload): Json<Value>,
+   |          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+
+warning: unused variable: `storage`
+  --> admin-service/src/handlers/claims.rs:88:12
+   |
+88 |     State((storage, _, _)): State<AppState>,
+   |            ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_storage`
+
+warning: unused variable: `storage_guard`
+  --> admin-service/src/handlers/roles.rs:25:9
+   |
+25 |     let storage_guard = storage.read().await;
+   |         ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_storage_guard`
+
+warning: unused variable: `user_id`
+   --> admin-service/src/storage.rs:320:9
+    |
+320 |         user_id: Option<&str>,
+    |         ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_user_id`
+
+warning: unused variable: `event_type`
+   --> admin-service/src/storage.rs:321:9
+    |
+321 |         event_type: Option<&str>,
+    |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_event_type`
+
+warning: unused variable: `from`
+   --> admin-service/src/storage.rs:322:9
+    |
+322 |         from: Option<&str>,
+    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_from`
+
+warning: unused variable: `to`
+   --> admin-service/src/storage.rs:323:9
+    |
+323 |         to: Option<&str>,
+    |         ^^ help: if this is intentional, prefix it with an underscore: `_to`
+
+warning: unused variable: `limit`
+   --> admin-service/src/storage.rs:324:9
+    |
+324 |         limit: u32
+    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_limit`
+
+warning: field `organizations` is never read
+  --> admin-service/src/storage.rs:35:5
+   |
+32 | pub struct AdminStorage {
+   |            ------------ field in this struct
+...
+35 |     organizations: HashMap<String, Organization>, // org_id -> Organization
+   |     ^^^^^^^^^^^^^
+   |
+   = note: `AdminStorage` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: multiple methods are never used
+   --> admin-service/src/storage.rs:115:12
+    |
+48  | impl AdminStorage {
+    | ----------------- methods in this implementation
+...
+115 |     pub fn is_auth_stale(&self) -> bool {
+    |            ^^^^^^^^^^^^^
+...
+235 |     pub fn get_user_by_email(&self, email: &str) -> Option<&User> {
+    |            ^^^^^^^^^^^^^^^^^
+...
+244 |     pub fn get_users_by_org(&self, org: &str) -> Vec<&User> {
+    |            ^^^^^^^^^^^^^^^^
+...
+263 |     pub fn find_users_by_claim(&self, claim_key: &str, claim_value: &str) -> Vec<&User> {
+    |            ^^^^^^^^^^^^^^^^^^^
+...
+292 |     pub fn organizations_count(&self) -> usize {
+    |            ^^^^^^^^^^^^^^^^^^^
+...
+296 |     pub fn get_all_organizations(&self) -> impl Iterator<Item = &Organization> {
+    |            ^^^^^^^^^^^^^^^^^^^^^
+...
+300 |     pub fn get_organization(&self, org_id: &str) -> Option<&Organization> {
+    |            ^^^^^^^^^^^^^^^^
+
+warning: associated items `new`, `full_name`, `is_admin_for_org`, `is_active`, and `get_roles` are never used
+   --> admin-service/src/models.rs:118:12
+    |
+117 | impl User {
+    | --------- associated items in this implementation
+118 |     pub fn new(email: String, password_hash: String, first_name: String, last_name: String, org: String) -> Self {
+    |            ^^^
+...
+138 |     pub fn full_name(&self) -> String {
+    |            ^^^^^^^^^
+...
+146 |     pub fn is_admin_for_org(&self, org: &str) -> bool {
+    |            ^^^^^^^^^^^^^^^^
+...
+150 |     pub fn is_active(&self) -> bool {
+    |            ^^^^^^^^^
+...
+154 |     pub fn get_roles(&self) -> Vec<String> {
+    |            ^^^^^^^^^
+
+warning: fields `id`, `name`, `description`, and `metadata` are never read
+   --> admin-service/src/models.rs:186:9
+    |
+185 | pub struct CreateGroupRequest {
+    |            ------------------ fields in this struct
+186 |     pub id: String,
+    |         ^^
+187 |     pub name: String,
+    |         ^^^^
+188 |     pub description: String,
+    |         ^^^^^^^^^^^
+189 |     pub metadata: Option<HashMap<String, serde_json::Value>>,
+    |         ^^^^^^^^
+    |
+    = note: `CreateGroupRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: fields `name`, `description`, and `metadata` are never read
+   --> admin-service/src/models.rs:194:9
+    |
+193 | pub struct UpdateGroupRequest {
+    |            ------------------ fields in this struct
+194 |     pub name: Option<String>,
+    |         ^^^^
+195 |     pub description: Option<String>,
+    |         ^^^^^^^^^^^
+196 |     pub metadata: Option<HashMap<String, serde_json::Value>>,
+    |         ^^^^^^^^
+    |
+    = note: `UpdateGroupRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: field `user_id` is never read
+   --> admin-service/src/models.rs:201:9
+    |
+200 | pub struct AddUserToGroupRequest {
+    |            --------------------- field in this struct
+201 |     pub user_id: String,
+    |         ^^^^^^^
+    |
+    = note: `AddUserToGroupRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: multiple fields are never read
+   --> admin-service/src/models.rs:207:9
+    |
+206 | pub struct CreateClientRequest {
+    |            ------------------- fields in this struct
+207 |     pub client_id: String,
+    |         ^^^^^^^^^
+208 |     pub name: String,
+    |         ^^^^
+209 |     pub client_type: ClientType,
+    |         ^^^^^^^^^^^
+210 |     pub redirect_uris: Vec<String>,
+    |         ^^^^^^^^^^^^^
+211 |     pub allowed_scopes: Vec<String>,
+    |         ^^^^^^^^^^^^^^
+212 |     pub require_pkce: Option<bool>,
+    |         ^^^^^^^^^^^^
+213 |     pub grant_types: Option<Vec<String>>,
+    |         ^^^^^^^^^^^
+    |
+    = note: `CreateClientRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: fields `name`, `redirect_uris`, `allowed_scopes`, `require_pkce`, and `grant_types` are never read
+   --> admin-service/src/models.rs:218:9
+    |
+217 | pub struct UpdateClientRequest {
+    |            ------------------- fields in this struct
+218 |     pub name: Option<String>,
+    |         ^^^^
+219 |     pub redirect_uris: Option<Vec<String>>,
+    |         ^^^^^^^^^^^^^
+220 |     pub allowed_scopes: Option<Vec<String>>,
+    |         ^^^^^^^^^^^^^^
+221 |     pub require_pkce: Option<bool>,
+    |         ^^^^^^^^^^^^
+222 |     pub grant_types: Option<Vec<String>>,
+    |         ^^^^^^^^^^^
+    |
+    = note: `UpdateClientRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: fields `user_id`, `event_type`, `from`, `to`, and `limit` are never read
+   --> admin-service/src/models.rs:228:9
+    |
+227 | pub struct AuditQueryRequest {
+    |            ----------------- fields in this struct
+228 |     pub user_id: Option<String>,
+    |         ^^^^^^^
+229 |     pub event_type: Option<String>,
+    |         ^^^^^^^^^^
+230 |     pub from: Option<String>,
+    |         ^^^^
+231 |     pub to: Option<String>,
+    |         ^^
+232 |     pub limit: Option<u32>,
+    |         ^^^^^
+    |
+    = note: `AuditQueryRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: function `add_group` is never used
+   --> admin-service/src/handlers/users.rs:275:14
+    |
+275 | pub async fn add_group(
+    |              ^^^^^^^^^
+
+warning: function `remove_group` is never used
+   --> admin-service/src/handlers/users.rs:293:14
+    |
+293 | pub async fn remove_group(
+    |              ^^^^^^^^^^^^
+
+warning: type alias `AppState` is never used
+  --> admin-service/src/handlers/roles.rs:19:6
+   |
+19 | type AppState = (Arc<RwLock<AdminStorage>>, Arc<JwtVerifier>, Config);
+   |      ^^^^^^^^
+
+warning: function `list` is never used
+  --> admin-service/src/handlers/roles.rs:21:14
+   |
+21 | pub async fn list(
+   |              ^^^^
+
+warning: function `create` is never used
+  --> admin-service/src/handlers/roles.rs:53:14
+   |
+53 | pub async fn create(
+   |              ^^^^^^
+
+warning: function `update` is never used
+  --> admin-service/src/handlers/roles.rs:71:14
+   |
+71 | pub async fn update(
+   |              ^^^^^^
+
+warning: function `delete` is never used
+  --> admin-service/src/handlers/roles.rs:91:14
+   |
+91 | pub async fn delete(
+   |              ^^^^^^
+
+warning: method `has_write_permission` is never used
+  --> admin-service/src/jwt.rs:35:12
+   |
+12 | impl JwtVerifier {
+   | ---------------- method in this implementation
+...
+35 |     pub fn has_write_permission(&self, claims: &Claims) -> bool {
+   |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `verify_password` is never used
+  --> admin-service/src/password.rs:21:8
+   |
+21 | pub fn verify_password(password: &str, hash: &str) -> Result<bool> {
+   |        ^^^^^^^^^^^^^^^
+
+warning: associated function `from_env` is never used
+   --> admin-service/src/tls.rs:101:12
+    |
+32  | impl TlsManager {
+    | --------------- associated function in this implementation
+...
+101 |     pub fn from_env() -> Self {
+    |            ^^^^^^^^
+
+warning: `admin-service` (bin "admin-service") generated 48 warnings (run `cargo fix --bin "admin-service"` to apply 11 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.38s
+     Running `/data/source/gitapps/um_oic/target/debug/admin-service --data-dir ../data --config config.toml`
+[2m@40000000690742ef2b684997[0m [3mevent[0m[2m=[0m"admin_storage_load_start" [3mdata_dir[0m[2m=[0m"../data"
+[2m@40000000690742ef2b6d4e67[0m [3mevent[0m[2m=[0m"organizations_loaded" [3mcount[0m[2m=[0m2 [3mpath[0m[2m=[0m../data/orgs.json
+[2m@40000000690742ef2b6f3670[0m Loading users for organization: all
+[2m@40000000690742ef2b73e6f2[0m Loading users for organization: group-8b
+[2m@40000000690742ef2b770717[0m Loading users for organization: group-7a
+[2m@40000000690742ef2b7a316d[0m Loading users for organization: default
+[2m@40000000690742ef2b7f6ad4[0m [3mevent[0m[2m=[0m"admin_storage_loaded" [3musers_count[0m[2m=[0m4 [3morganizations_count[0m[2m=[0m2 [3mclients_count[0m[2m=[0m0
+[2m@40000000690742ef2b7fbc19[0m [3mservice[0m[2m=[0m"admin-service" [3mevent[0m[2m=[0m"startup" [3mbind[0m[2m=[0m0.0.0.0:8444 [3mdata_dir[0m[2m=[0m../data [3musers_loaded[0m[2m=[0m4 [3mversion[0m[2m=[0m"0.1.0"
+[2m@40000000690742ef2b885e2d[0m [3mservice[0m[2m=[0m"admin-service" [3mevent[0m[2m=[0m"listening" [3maddr[0m[2m=[0m0.0.0.0:8444
+[2m@40000000690745e9255c2b47[0m [3mservice[0m[2m=[0m"admin-service" [3mevent[0m[2m=[0m"shutdown" [3msignal[0m[2m=[0m"SIGTERM"

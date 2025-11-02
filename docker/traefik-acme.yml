@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"  # Dashboard (optional, secure in production)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-data:/data
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic:/etc/traefik/dynamic:ro
+    environment:
+      - TRAEFIK_CERTIFICATESRESOLVERS_LETSENCRYPT_ACME_EMAIL=admin@yourdomain.com
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.yourdomain.com`)"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
+
+  auth-service:
+    build: ../auth-service
+    container_name: um-oic-auth
+    restart: unless-stopped
+    environment:
+      - RUST_LOG=info
+      - PORT=8000
+      - DATA_DIR=/app/data
+    volumes:
+      - auth-data:/app/data
+    networks:
+      - web
+      - internal
+    labels:
+      # Traefik ACME Integration
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth.rule=Host(`auth.yourdomain.com`)"
+      - "traefik.http.routers.auth.tls=true"
+      - "traefik.http.routers.auth.tls.certresolver=letsencrypt"
+      - "traefik.http.services.auth.loadbalancer.server.port=8000"
+
+      # Security Headers
+      - "traefik.http.middlewares.security-headers.headers.accesscontrolallowmethods=GET,OPTIONS,PUT,POST,DELETE"
+      - "traefik.http.middlewares.security-headers.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.security-headers.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.security-headers.headers.addvaryheader=true"
+      - "traefik.http.middlewares.security-headers.headers.referrerpolicy=same-origin"
+      - "traefik.http.middlewares.security-headers.headers.contentsecuritypolicy=default-src 'self'"
+      - "traefik.http.routers.auth.middlewares=security-headers"
+
+  admin-service:
+    build: ../admin-service
+    container_name: um-oic-admin
+    restart: unless-stopped
+    environment:
+      - RUST_LOG=info
+      - PORT=8001
+      - DATA_DIR=/app/data
+      - AUTH_SERVICE_URL=http://auth-service:8000
+    volumes:
+      - admin-data:/app/data
+    networks:
+      - web
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.rule=Host(`admin.yourdomain.com`)"
+      - "traefik.http.routers.admin.tls=true"
+      - "traefik.http.routers.admin.tls.certresolver=letsencrypt"
+      - "traefik.http.services.admin.loadbalancer.server.port=8001"
+      - "traefik.http.routers.admin.middlewares=security-headers"
+
+volumes:
+  traefik-data:
+  auth-data:
+  admin-data:
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false

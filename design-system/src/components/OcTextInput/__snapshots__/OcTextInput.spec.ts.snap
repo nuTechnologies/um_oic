@@ -1,0 +1,107 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`OcTextInput > password input field > password policy > displays error state if password does not match criteria 1`] = `
+"<div class=""><label class="inline-block mb-0.5" for="nu-textinput-20">test
+    <!--v-if-->
+  </label>
+  <div class="relative">
+    <!--v-if-->
+    <div class="nu-text-input-password-wrapper flex flex-row border rounded-sm border-role-outline"><input id="nu-textinput-20" aria-invalid="false" class="nu-text-input nu-input grow-2 border-0 focus:border-0 focus:outline-0" type="password"> <button type="button" aria-label="Show password" class="nu-button-secondary nu-button-raw nu-button-secondary-raw gap-2 justify-center text-sm min-h-3 nu-button cursor-pointer disabled:opacity-60 disabled:cursor-default nu-text-input-show-password-toggle px-2">
+        <!--v-if-->
+        <!-- @slot Content of the button --> <span class="nu-icon box-content inline-block align-baseline [&amp;_svg]:block size-4"><svg data-testid="inline-svg-stub" src="icons/eye-fill.svg" transform-source="(svg) => {
+      if (__props.accessibleLabel !== &quot;&quot;) {
+        const title = document.createElement(&quot;title&quot;);
+        title.setAttribute(&quot;id&quot;, svgTitleId.value);
+        title.appendChild(document.createTextNode(__props.accessibleLabel));
+        svg.insertBefore(title, svg.firstChild);
+      };
+      return svg;
+    }" aria-hidden="true" focusable="false" class="size-4"></svg></span>
+      </button> <button type="button" aria-label="Copy password" class="nu-button-secondary nu-button-raw nu-button-secondary-raw gap-2 justify-center text-sm min-h-3 nu-button cursor-pointer disabled:opacity-60 disabled:cursor-default nu-text-input-copy-password-button px-2">
+        <!--v-if-->
+        <!-- @slot Content of the button --> <span class="nu-icon box-content inline-block align-baseline [&amp;_svg]:block size-4"><svg data-testid="inline-svg-stub" src="icons/file-copy-fill.svg" transform-source="(svg) => {
+      if (__props.accessibleLabel !== &quot;&quot;) {
+        const title = document.createElement(&quot;title&quot;);
+        title.setAttribute(&quot;id&quot;, svgTitleId.value);
+        title.appendChild(document.createTextNode(__props.accessibleLabel));
+        svg.insertBefore(title, svg.firstChild);
+      };
+      return svg;
+    }" aria-hidden="true" focusable="false" class="size-4"></svg></span>
+      </button>
+      <!--v-if-->
+    </div>
+    <portal to="app.design-system.password-policy">
+      <div class="flex flex-row flex-wrap text-sm pt-2 gap-x-2">
+        <div class="flex items-center nu-text-input-password-policy-rule"><span class="nu-icon box-content inline-block align-baseline [&amp;_svg]:block size-4 mr-1"><svg data-testid="inline-svg-stub" src="icons/close-circle-fill.svg" transform-source="(svg) => {
+      if (__props.accessibleLabel !== &quot;&quot;) {
+        const title = document.createElement(&quot;title&quot;);
+        title.setAttribute(&quot;id&quot;, svgTitleId.value);
+        title.appendChild(document.createTextNode(__props.accessibleLabel));
+        svg.insertBefore(title, svg.firstChild);
+      };
+      return svg;
+    }" aria-hidden="true" focusable="false" style="fill: var(--nu-role-error);" class="size-4"></svg></span> <span class="nu-text-input-danger">8+ letters</span>
+          <!--v-if-->
+        </div>
+      </div>
+    </portal>
+    <!--v-if-->
+  </div>
+  <!--v-if-->
+  <!---->
+</div>"
+`;
+
+exports[`OcTextInput > password input field > password policy > displays success state if password matches criteria 1`] = `
+"<div class=""><label class="inline-block mb-0.5" for="nu-textinput-21">test
+    <!--v-if-->
+  </label>
+  <div class="relative">
+    <!--v-if-->
+    <div class="nu-text-input-password-wrapper flex flex-row border rounded-sm border-role-outline"><input id="nu-textinput-21" aria-invalid="false" class="nu-text-input nu-input grow-2 border-0 focus:border-0 focus:outline-0" type="password"> <button type="button" aria-label="Show password" class="nu-button-secondary nu-button-raw nu-button-secondary-raw gap-2 justify-center text-sm min-h-3 nu-button cursor-pointer disabled:opacity-60 disabled:cursor-default nu-text-input-show-password-toggle px-2">
+        <!--v-if-->
+        <!-- @slot Content of the button --> <span class="nu-icon box-content inline-block align-baseline [&amp;_svg]:block size-4"><svg data-testid="inline-svg-stub" src="icons/eye-fill.svg" transform-source="(svg) => {
+      if (__props.accessibleLabel !== &quot;&quot;) {
+        const title = document.createElement(&quot;title&quot;);
+        title.setAttribute(&quot;id&quot;, svgTitleId.value);
+        title.appendChild(document.createTextNode(__props.accessibleLabel));
+        svg.insertBefore(title, svg.firstChild);
+      };
+      return svg;
+    }" aria-hidden="true" focusable="false" class="size-4"></svg></span>
+      </button> <button type="button" aria-label="Copy password" class="nu-button-secondary nu-button-raw nu-button-secondary-raw gap-2 justify-center text-sm min-h-3 nu-button cursor-pointer disabled:opacity-60 disabled:cursor-default nu-text-input-copy-password-button px-2">
+        <!--v-if-->
+        <!-- @slot Content of the button --> <span class="nu-icon box-content inline-block align-baseline [&amp;_svg]:block size-4"><svg data-testid="inline-svg-stub" src="icons/file-copy-fill.svg" transform-source="(svg) => {
+      if (__props.accessibleLabel !== &quot;&quot;) {
+        const title = document.createElement(&quot;title&quot;);
+        title.setAttribute(&quot;id&quot;, svgTitleId.value);
+        title.appendChild(document.createTextNode(__props.accessibleLabel));
+        svg.insertBefore(title, svg.firstChild);
+      };
+      return svg;
+    }" aria-hidden="true" focusable="false" class="size-4"></svg></span>
+      </button>
+      <!--v-if-->
+    </div>
+    <portal to="app.design-system.password-policy">
+      <div class="flex flex-row flex-wrap text-sm pt-2 gap-x-2">
+        <div class="flex items-center nu-text-input-password-policy-rule"><span class="nu-icon box-content inline-block align-baseline [&amp;_svg]:block size-4 mr-1"><svg data-testid="inline-svg-stub" src="icons/checkbox-circle-fill.svg" transform-source="(svg) => {
+      if (__props.accessibleLabel !== &quot;&quot;) {
+        const title = document.createElement(&quot;title&quot;);
+        title.setAttribute(&quot;id&quot;, svgTitleId.value);
+        title.appendChild(document.createTextNode(__props.accessibleLabel));
+        svg.insertBefore(title, svg.firstChild);
+      };
+      return svg;
+    }" aria-hidden="true" focusable="false" style="fill: var(--nu-role-on-surface);" class="size-4"></svg></span> <span class="">8+ letters</span>
+          <!--v-if-->
+        </div>
+      </div>
+    </portal>
+    <!--v-if-->
+  </div>
+  <!--v-if-->
+  <!---->
+</div>"
+`;

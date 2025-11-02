@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`OcDatePicker > renders 1`] = `
+"<div class="nu-date-picker"><label class="inline-block mb-0.5" for="nu-textinput-1">Datepicker label
+    <!--v-if-->
+  </label>
+  <div class="relative">
+    <!--v-if--> <input id="nu-textinput-1" aria-invalid="false" class="nu-text-input nu-input" type="date" value="">
+    <!--v-if-->
+  </div>
+  <div class="nu-text-input-message flex align-center text-sm mt-1 min-h-4.5">
+    <!--v-if-->
+  </div>
+  <!--v-if-->
+</div>"
+`;

@@ -54,8 +54,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         url.searchParams.set('token', loginResult.token);
                         window.location.href = url.toString();
                     } else {
-                        // Regular login - redirect to management interface
-                        window.location.href = 'http://localhost:8444/';
+                        // Use backend-provided redirect URL
+                        const redirectTo = loginResult.redirect_to || 'https://localhost:8445/';
+                        window.location.href = redirectTo;
                     }
                 }
             } else {
@@ -88,7 +89,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (response.ok) {
                 const tokenData = await response.json();
-                return { success: true, token: tokenData.access_token };
+                return {
+                    success: true,
+                    token: tokenData.access_token,
+                    redirect_to: tokenData.redirect_to
+                };
             } else {
                 const errorData = await response.json().catch(() => ({}));
                 return { success: false, error: errorData.error_description || 'Ungültige Anmeldedaten' };

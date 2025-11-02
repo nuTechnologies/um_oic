@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build: .
+    environment:
+      - AUTH_TLS_ENABLE=true
+      - DOMAIN=auth.yourdomain.com
+      - TLS_AUTO_GENERATE=false
+      - TLS_CERT_PATH=/etc/letsencrypt/live/auth.yourdomain.com/fullchain.pem
+      - TLS_KEY_PATH=/etc/letsencrypt/live/auth.yourdomain.com/privkey.pem
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    ports:
+      - "443:8443"
+      - "80:8080"

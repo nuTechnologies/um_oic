@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "Admin Service Placeholder - Port 8001"
+echo "To build: fix Rust compilation errors and run cargo build --release"
+echo "Starting placeholder server..."
+while true; do
+    echo "$(date): Admin service would be running on port 8001"
+    sleep 30
+done

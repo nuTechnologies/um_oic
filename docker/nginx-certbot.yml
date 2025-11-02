@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - certbot-data:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+      - nginx-logs:/var/log/nginx
+    networks:
+      - web
+    depends_on:
+      - auth-service
+      - admin-service
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    restart: unless-stopped
+    volumes:
+      - certbot-data:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  # Certificate renewal cron
+  certbot-renewal:
+    image: certbot/certbot
+    container_name: certbot-renewal
+    volumes:
+      - certbot-data:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'while :; do sleep 6h; certbot renew --quiet --deploy-hook \"nginx -s reload\"; done'"
+
+  auth-service:
+    build: ../auth-service
+    container_name: um-oic-auth
+    restart: unless-stopped
+    environment:
+      - RUST_LOG=info
+      - PORT=8000
+      - DATA_DIR=/app/data
+    volumes:
+      - auth-data:/app/data
+    networks:
+      - web
+      - internal
+    expose:
+      - "8000"
+
+  admin-service:
+    build: ../admin-service
+    container_name: um-oic-admin
+    restart: unless-stopped
+    environment:
+      - RUST_LOG=info
+      - PORT=8001
+      - DATA_DIR=/app/data
+      - AUTH_SERVICE_URL=http://auth-service:8000
+    volumes:
+      - admin-data:/app/data
+    networks:
+      - web
+      - internal
+    expose:
+      - "8001"
+
+volumes:
+  certbot-data:
+  certbot-www:
+  nginx-logs:
+  auth-data:
+  admin-data:
+
+networks:
+  web:
+    external: true
+  internal:
+    external: false
