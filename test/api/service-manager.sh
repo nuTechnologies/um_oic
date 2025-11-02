@@ -52,6 +52,7 @@ start_services() {
     log "Starting admin service on https://localhost:8445..."
     cd "$PROJECT_ROOT/admin-service"
     RUST_LOG=info cargo run -- \
+        --tls-enable \
         --data-dir ../data \
         --config config.toml \
         > /tmp/admin-service.log 2>&1 &
@@ -139,6 +140,65 @@ show_logs() {
     fi
 }
 
+check_status() {
+    log "Checking service status..."
+
+    # Check PIDs
+    local auth_running=false
+    local admin_running=false
+
+    if [ -f /tmp/auth-service.pid ]; then
+        AUTH_PID=$(cat /tmp/auth-service.pid)
+        if kill -0 $AUTH_PID 2>/dev/null; then
+            auth_running=true
+        fi
+    fi
+
+    if [ -f /tmp/admin-service.pid ]; then
+        ADMIN_PID=$(cat /tmp/admin-service.pid)
+        if kill -0 $ADMIN_PID 2>/dev/null; then
+            admin_running=true
+        fi
+    fi
+
+    # Check connectivity
+    local auth_reachable=false
+    local admin_reachable=false
+
+    if curl -k -s --max-time 5 https://localhost:8443/health >/dev/null 2>&1; then
+        auth_reachable=true
+    fi
+
+    if curl -k -s --max-time 5 https://localhost:8445/health >/dev/null 2>&1; then
+        admin_reachable=true
+    fi
+
+    # Report status
+    echo -e "\n=== Service Status ==="
+
+    if $auth_running && $auth_reachable; then
+        success "Auth Service: Running (PID: $AUTH_PID, HTTPS: ✓)"
+    elif $auth_running; then
+        warn "Auth Service: Process running but not reachable (PID: $AUTH_PID)"
+    else
+        fail "Auth Service: Not running"
+    fi
+
+    if $admin_running && $admin_reachable; then
+        success "Admin Service: Running (PID: $ADMIN_PID, HTTPS: ✓)"
+    elif $admin_running; then
+        warn "Admin Service: Process running but not reachable (PID: $ADMIN_PID)"
+    else
+        fail "Admin Service: Not running"
+    fi
+
+    # Additional info
+    echo -e "\n=== Connectivity ==="
+    echo "Auth:  https://localhost:8443/health"
+    echo "Admin: https://localhost:8445/health"
+    echo "Web:   https://localhost:8445/"
+}
+
 case "$1" in
     start)
         start_services
@@ -151,11 +211,14 @@ case "$1" in
         sleep 2
         start_services
         ;;
+    status)
+        check_status
+        ;;
     logs)
         show_logs
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart|logs}"
+        echo "Usage: $0 {start|stop|restart|status|logs}"
         exit 1
         ;;
 esac

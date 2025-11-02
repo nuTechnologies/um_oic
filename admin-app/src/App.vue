@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div id="app">
     <!-- Loading Screen -->
     <LoadingScreen v-if="isInitializing" />
 

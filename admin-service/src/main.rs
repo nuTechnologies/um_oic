@@ -6,6 +6,10 @@ use axum::{
     response::Response,
     extract::Request,
     http::HeaderValue,
+    response::Html,
+    extract::Path,
+    body::Body,
+    http::StatusCode,
 };
 use clap::Parser;
 use std::{net::SocketAddr, sync::Arc};
@@ -192,12 +196,19 @@ async fn create_app(
 
     let app = Router::new()
 
-        // Static files (admin UI) - no authentication required
-        .nest_service("/", ServeDir::new("./data/web/mgmt"))
-        .nest_service("/mgmt", ServeDir::new("./data/web/mgmt"))
-
         // Health check - no authentication required
         .route("/health", get(handlers::health::health))
+
+        // Static files with explicit routes for assets
+        .route("/assets/*path", get(serve_static_asset))
+        .route("/vite.svg", get(serve_static_file))
+        .route("/favicon.ico", get(serve_static_file))
+
+        // Root route serves index.html
+        .route("/", get(serve_index))
+
+        // SPA fallback - serve index.html for any non-API routes
+        .fallback(spa_fallback)
 
         // Add cache-control headers to prevent stale auth data
         .layer(axum::middleware::from_fn(add_cache_headers))
@@ -221,6 +232,52 @@ async fn add_cache_headers(req: Request, next: Next) -> Response {
     headers.insert("Expires", HeaderValue::from_static("0"));
 
     response
+}
+
+async fn serve_index() -> Result<Response<Body>, StatusCode> {
+    serve_file_from_mgmt("index.html").await
+}
+
+async fn serve_static_file(Path(path): Path<String>) -> Result<Response<Body>, StatusCode> {
+    serve_file_from_mgmt(&path).await
+}
+
+async fn serve_static_asset(Path(path): Path<String>) -> Result<Response<Body>, StatusCode> {
+    serve_file_from_mgmt(&format!("assets/{}", path)).await
+}
+
+async fn serve_file_from_mgmt(file_path: &str) -> Result<Response<Body>, StatusCode> {
+    let full_path = format!("./data/web/mgmt/{}", file_path);
+
+    match tokio::fs::read(&full_path).await {
+        Ok(contents) => {
+            let content_type = match std::path::Path::new(file_path)
+                .extension()
+                .and_then(|ext| ext.to_str())
+            {
+                Some("html") => "text/html; charset=utf-8",
+                Some("css") => "text/css",
+                Some("js") => "application/javascript",
+                Some("svg") => "image/svg+xml",
+                Some("ico") => "image/x-icon",
+                _ => "application/octet-stream",
+            };
+
+            Ok(Response::builder()
+                .header("content-type", content_type)
+                .body(Body::from(contents))
+                .unwrap())
+        }
+        Err(_) => Err(StatusCode::NOT_FOUND)
+    }
+}
+
+async fn spa_fallback() -> Html<String> {
+    // For SPA routes that don't exist as files, serve index.html
+    match tokio::fs::read_to_string("./data/web/mgmt/index.html").await {
+        Ok(content) => Html(content),
+        Err(_) => Html("<html><body><h1>404 - Admin App Not Found</h1></body></html>".to_string()),
+    }
 }
 
 fn setup_shutdown_handler() {

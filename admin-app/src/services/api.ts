@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { config } from '@/config'
 
 export interface ApiResponse<T = any> {
   data: T
@@ -16,10 +17,10 @@ class ApiService {
   private client: AxiosInstance
   private authToken: string | null = null
 
-  constructor(baseURL: string = import.meta.env.VITE_API_BASE_URL || '/api') {
+  constructor(baseURL: string = config.api.baseUrl) {
     this.client = axios.create({
       baseURL,
-      timeout: 10000,
+      timeout: config.api.timeout,
       headers: {
         'Content-Type': 'application/json'
       }

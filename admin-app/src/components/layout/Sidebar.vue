@@ -187,108 +187,44 @@ const navigationItems = [
     exact: true
   },
   {
-    title: 'Benutzerverwaltung',
+    title: 'Benutzer',
     icon: 'UsersIcon',
-    children: [
-      {
-        title: 'Alle Benutzer',
-        href: '/users',
-        description: 'Benutzer verwalten und bearbeiten'
-      },
-      {
-        title: 'Benutzer erstellen',
-        href: '/users/create',
-        description: 'Neuen Benutzer anlegen'
-      },
-      {
-        title: 'Bulk-Import',
-        href: '/users/import',
-        description: 'CSV-Import für mehrere Benutzer'
-      }
-    ]
+    href: '/users'
   },
   {
     title: 'Organisationen',
     icon: 'BuildingOfficeIcon',
-    children: [
-      {
-        title: 'Übersicht',
-        href: '/organizations',
-        description: 'Alle Organisationen anzeigen'
-      }
-    ]
+    href: '/organizations'
   },
   {
     title: 'OAuth2 Clients',
     icon: 'KeyIcon',
-    children: [
-      {
-        title: 'Client-Übersicht',
-        href: '/clients',
-        description: 'OAuth2-Anwendungen verwalten'
-      },
-      {
-        title: 'Client erstellen',
-        href: '/clients/create',
-        description: 'Neue OAuth2-Anwendung registrieren'
-      }
-    ]
+    href: '/clients'
   },
   {
-    title: 'Berechtigung & Claims',
+    title: 'Claims',
     icon: 'ShieldCheckIcon',
-    children: [
-      {
-        title: 'Claims Registry',
-        href: '/claims',
-        description: 'Verfügbare Claims verwalten'
-      }
-    ]
+    href: '/claims'
   },
   {
-    title: 'Aktivitäten',
+    title: 'Audit-Log',
     icon: 'ClockIcon',
-    children: [
-      {
-        title: 'Audit-Log',
-        href: '/audit',
-        description: 'System-Aktivitäten anzeigen'
-      },
-      {
-        title: 'Aktive Sessions',
-        href: '/sessions',
-        description: 'Aktuelle Benutzersitzungen'
-      },
-      {
-        title: 'Login-Statistiken',
-        href: '/analytics',
-        description: 'Anmelde-Analysen'
-      }
-    ]
+    href: '/audit'
+  },
+  {
+    title: 'Sessions',
+    icon: 'UserGroupIcon',
+    href: '/sessions'
+  },
+  {
+    title: 'Analytics',
+    icon: 'ClockIcon',
+    href: '/analytics'
   },
   {
     title: 'System',
     icon: 'CogIcon',
-    children: [
-      {
-        title: 'Status',
-        href: '/system/status',
-        description: 'System-Gesundheit',
-        badge: {
-          status: 'healthStatus',
-          colors: {
-            healthy: 'green',
-            degraded: 'yellow',
-            unhealthy: 'red'
-          }
-        }
-      },
-      {
-        title: 'Konfiguration',
-        href: '/system/config',
-        description: 'System-Einstellungen'
-      }
-    ]
+    href: '/system/status'
   }
 ]
 

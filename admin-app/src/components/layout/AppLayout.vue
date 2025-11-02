@@ -46,7 +46,7 @@
       <Breadcrumb />
 
       <!-- Main content -->
-      <main class="py-6">
+      <main class="py-6 pb-24">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <!-- Page header slot -->
           <div v-if="$slots.header" class="mb-6">

@@ -82,7 +82,7 @@ export const useAuthStore = defineStore('auth', () => {
     isLoading.value = true
     try {
       api.setAuthToken(token.value)
-      const response = await api.get('/auth/me')
+      const response = await api.get('/api/auth/me')
       setUser(response.data)
     } catch (error) {
       console.warn('Auth check failed:', error)

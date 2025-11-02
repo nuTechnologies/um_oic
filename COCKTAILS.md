@@ -49,3 +49,38 @@
 2 oz rye whiskey, 1 sugar cube, 2 dashes Peychaud's bitters, absinthe rinse. Stir, strain, express lemon peel.
 
 *"Service managers orchestrate complexity while proper endpoints find their destined ports in the grand authentication ballet."*
+
+## Vieux Carré
+1 oz rye whiskey, 1 oz cognac, 1 oz sweet vermouth, 1 tsp Benedictine, 2 dashes Peychaud's, 2 dashes Angostura. Stir, strain over cube, lemon peel.
+
+*"SPA fallbacks catch lost routes like New Orleans catches wandering souls - all paths lead home to the same warm welcome."*
+
+## Trinidad Sour
+1 oz Angostura bitters, 1 oz orgeat syrup, 0.75 oz lemon juice, 0.5 oz rye whiskey. Shake, strain, up.
+
+*"When routing fails, explicit static handlers catch what nest_service drops - bitter lessons make the sweetest fallbacks."*
+
+## Gold Rush
+2 oz bourbon, 0.75 oz lemon juice, 0.75 oz honey syrup. Shake, strain, over rocks.
+
+*"Router guards must await async validation before judging tokens - hasty redirects mine fool's gold from real authentication nuggets."*
+
+## Paper Plane
+0.75 oz bourbon, 0.75 oz Aperol, 0.75 oz Amaro Nonino, 0.75 oz lemon juice. Shake, strain, coupe.
+
+*"PostCSS transforms raw @tailwind directives into compiled flight-ready CSS - missing configs ground even the most modern designs."*
+
+## Last Word
+0.75 oz gin, 0.75 oz green Chartreuse, 0.75 oz maraschino liqueur, 0.75 oz lime juice. Shake, strain, coupe.
+
+*"Navigation simplified from nested children to direct routes - sometimes the last word in UX is just cutting the complexity."*
+
+## Corpse Reviver #2
+0.75 oz gin, 0.75 oz Cointreau, 0.75 oz Lillet Blanc, 0.75 oz lemon juice, absinthe rinse. Shake, strain, coupe.
+
+*"Race conditions between router guards and app initialization kill user experience - coordinated timing brings authentication back to life."*
+
+## Aviation
+2 oz gin, 0.5 oz maraschino liqueur, 0.25 oz crème de violette, 0.75 oz lemon juice. Shake, strain, coupe.
+
+*"Duplicate containers crash the layout like overlapping flight patterns - clean separation of concerns keeps the UI flying smooth."*

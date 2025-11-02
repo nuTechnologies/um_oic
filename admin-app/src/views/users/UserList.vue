@@ -194,15 +194,21 @@
               </td>
               <td class="text-right text-sm font-medium">
                 <div class="flex justify-end space-x-2">
-                  <router-link
-                    :to="`/users/${user.id}`"
-                    class="text-primary-600 hover:text-primary-900 dark:text-primary-400"
+                  <button
+                    @click="$router.push(`/users/${user.id}`)"
+                    class="btn btn-sm btn-secondary"
                   >
                     Bearbeiten
-                  </router-link>
+                  </button>
+                  <button
+                    @click="showUserClaims(user)"
+                    class="btn btn-sm btn-ghost"
+                  >
+                    Claims
+                  </button>
                   <button
                     @click="confirmDelete(user)"
-                    class="text-red-600 hover:text-red-900 dark:text-red-400"
+                    class="btn btn-sm btn-error"
                   >
                     Löschen
                   </button>
@@ -331,6 +337,13 @@ const deleteUser = async () => {
     console.error('Failed to delete user:', error)
     // Handle error (show toast notification, etc.)
   }
+}
+
+const showUserClaims = (user: User) => {
+  // Navigate to claims view for this user
+  // For now, just log - can be extended later
+  console.log('Show claims for user:', user.email)
+  // Could navigate to a claims modal or dedicated page
 }
 
 // Watch for filter changes and update store filters
