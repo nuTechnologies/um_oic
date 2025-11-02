@@ -27,11 +27,11 @@ info() {
 
 # Test variables
 AUTH_BASE="https://localhost:8443"
-ADMIN_BASE="http://localhost:8444"
+ADMIN_BASE="https://localhost:8445"
 
 echo "Testing Service Endpoints:"
 echo "🔒 Auth Service: $AUTH_BASE (HTTPS with TLS)"
-echo "🔧 Admin Service: $ADMIN_BASE (HTTP)"
+echo "🔧 Admin Service: $ADMIN_BASE (HTTPS)"
 echo
 
 # Test 1: Health Checks
@@ -46,9 +46,9 @@ else
 fi
 
 echo "Admin Service Health:"
-ADMIN_HEALTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $ADMIN_BASE/health)
-if [[ $ADMIN_HEALTH_STATUS -eq 401 ]]; then
-    success "Admin service is running (401 = auth required)"
+ADMIN_HEALTH_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" $ADMIN_BASE/health)
+if [[ $ADMIN_HEALTH_STATUS -eq 200 ]]; then
+    success "Admin service is running (200 = healthy)"
 else
     error "Admin service unexpected status: $ADMIN_HEALTH_STATUS"
 fi
@@ -122,7 +122,7 @@ echo
 # Test 7: Cross-Service Communication
 info "Test 7: Cross-Service Communication"
 # Test if admin service can reach auth service
-ADMIN_TO_AUTH_STATUS=$(curl -s -o /dev/null -w "%{http_code}" $ADMIN_BASE/api/users)
+ADMIN_TO_AUTH_STATUS=$(curl -k -s -o /dev/null -w "%{http_code}" $ADMIN_BASE/api/users)
 if [[ $ADMIN_TO_AUTH_STATUS -eq 401 ]]; then
     success "Admin service is protected (auth required)"
 else
@@ -134,7 +134,7 @@ echo
 echo "🎯 Test Summary"
 echo "==============="
 echo "✅ HTTPS TLS Service: Running on port 8443"
-echo "✅ HTTP Admin Service: Running on port 8444"
+echo "✅ HTTPS Admin Service: Running on port 8445"
 echo "✅ Self-signed Certificates: Generated and working"
 echo "✅ OAuth2/OIDC Endpoints: Functional"
 echo "✅ Security Headers: Implemented"

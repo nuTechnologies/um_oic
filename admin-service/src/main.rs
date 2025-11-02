@@ -105,10 +105,10 @@ async fn main() -> Result<()> {
         );
 
         let tls_config = tls::TlsConfig {
-            cert_path: "./certs/admin-cert.pem".to_string(),
-            key_path: "./certs/admin-key.pem".to_string(),
-            domain: "localhost".to_string(),
-            auto_generate: true,
+            cert_path: std::env::var("TLS_CERT_PATH").unwrap_or_else(|_| "../certs/admin-cert.pem".to_string()),
+            key_path: std::env::var("TLS_KEY_PATH").unwrap_or_else(|_| "../certs/admin-key.pem".to_string()),
+            domain: std::env::var("DOMAIN").unwrap_or_else(|_| "localhost".to_string()),
+            auto_generate: std::env::var("TLS_AUTO_GENERATE").map(|v| v == "true").unwrap_or(true),
         };
 
         let tls_manager = tls::TlsManager::new(tls_config);
