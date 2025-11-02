@@ -83,7 +83,7 @@ benchmark_login() {
     log "Benchmarking login performance..."
 
     # Create temporary file with login data
-    local login_data='{"email":"admin@test.local","password":"testpassword123"}'
+    local login_data='{"email":"admin@example.com","password":"testpassword123"}'
     echo "$login_data" > /tmp/login_data.json
 
     # Use curl for POST requests (ab doesn't handle JSON POST well)
@@ -128,7 +128,7 @@ benchmark_admin_api() {
     log "Benchmarking admin API performance..."
 
     # Get admin token first
-    local login_data='{"email":"admin@test.local","password":"testpassword123"}'
+    local login_data='{"email":"admin@example.com","password":"testpassword123"}'
     local auth_response=$(curl -s \
         -H "Content-Type: application/json" \
         -d "$login_data" \

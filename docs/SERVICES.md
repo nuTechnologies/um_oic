@@ -12,7 +12,7 @@
 
 ## Ports
 - Auth: https://localhost:8443 (HTTPS)
-- Admin UI: https://localhost:8444 (HTTPS)
+- Admin UI: https://localhost:8445 (HTTPS)
 - Health: /health on both
 
 ## Data Structure

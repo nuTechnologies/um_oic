@@ -113,7 +113,7 @@ done
 
 # Test admin service
 for i in {1..10}; do
-    ADMIN_HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8444/health" 2>/dev/null || echo "000")
+    ADMIN_HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://localhost:8445/health" 2>/dev/null || echo "000")
     if [[ $ADMIN_HTTP_STATUS -eq 401 ]]; then
         success "Admin service is responding (auth required)"
         break
@@ -175,7 +175,7 @@ success "✅ OIDC Discovery: Working"
 echo
 log "=== Test Endpoints ==="
 echo "🔒 Auth Service: https://localhost:8443"
-echo "🔧 Admin Service: http://localhost:8444"
+echo "🔧 Admin Service: https://localhost:8445"
 echo
 echo "Sample commands:"
 echo "curl -k https://localhost:8443/health | jq"

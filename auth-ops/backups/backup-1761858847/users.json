@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "user-5e13b9791dda4f8db7b9e25815164b55",
-      "email": "admin@test.local",
+      "email": "admin@example.com",
       "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$RHdXoloMMKdky0rRp/IMmg$N9mm0wj13RJAb6Zm/M3DGDB5uSUS3C6uuDt6SpRSXag",
       "first_name": "Admin",
       "last_name": "User",

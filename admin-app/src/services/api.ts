@@ -16,7 +16,7 @@ class ApiService {
   private client: AxiosInstance
   private authToken: string | null = null
 
-  constructor(baseURL: string = 'http://localhost:8001/api') {
+  constructor(baseURL: string = import.meta.env.VITE_API_BASE_URL || '/api') {
     this.client = axios.create({
       baseURL,
       timeout: 10000,

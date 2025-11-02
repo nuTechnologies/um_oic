@@ -148,7 +148,7 @@ openssl s_client -connect localhost:8443 -servername localhost < /dev/null
 ```bash
 cd auth-ops
 cargo run -- --data-dir ../data user create \
-  --email admin@test.local \
+  --email admin@example.com \
   --password password123 \
   --first-name Admin \
   --last-name User \
@@ -164,7 +164,7 @@ cargo run -- --data-dir ../data user list
 ### Reset Password
 ```bash
 cd auth-ops
-cargo run -- --data-dir ../data user reset-password admin@test.local newpassword
+cargo run -- --data-dir ../data user reset-password admin@example.com newpassword
 ```
 
 ## 🐳 Docker Testing

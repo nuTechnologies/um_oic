@@ -29,7 +29,7 @@ fn verify_password(password: &str, hash: &str) -> Result<bool> {
 }
 
 fn main() -> Result<()> {
-    let test_password = "admin123";
+    let test_password = "password123";
     let hash = hash_password(test_password)?;
     println!("Password: {}", test_password);
     println!("Hash: {}", hash);

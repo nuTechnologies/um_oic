@@ -5,7 +5,6 @@ import { useAuthStore } from '@/stores/auth'
 import AppLayout from '@/components/layout/AppLayout.vue'
 
 // Views
-import Login from '@/views/auth/Login.vue'
 import Dashboard from '@/views/Dashboard.vue'
 
 // User management
@@ -47,17 +46,6 @@ import Unauthorized from '@/views/errors/Unauthorized.vue'
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    // Authentication
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login,
-      meta: {
-        requiresAuth: false,
-        layout: 'auth'
-      }
-    },
-
     // Main application routes
     {
       path: '/',
@@ -312,20 +300,13 @@ router.beforeEach(async (to, from, next) => {
       await authStore.checkAuth()
     }
 
-    // Redirect to login if not authenticated
+    // Redirect to auth service if not authenticated
     if (!authStore.isAuthenticated) {
-      next({
-        name: 'Login',
-        query: { redirect: to.fullPath }
-      })
+      const currentUrl = `${window.location.origin}${to.fullPath}`
+      const authUrl = `https://localhost:8443/?redirect=${encodeURIComponent(currentUrl)}`
+      window.location.href = authUrl
       return
     }
-  }
-
-  // Redirect authenticated users away from login page
-  if (to.name === 'Login' && authStore.isAuthenticated) {
-    next({ name: 'Dashboard' })
-    return
   }
 
   next()

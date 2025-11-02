@@ -5,7 +5,7 @@ set -e
 
 # Test configuration
 AUTH_URL="http://localhost:8080"
-TEST_EMAIL="admin@test.local"
+TEST_EMAIL="admin@example.com"
 TEST_PASSWORD="testpassword123"
 
 # Colors

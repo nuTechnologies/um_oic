@@ -83,7 +83,7 @@ start_services() {
         warn "Auth service may still be starting"
     fi
 
-    if curl -s http://localhost:8444/health >/dev/null 2>&1; then
+    if curl -s https://localhost:8445/health >/dev/null 2>&1; then
         success "Admin service is healthy"
     else
         warn "Admin service may still be starting"
@@ -92,7 +92,7 @@ start_services() {
     echo ""
     log "Services are running:"
     echo "🔒 Auth Service:  https://localhost:8443"
-    echo "🔧 Admin Service: http://localhost:8444"
+    echo "🔧 Admin Service: https://localhost:8445"
     echo "💾 Redis:         localhost:6379"
 }
 
@@ -131,7 +131,7 @@ run_tests() {
     fi
 
     # Test admin service
-    local admin_status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8444/health 2>/dev/null || echo "000")
+    local admin_status=$(curl -s -o /dev/null -w "%{http_code}" https://localhost:8445/health 2>/dev/null || echo "000")
     if [[ "$admin_status" == "200" || "$admin_status" == "401" ]]; then
         success "Admin service is responding (status: $admin_status)"
     else

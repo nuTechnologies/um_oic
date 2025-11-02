@@ -12,7 +12,7 @@ use crate::{config::Config, jwt::JwtVerifier, models::Claims};
 type AuthState = (Arc<JwtVerifier>, Config);
 
 pub async fn require_admin(
-    State((jwt_verifier, _config)): State<AuthState>,
+    State((jwt_verifier, config)): State<AuthState>,
     mut req: Request,
     next: Next,
 ) -> Result<Response, StatusCode> {
@@ -28,8 +28,9 @@ pub async fn require_admin(
 
         if is_browser_request && !path.starts_with("/api/") {
             // Redirect to auth service for browser requests
-            let current_url = format!("http://localhost:8444{}", req.uri());
-            let login_url = format!("https://localhost:8443/?redirect={}",
+            let current_url = format!("{}{}", config.instance.base_url, req.uri());
+            let login_url = format!("{}/?redirect={}",
+                config.instance.auth_service_url,
                 urlencoding::encode(&current_url));
 
             warn!(

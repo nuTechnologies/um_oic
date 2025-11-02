@@ -5,3 +5,5 @@ jwt_public_key = "your-secret-key-change-in-production-make-it-very-long-and-ran
 [instance]
 name = "Grundschule Brandis Admin"
 issuer = "https://auth.example.com"
+base_url = "https://localhost:8445"
+auth_service_url = "https://localhost:8443"

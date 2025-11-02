@@ -49,7 +49,7 @@ start_services() {
     echo $AUTH_PID > /tmp/auth-service.pid
 
     # Start admin service
-    log "Starting admin service on http://localhost:8444..."
+    log "Starting admin service on https://localhost:8445..."
     cd "$PROJECT_ROOT/admin-service"
     RUST_LOG=info cargo run -- \
         --data-dir ../data \
@@ -84,7 +84,7 @@ start_services() {
         return 1
     fi
 
-    if curl -s --max-time 5 http://localhost:8444/health >/dev/null; then
+    if curl -s --max-time 5 https://localhost:8445/health >/dev/null; then
         success "Admin service is responding"
     else
         fail "Admin service is not responding"

@@ -3,11 +3,8 @@
     <!-- Loading Screen -->
     <LoadingScreen v-if="isInitializing" />
 
-    <!-- Login View -->
-    <LoginView v-else-if="!authStore.isAuthenticated" />
-
     <!-- Main Application -->
-    <AppLayout v-else>
+    <AppLayout v-if="authStore.isAuthenticated">
       <router-view />
     </AppLayout>
 
@@ -24,7 +21,6 @@ import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useSystemStore } from '@/stores/system'
 import AppLayout from '@/components/layout/AppLayout.vue'
-import LoginView from '@/views/auth/Login.vue'
 import LoadingScreen from '@/components/ui/LoadingScreen.vue'
 import NotificationContainer from '@/components/ui/NotificationContainer.vue'
 import GlobalModals from '@/components/ui/GlobalModals.vue'
@@ -35,6 +31,19 @@ const isInitializing = ref(true)
 
 onMounted(async () => {
   try {
+    // Check for token in URL parameters (from auth service redirect)
+    const urlParams = new URLSearchParams(window.location.search)
+    const token = urlParams.get('token')
+
+    if (token) {
+      // Save token and remove from URL
+      authStore.setToken(token)
+      // Clean URL without reloading
+      const url = new URL(window.location.href)
+      url.searchParams.delete('token')
+      window.history.replaceState({}, document.title, url.pathname + url.hash)
+    }
+
     // Initialize authentication
     await authStore.checkAuth()
 

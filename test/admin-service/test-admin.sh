@@ -6,7 +6,7 @@ set -e
 # Test configuration
 ADMIN_URL="http://localhost:8081"
 AUTH_URL="http://localhost:8080"
-TEST_ADMIN_EMAIL="admin@test.local"
+TEST_ADMIN_EMAIL="admin@example.com"
 TEST_PASSWORD="testpassword123"
 
 # Colors
@@ -141,7 +141,7 @@ test_get_user() {
     local body="${response%???}"
 
     assert_http_code "200" "$http_code" "Get user by ID"
-    assert_json_field "$body" "email" "admin@test.local" "User email"
+    assert_json_field "$body" "email" "admin@example.com" "User email"
 }
 
 # Test 5: Search Users
@@ -158,8 +158,8 @@ test_search_users() {
     assert_http_code "200" "$http_code" "Search users"
 
     # Check if results contain admin user
-    local admin_found=$(echo "$body" | jq '.[] | select(.email == "admin@test.local") | .email')
-    if [ "$admin_found" = '"admin@test.local"' ]; then
+    local admin_found=$(echo "$body" | jq '.[] | select(.email == "admin@example.com") | .email')
+    if [ "$admin_found" = '"admin@example.com"' ]; then
         success "Search users: Admin user found"
     else
         error "Search users: Admin user not found"

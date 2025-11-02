@@ -410,6 +410,6 @@ warning: `admin-service` (bin "admin-service") generated 48 warnings (run `cargo
 [2m@40000000690742ef2b770717[0m Loading users for organization: group-7a
 [2m@40000000690742ef2b7a316d[0m Loading users for organization: default
 [2m@40000000690742ef2b7f6ad4[0m [3mevent[0m[2m=[0m"admin_storage_loaded" [3musers_count[0m[2m=[0m4 [3morganizations_count[0m[2m=[0m2 [3mclients_count[0m[2m=[0m0
-[2m@40000000690742ef2b7fbc19[0m [3mservice[0m[2m=[0m"admin-service" [3mevent[0m[2m=[0m"startup" [3mbind[0m[2m=[0m0.0.0.0:8444 [3mdata_dir[0m[2m=[0m../data [3musers_loaded[0m[2m=[0m4 [3mversion[0m[2m=[0m"0.1.0"
-[2m@40000000690742ef2b885e2d[0m [3mservice[0m[2m=[0m"admin-service" [3mevent[0m[2m=[0m"listening" [3maddr[0m[2m=[0m0.0.0.0:8444
+[2m@40000000690742ef2b7fbc19[0m [3mservice[0m[2m=[0m"admin-service" [3mevent[0m[2m=[0m"startup" [3mbind[0m[2m=[0m0.0.0.0:8445 [3mdata_dir[0m[2m=[0m../data [3musers_loaded[0m[2m=[0m4 [3mversion[0m[2m=[0m"0.1.0"
+[2m@40000000690742ef2b885e2d[0m [3mservice[0m[2m=[0m"admin-service" [3mevent[0m[2m=[0m"listening" [3maddr[0m[2m=[0m0.0.0.0:8445
 [2m@40000000690745e9255c2b47[0m [3mservice[0m[2m=[0m"admin-service" [3mevent[0m[2m=[0m"shutdown" [3msignal[0m[2m=[0m"SIGTERM"

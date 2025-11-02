@@ -9,7 +9,7 @@ Sofware style
 - builds sollten einen build-inkrementor (integer) halten und je build um eins erhöhen. dabei spielt die änderung keine rolle. jeder build erhöht die version. total safe. bsp: lib version 2.0  -> wird zu  2.0.<buildversion>    also   von 2.0.100 nach einem buildlauf zu 2.0.101
 - Immer die vorhandenen Skripte nutzen, nicht manuell rumfummeln! minimalistische Liste TOOLs.md führen.
 - größere Aufgaben immer vorher in TASKS_<aufgabenpaket>.md minimalistisch auflisten in Aufgabengrößen, die Du mit einem run schaffts. je Abarbeitung in DONE_<aufgabenpaket>.md quittieren, welche TASK erledigt wurden.
-
+- keine hardcoded URLs oder andere default, in config auslagern
 
 logging:
 - log mit -v, debug mit -debug

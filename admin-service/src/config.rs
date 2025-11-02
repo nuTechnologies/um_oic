@@ -11,6 +11,8 @@ pub struct Config {
 pub struct InstanceConfig {
     pub name: String,
     pub issuer: String,
+    pub base_url: String,
+    pub auth_service_url: String,
 }
 
 impl Config {
@@ -28,6 +30,8 @@ impl Default for Config {
             instance: InstanceConfig {
                 name: "Admin Service".to_string(),
                 issuer: "https://auth.example.com".to_string(),
+                base_url: "https://localhost:8445".to_string(),
+                auth_service_url: "https://localhost:8443".to_string(),
             },
         }
     }

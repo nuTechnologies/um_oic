@@ -97,7 +97,7 @@ if [[ ! -f "$AUTH_HOME/data/users.json" ]]; then
 
     mkdir -p "$AUTH_HOME/data/audit"
 
-    # Create default admin user with password "admin123"
+    # Create default admin user with password "password123"
     # Hash: $argon2id$v=19$m=19456,t=2,p=1$8qwOOxUlm7OQgVzggDL5WA$Nqs4AuB6c2QeFlcv9l5gQz8hHwP9iZQ+YLkQbA+F9nY
     cat > "$AUTH_HOME/data/users.json" << 'EOF'
 {
@@ -147,7 +147,7 @@ EOF
 
     chown -R $AUTH_USER:$AUTH_GROUP "$AUTH_HOME/data"
     echo "✅ Sample data files created"
-    echo "ℹ️  Default admin user: admin@example.com / admin123"
+    echo "ℹ️  Default admin user: admin@example.com / password123"
 fi
 
 # Generate self-signed certificates if they don't exist
@@ -175,6 +175,6 @@ echo "3. Enable services: systemctl enable auth-service admin-service"
 echo "4. Start services: systemctl start auth-service admin-service"
 echo "5. Check status: systemctl status auth-service admin-service"
 echo ""
-echo "Default admin login: admin@example.com / admin123"
+echo "Default admin login: admin@example.com / password123"
 echo "Auth service will run on: http://localhost:8000"
 echo "Admin service will run on: http://localhost:8001"

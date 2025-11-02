@@ -143,7 +143,7 @@ test_jwt_manipulation() {
     log "Testing JWT token manipulation protection..."
 
     # Get a valid token first
-    local login_data='{"email":"admin@test.local","password":"testpassword123"}'
+    local login_data='{"email":"admin@example.com","password":"testpassword123"}'
     local auth_response=$(curl -s \
         -H "Content-Type: application/json" \
         -d "$login_data" \

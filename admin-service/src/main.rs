@@ -47,7 +47,7 @@ struct Args {
     config: String,
 
     /// Bind address
-    #[arg(long, env = "ADMIN_BIND", default_value = "0.0.0.0:8444")]
+    #[arg(long, env = "ADMIN_BIND", default_value = "0.0.0.0:8445")]
     bind: String,
 
     /// Enable TLS
@@ -153,6 +153,9 @@ async fn create_app(
 
     // Create API routes with authentication middleware
     let api_routes = Router::new()
+        // Auth API
+        .route("/api/auth/me", get(handlers::auth::me))
+
         // Users API
         .route("/api/users", get(handlers::users::list).post(handlers::users::create))
         .route("/api/users/:id", get(handlers::users::get).patch(handlers::users::update).delete(handlers::users::delete))
@@ -188,15 +191,10 @@ async fn create_app(
         ));
 
     let app = Router::new()
-        // Login redirect route for Vue.js client-side routing
-        .route("/login", get(handlers::auth::login_redirect))
 
         // Static files (admin UI) - no authentication required
         .nest_service("/", ServeDir::new("./data/web/mgmt"))
         .nest_service("/mgmt", ServeDir::new("./data/web/mgmt"))
-
-        // API routes with authentication
-        .merge(api_routes)
 
         // Health check - no authentication required
         .route("/health", get(handlers::health::health))
@@ -205,7 +203,10 @@ async fn create_app(
         .layer(axum::middleware::from_fn(add_cache_headers))
 
         // Shared state
-        .with_state((storage, jwt_verifier, config));
+        .with_state(config.clone())
+
+        // API routes with authentication (using tuple state)
+        .merge(api_routes.with_state((storage, jwt_verifier, config)));
 
     Ok(app)
 }

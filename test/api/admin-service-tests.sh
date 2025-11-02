@@ -4,7 +4,7 @@
 set -e
 
 AUTH_BASE_URL="https://localhost:8443"
-ADMIN_BASE_URL="http://localhost:8444"
+ADMIN_BASE_URL="https://localhost:8445"
 TEST_EMAIL="admin@example.com"
 TEST_PASSWORD="password123"
 
