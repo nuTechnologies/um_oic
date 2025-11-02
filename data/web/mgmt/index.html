@@ -30,10 +30,10 @@
         --nu-color-icon-spreadsheet: rgb(21, 194, 134);
         --nu-color-icon-text: #171C1F;
         --nu-color-icon-video: rgb(4, 84, 89);
-        --nu-font-family: xwork, Inter, sans-serif;
+        --nu-font-family: Tahoma;
         --nu-role-background: #FBFCFE;
         --nu-role-chrome: #20434F;
-        --nu-role-error: #BA1A1A;
+        --nu-role-error: #7c005e;
         --nu-role-error-container: #FFDAD6;
         --nu-role-inverse-on-surface: #EFF1F2;
         --nu-role-inverse-primary: #5CD5FB;
@@ -49,17 +49,17 @@
         --nu-role-on-secondary-container: #071E26;
         --nu-role-on-secondary-fixed: #071E26;
         --nu-role-on-surface: #191C1D;
-        --nu-role-on-surface-variant: #40484C;
+        --nu-role-on-surface-variant: #a77f00;
         --nu-role-on-tertiary: #FFFFFF;
         --nu-role-on-tertiary-container: #171937;
         --nu-role-on-tertiary-fixed: #171937;
-        --nu-role-outline: #70787C;
+        --nu-role-outline: #00aacc;
         --nu-role-outline-variant: #BFC8CC;
         --nu-role-primary: #00677F;
         --nu-role-primary-container: #B7EAFF;
         --nu-role-primary-fixed: #B7EAFF;
         --nu-role-scrim: #000000;
-        --nu-role-secondary: #20434F;
+        --nu-role-secondary: #00aacc;
         --nu-role-secondary-container: #CFE6F1;
         --nu-role-secondary-fixed: #CFE6F1;
         --nu-role-shadow: #000000;
@@ -77,33 +77,6 @@
         --nu-role-tertiary-container: #E0E0FF;
         --nu-role-tertiary-fixed: #E0E0FF;
 
-        /* nu Prefixed Variables (Original) */
-        --nu-font-family: var(--nu-font-family);
-        --nu-role-background: var(--nu-role-background);
-        --nu-role-chrome: var(--nu-role-chrome);
-        --nu-role-error: var(--nu-role-error);
-        --nu-role-error-container: var(--nu-role-error-container);
-        --nu-role-on-chrome: var(--nu-role-on-chrome);
-        --nu-role-on-error: var(--nu-role-on-error);
-        --nu-role-on-error-container: var(--nu-role-on-error-container);
-        --nu-role-on-primary: var(--nu-role-on-primary);
-        --nu-role-on-secondary: var(--nu-role-on-secondary);
-        --nu-role-on-secondary-container: var(--nu-role-on-secondary-container);
-        --nu-role-on-surface: var(--nu-role-on-surface);
-        --nu-role-on-surface-variant: var(--nu-role-on-surface-variant);
-        --nu-role-on-tertiary: var(--nu-role-on-tertiary);
-        --nu-role-outline: var(--nu-role-outline);
-        --nu-role-outline-variant: var(--nu-role-outline-variant);
-        --nu-role-primary: var(--nu-role-primary);
-        --nu-role-secondary: var(--nu-role-secondary);
-        --nu-role-secondary-container: var(--nu-role-secondary-container);
-        --nu-role-shadow: var(--nu-role-shadow);
-        --nu-role-surface: var(--nu-role-surface);
-        --nu-role-surface-container: var(--nu-role-surface-container);
-        --nu-role-surface-container-high: var(--nu-role-surface-container-high);
-        --nu-role-surface-container-highest: var(--nu-role-surface-container-highest);
-        --nu-role-surface-container-low: var(--nu-role-surface-container-low);
-        --nu-role-tertiary: var(--nu-role-tertiary);
 
         /* Theme-compatible Color Variables */
         --color-role-chrome: var(--nu-role-chrome);
@@ -171,12 +144,12 @@
         --nu-color-icon-video: rgb(50, 120, 140);
 
         /* Font Family bleibt gleich */
-        --nu-font-family: xwork, Inter, sans-serif;
+        --nu-font-family: Tahoma;
 
         /* Dark Mode Semantic Colors */
         --nu-role-background: #121212;
         --nu-role-chrome: #1F1F1F;
-        --nu-role-error: #CF6679;
+        --nu-role-error: #7c005e;
         --nu-role-error-container: #3A1A1B;
         --nu-role-inverse-on-surface: #121212;
         --nu-role-inverse-primary: #004D5C;
@@ -192,17 +165,17 @@
         --nu-role-on-secondary-container: #CFE6F1;
         --nu-role-on-secondary-fixed: #CFE6F1;
         --nu-role-on-surface: #E6E1E5;
-        --nu-role-on-surface-variant: #CAC4D0;
+        --nu-role-on-surface-variant: #a77f00;
         --nu-role-on-tertiary: #000000;
         --nu-role-on-tertiary-container: #E0E0FF;
         --nu-role-on-tertiary-fixed: #E0E0FF;
-        --nu-role-outline: #938F99;
+        --nu-role-outline: #00aacc;
         --nu-role-outline-variant: #49454F;
         --nu-role-primary: #5CD5FB;
         --nu-role-primary-container: #004D5C;
         --nu-role-primary-fixed: #B7EAFF;
         --nu-role-scrim: #000000;
-        --nu-role-secondary: #CFE6F1;
+        --nu-role-secondary: #00aacc;
         --nu-role-secondary-container: #2A3F4A;
         --nu-role-secondary-fixed: #CFE6F1;
         --nu-role-shadow: #000000;
@@ -1794,6 +1767,48 @@
     </div>
 
     <script>
+      // Simple theme initialization (global scope)
+      function initializeTheme() {
+        const savedTheme = localStorage.getItem('nu-theme') || 'light';
+        console.log('Theme initialized:', savedTheme);
+      }
+
+
+      // Modal functions
+      function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.style.display = 'flex';
+          modal.classList.add('modal-active');
+        }
+      }
+
+      function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+          modal.style.display = 'none';
+          modal.classList.remove('modal-active');
+        }
+      }
+
+      // User functions
+      function editUser(userId) {
+        openModal('user-modal');
+        console.log('Editing user:', userId);
+      }
+
+
+
+      function editOrg(orgId) {
+        openModal('org-modal');
+        console.log('Editing org:', orgId);
+      }
+
+      function editUserClaims(userId) {
+        openModal('user-claims-modal');
+        console.log('Editing user claims:', userId);
+      }
+
       // Check authentication on page load
       document.addEventListener('DOMContentLoaded', function() {
         checkAuthentication();
@@ -2249,7 +2264,7 @@
         tbody.innerHTML = '<tr><td colspan="4" class="loading">Laden...</td></tr>';
 
         try {
-          const logs = await apiCall('/api/audit/logs');
+          const logs = await apiCall('/api/audit');
 
           if (logs.length === 0) {
             tbody.innerHTML = '<tr><td colspan="4" class="loading">Keine Audit-Logs gefunden</td></tr>';
@@ -3372,6 +3387,7 @@
           closeModal(modalId);
         }
       });
+    }
     </script>
   </body>
 </html>

@@ -4,7 +4,7 @@
   "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$Sv1BnO7Gufb19gEB4CsxDA$QFTcmT5emtr9eUNP7bYmi4fkxtm5XuORaRW7VFA9BWE",
   "first_name": "System",
   "last_name": "Administrator",
-  "status": "inactive",
+  "status": "active",
   "verified": true,
   "authenticated": "2025-01-01",
   "admin": [
