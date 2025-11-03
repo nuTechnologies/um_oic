@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
-    pub jwt_public_key: String,
+    pub jwt_secret: String,
     pub instance: InstanceConfig,
 }
 
@@ -26,7 +26,7 @@ impl Config {
 impl Default for Config {
     fn default() -> Self {
         Config {
-            jwt_public_key: "your-secret-key-change-in-production".to_string(),
+            jwt_secret: "your-secret-key-change-in-production".to_string(),
             instance: InstanceConfig {
                 name: "Admin Service".to_string(),
                 issuer: "https://auth.example.com".to_string(),

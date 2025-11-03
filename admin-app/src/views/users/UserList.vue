@@ -62,18 +62,18 @@
           </div>
 
           <div>
-            <label for="role-filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Rolle
+            <label for="status-filter" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Status
             </label>
             <select
-              id="role-filter"
-              v-model="selectedRole"
+              id="status-filter"
+              v-model="selectedStatus"
               class="form-select mt-1"
             >
-              <option value="">Alle Rollen</option>
-              <option value="admin">Admin</option>
-              <option value="adminread">Admin (Read-only)</option>
-              <option value="user">User</option>
+              <option value="">Alle Status</option>
+              <option value="active">Aktiv</option>
+              <option value="inactive">Inaktiv</option>
+              <option value="suspended">Gesperrt</option>
             </select>
           </div>
 
@@ -117,10 +117,19 @@
             Keine Benutzer gefunden
           </h3>
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ searchQuery || selectedOrg || selectedRole
+            {{ searchQuery || selectedOrg || selectedStatus
                ? 'Keine Benutzer entsprechen den Filterkriterien.'
                : 'Erstellen Sie den ersten Benutzer.' }}
           </p>
+          <div class="mt-4">
+            <router-link
+              to="/users/create"
+              class="btn btn-primary"
+            >
+              <PlusIcon class="w-4 h-4 mr-2" />
+              Benutzer erstellen
+            </router-link>
+          </div>
         </div>
 
         <table v-else class="table">
@@ -128,7 +137,7 @@
             <tr>
               <th>Benutzer</th>
               <th>Organisation</th>
-              <th>Rollen</th>
+              <th>Status</th>
               <th>Admin-Berechtigung</th>
               <th>Erstellt</th>
               <th class="relative">
@@ -143,7 +152,7 @@
                   <Avatar :user="user" size="sm" class="mr-3" />
                   <div>
                     <div class="text-sm font-medium text-gray-900 dark:text-white">
-                      {{ user.full_name }}
+                      {{ `${user.first_name} ${user.last_name}` }}
                     </div>
                     <div class="text-sm text-gray-500 dark:text-gray-400">
                       {{ user.email }}
@@ -155,14 +164,10 @@
                 <Badge :text="user.org" color="gray" />
               </td>
               <td>
-                <div class="flex flex-wrap gap-1">
-                  <Badge
-                    v-for="role in user.roles"
-                    :key="role"
-                    :text="role"
-                    :color="getRoleColor(role)"
-                  />
-                </div>
+                <Badge
+                  :text="getStatusText(user.status)"
+                  :color="getStatusColor(user.status)"
+                />
               </td>
               <td>
                 <div v-if="user.admin.length > 0">
@@ -232,7 +237,7 @@
             Benutzer löschen
           </h3>
           <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Sind Sie sicher, dass Sie den Benutzer <strong>{{ userToDelete.full_name }}</strong> löschen möchten?
+            Sind Sie sicher, dass Sie den Benutzer <strong>{{ `${userToDelete.first_name} ${userToDelete.last_name}` }}</strong> löschen möchten?
             Diese Aktion kann nicht rückgängig gemacht werden.
           </p>
         </div>
@@ -272,7 +277,7 @@ const usersStore = useUsersStore()
 
 const searchQuery = ref('')
 const selectedOrg = ref('')
-const selectedRole = ref('')
+const selectedStatus = ref('')
 const userToDelete = ref<User | null>(null)
 
 const filteredUsers = computed(() => {
@@ -281,8 +286,8 @@ const filteredUsers = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     users = users.filter(user =>
-      user.full_name.toLowerCase().includes(query) ||
-      user.email.toLowerCase().includes(query)
+      (`${user.first_name} ${user.last_name}`.toLowerCase()).includes(query) ||
+      (user.email?.toLowerCase() || '').includes(query)
     )
   }
 
@@ -290,26 +295,41 @@ const filteredUsers = computed(() => {
     users = users.filter(user => user.org === selectedOrg.value)
   }
 
-  if (selectedRole.value) {
-    users = users.filter(user => user.roles.includes(selectedRole.value))
+  if (selectedStatus.value) {
+    users = users.filter(user => user.status === selectedStatus.value)
   }
 
   return users
 })
 
 const organizations = computed(() => {
-  const orgs = new Set(usersStore.users.map(user => user.org))
+  const orgs = new Set(usersStore.users.map(user => user.org).filter(Boolean))
   return Array.from(orgs).sort()
 })
 
-const getRoleColor = (role: string) => {
-  switch (role) {
-    case 'admin':
-      return 'red'
-    case 'adminread':
-      return 'yellow'
+const getStatusText = (status: string) => {
+  switch (status) {
+    case 'active':
+      return 'Aktiv'
+    case 'inactive':
+      return 'Inaktiv'
+    case 'suspended':
+      return 'Gesperrt'
     default:
-      return 'blue'
+      return status
+  }
+}
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'active':
+      return 'green'
+    case 'inactive':
+      return 'gray'
+    case 'suspended':
+      return 'red'
+    default:
+      return 'gray'
   }
 }
 
@@ -320,7 +340,7 @@ const formatDate = (dateStr: string) => {
 const clearFilters = () => {
   searchQuery.value = ''
   selectedOrg.value = ''
-  selectedRole.value = ''
+  selectedStatus.value = ''
 }
 
 const confirmDelete = (user: User) => {
@@ -347,11 +367,11 @@ const showUserClaims = (user: User) => {
 }
 
 // Watch for filter changes and update store filters
-watch([searchQuery, selectedOrg, selectedRole], () => {
+watch([searchQuery, selectedOrg, selectedStatus], () => {
   usersStore.setFilters({
     search: searchQuery.value || undefined,
     org: selectedOrg.value || undefined,
-    role: selectedRole.value || undefined
+    status: selectedStatus.value || undefined
   })
 })
 

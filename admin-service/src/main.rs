@@ -153,7 +153,7 @@ async fn create_app(
     storage: Arc<RwLock<AdminStorage>>,
     config: Config
 ) -> Result<Router> {
-    let jwt_verifier = Arc::new(jwt::JwtVerifier::new(&config.jwt_public_key));
+    let jwt_verifier = Arc::new(jwt::JwtVerifier::new(&config.jwt_secret));
 
     // Create API routes with authentication middleware
     let api_routes = Router::new()
@@ -186,7 +186,22 @@ async fn create_app(
 
         // Claims API
         .route("/api/claims", get(handlers::claims::list).post(handlers::claims::create))
+        .route("/api/claims/registry", get(handlers::claims::get_registry).put(handlers::claims::update_registry))
         .route("/api/claims/:key", patch(handlers::claims::update).delete(handlers::claims::delete))
+
+        // Sessions API
+        .route("/api/sessions/active", get(handlers::sessions::list_active))
+        .route("/api/sessions/:id", delete(handlers::sessions::terminate))
+
+        // Stats API
+        .route("/stats/users", get(handlers::stats::users_stats))
+        .route("/stats/sessions", get(handlers::stats::sessions_stats))
+        .route("/stats/organizations", get(handlers::stats::organizations_stats))
+        .route("/stats/clients", get(handlers::stats::clients_stats))
+        .route("/stats/activity", get(handlers::stats::activity_data))
+        .route("/stats/login-distribution", get(handlers::stats::login_distribution))
+        .route("/stats/recent-activities", get(handlers::stats::recent_activities))
+        .route("/stats/quick", get(handlers::stats::quick_stats))
 
         // Admin authentication middleware for API routes only
         .layer(axum::middleware::from_fn_with_state(
@@ -198,6 +213,9 @@ async fn create_app(
 
         // Health check - no authentication required
         .route("/health", get(handlers::health::health))
+
+        // API routes with authentication (using tuple state) - FIRST!
+        .merge(api_routes.with_state((storage, jwt_verifier, config.clone())))
 
         // Static files with explicit routes for assets
         .route("/assets/*path", get(serve_static_asset))
@@ -214,10 +232,7 @@ async fn create_app(
         .layer(axum::middleware::from_fn(add_cache_headers))
 
         // Shared state
-        .with_state(config.clone())
-
-        // API routes with authentication (using tuple state)
-        .merge(api_routes.with_state((storage, jwt_verifier, config)));
+        .with_state(config.clone());
 
     Ok(app)
 }

@@ -309,9 +309,174 @@ impl AdminStorage {
         self.clients.get(client_id)
     }
 
+    // Organization CRUD operations
+    pub async fn add_organization(&mut self, organization: Organization) -> Result<Organization> {
+        self.organizations.insert(organization.id.clone(), organization.clone());
+        self.persist_organization(&organization).await?;
+        self.sync_state.last_data_update = SystemTime::now();
+
+        info!(
+            service = "admin-storage",
+            event = "organization_added",
+            org_id = %organization.id
+        );
+
+        Ok(organization)
+    }
+
+    pub async fn update_organization(&mut self, org_id: &str, updated_org: Organization) -> Result<Organization> {
+        if !self.organizations.contains_key(org_id) {
+            return Err(anyhow::anyhow!("Organization not found: {}", org_id));
+        }
+
+        self.organizations.insert(org_id.to_string(), updated_org.clone());
+        self.persist_organization(&updated_org).await?;
+        self.sync_state.last_data_update = SystemTime::now();
+
+        info!(
+            service = "admin-storage",
+            event = "organization_updated",
+            org_id = %org_id
+        );
+
+        Ok(updated_org)
+    }
+
+    pub async fn delete_organization(&mut self, org_id: &str) -> Result<()> {
+        if !self.organizations.contains_key(org_id) {
+            return Err(anyhow::anyhow!("Organization not found: {}", org_id));
+        }
+
+        self.organizations.remove(org_id);
+        self.delete_organization_file(org_id).await?;
+        self.sync_state.last_data_update = SystemTime::now();
+
+        info!(
+            service = "admin-storage",
+            event = "organization_deleted",
+            org_id = %org_id
+        );
+
+        Ok(())
+    }
+
+    // Client CRUD operations
+    pub async fn add_client(&mut self, client: Client) -> Result<Client> {
+        self.clients.insert(client.client_id.clone(), client.clone());
+
+        // Immediate persistence
+        self.persist_client(&client).await?;
+        self.sync_state.last_data_update = SystemTime::now();
+
+        info!(
+            service = "admin-service",
+            event = "client_added",
+            client_id = %client.client_id,
+            name = %client.name
+        );
+
+        Ok(client)
+    }
+
+    pub async fn update_client(&mut self, client_id: &str, client: Client) -> Result<Client> {
+        self.clients.insert(client_id.to_string(), client.clone());
+
+        // Immediate persistence
+        self.persist_client(&client).await?;
+        self.sync_state.last_data_update = SystemTime::now();
+
+        info!(
+            service = "admin-service",
+            event = "client_updated",
+            client_id = %client_id,
+            name = %client.name
+        );
+
+        Ok(client)
+    }
+
+    pub async fn delete_client(&mut self, client_id: &str) -> Result<()> {
+        if let Some(client) = self.clients.remove(client_id) {
+            // Delete client file
+            self.delete_client_file(&client).await?;
+            self.sync_state.last_data_update = SystemTime::now();
+
+            info!(
+                service = "admin-service",
+                event = "client_deleted",
+                client_id = %client_id
+            );
+        }
+        Ok(())
+    }
+
     // Claims registry
     pub fn get_claims(&self) -> &ClaimsRegistry {
         &self.claims_registry
+    }
+
+    pub async fn update_claims_registry(&mut self, new_registry: ClaimsRegistry) -> Result<()> {
+        self.claims_registry = new_registry.clone();
+        self.persist_claims_registry(&new_registry).await?;
+        self.sync_state.last_data_update = SystemTime::now();
+
+        info!(
+            service = "admin-storage",
+            event = "claims_registry_updated",
+            count = new_registry.claims.len()
+        );
+
+        Ok(())
+    }
+
+    pub async fn add_claim(&mut self, key: String, claim: ClaimDefinition) -> Result<()> {
+        self.claims_registry.claims.insert(key.clone(), claim);
+        self.persist_claims_registry(&self.claims_registry).await?;
+        self.sync_state.last_data_update = SystemTime::now();
+
+        info!(
+            service = "admin-storage",
+            event = "claim_added",
+            claim_key = %key
+        );
+
+        Ok(())
+    }
+
+    pub async fn update_claim(&mut self, key: &str, updated_claim: ClaimDefinition) -> Result<()> {
+        if !self.claims_registry.claims.contains_key(key) {
+            return Err(anyhow::anyhow!("Claim not found: {}", key));
+        }
+
+        self.claims_registry.claims.insert(key.to_string(), updated_claim);
+        self.persist_claims_registry(&self.claims_registry).await?;
+        self.sync_state.last_data_update = SystemTime::now();
+
+        info!(
+            service = "admin-storage",
+            event = "claim_updated",
+            claim_key = %key
+        );
+
+        Ok(())
+    }
+
+    pub async fn delete_claim(&mut self, key: &str) -> Result<()> {
+        if !self.claims_registry.claims.contains_key(key) {
+            return Err(anyhow::anyhow!("Claim not found: {}", key));
+        }
+
+        self.claims_registry.claims.remove(key);
+        self.persist_claims_registry(&self.claims_registry).await?;
+        self.sync_state.last_data_update = SystemTime::now();
+
+        info!(
+            service = "admin-storage",
+            event = "claim_deleted",
+            claim_key = %key
+        );
+
+        Ok(())
     }
 
     // Audit log operations
@@ -356,6 +521,85 @@ impl AdminStorage {
             tokio::fs::remove_file(&user_path).await
                 .context("Failed to delete user file")?;
         }
+
+        Ok(())
+    }
+
+    async fn persist_client(&self, client: &Client) -> Result<()> {
+        let clients_dir = format!("{}/clients", self.data_dir);
+
+        // Ensure clients directory exists
+        tokio::fs::create_dir_all(&clients_dir).await
+            .context("Failed to create clients directory")?;
+
+        let client_path = format!("{}/{}.json", clients_dir, client.client_id);
+        let temp_path = format!("{}.tmp", client_path);
+
+        tokio::fs::write(&temp_path, serde_json::to_string_pretty(client)?)
+            .await
+            .context("Failed to write client temp file")?;
+
+        tokio::fs::rename(temp_path, client_path)
+            .await
+            .context("Failed to rename client file")?;
+
+        Ok(())
+    }
+
+    async fn delete_client_file(&self, client: &Client) -> Result<()> {
+        let client_path = format!("{}/clients/{}.json", self.data_dir, client.client_id);
+
+        if std::path::Path::new(&client_path).exists() {
+            tokio::fs::remove_file(&client_path).await
+                .context("Failed to delete client file")?;
+        }
+
+        Ok(())
+    }
+
+    async fn persist_organization(&self, organization: &Organization) -> Result<()> {
+        let orgs_dir = format!("{}/organizations", self.data_dir);
+
+        // Ensure organizations directory exists
+        tokio::fs::create_dir_all(&orgs_dir).await
+            .context("Failed to create organizations directory")?;
+
+        let org_path = format!("{}/{}.json", orgs_dir, organization.id);
+        let temp_path = format!("{}.tmp", org_path);
+
+        tokio::fs::write(&temp_path, serde_json::to_string_pretty(organization)?)
+            .await
+            .context("Failed to write organization temp file")?;
+
+        tokio::fs::rename(temp_path, org_path)
+            .await
+            .context("Failed to rename organization file")?;
+
+        Ok(())
+    }
+
+    async fn delete_organization_file(&self, org_id: &str) -> Result<()> {
+        let org_path = format!("{}/organizations/{}.json", self.data_dir, org_id);
+
+        if std::path::Path::new(&org_path).exists() {
+            tokio::fs::remove_file(&org_path).await
+                .context("Failed to delete organization file")?;
+        }
+
+        Ok(())
+    }
+
+    async fn persist_claims_registry(&self, registry: &ClaimsRegistry) -> Result<()> {
+        let claims_path = format!("{}/claims.json", self.data_dir);
+        let temp_path = format!("{}.tmp", claims_path);
+
+        tokio::fs::write(&temp_path, serde_json::to_string_pretty(registry)?)
+            .await
+            .context("Failed to write claims registry temp file")?;
+
+        tokio::fs::rename(temp_path, claims_path)
+            .await
+            .context("Failed to rename claims registry file")?;
 
         Ok(())
     }

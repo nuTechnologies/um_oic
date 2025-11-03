@@ -63,10 +63,14 @@ class ApiService {
             originalRequest.headers.Authorization = `Bearer ${newToken}`
             return this.client(originalRequest)
           } catch (refreshError) {
-            // Refresh failed, redirect to login
+            // Refresh failed, redirect to auth service
             this.setAuthToken(null)
             localStorage.removeItem('auth_token')
-            window.location.href = '/login'
+
+            // Redirect to auth service with current URL
+            const currentUrl = `${window.location.origin}${window.location.pathname}${window.location.search}${window.location.hash}`
+            const authUrl = `${config.auth.serviceUrl}/?redirect=${encodeURIComponent(currentUrl)}`
+            window.location.href = authUrl
             return Promise.reject(refreshError)
           }
         }

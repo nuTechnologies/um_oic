@@ -22,7 +22,10 @@ impl JwtVerifier {
         validation.validate_aud = false; // We'll validate audience manually if needed
 
         let token_data = decode::<Claims>(token, &self.decoding_key, &validation)
-            .context("Failed to decode JWT")?;
+            .map_err(|e| {
+                tracing::error!("JWT decode error: {:?}", e);
+                anyhow::anyhow!("Failed to decode JWT: {}", e)
+            })?;
 
         Ok(token_data.claims)
     }

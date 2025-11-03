@@ -18,7 +18,7 @@
     {
       "id": "user-5e13b9791dda4f8db7b9e25815164b55",
       "email": "admin@example.com",
-      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$RHdXoloMMKdky0rRp/IMmg$N9mm0wj13RJAb6Zm/M3DGDB5uSUS3C6uuDt6SpRSXag",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$z+BA+Q62dShH4+b8x5tDrw$Q5VY5mfMUbw9rX81ifhTf3UiHY5MiA8N+x2W8qCqrMc",
       "first_name": "Admin",
       "last_name": "User",
       "status": "active",
@@ -28,7 +28,22 @@
       "group_memberships": [],
       "mfa_secret": null,
       "created_at": "+002025-10-30T21:13:41.080485732Z",
-      "updated_at": "+002025-10-30T21:13:41.080485732Z"
+      "updated_at": "+002025-11-03T19:47:21.611894426Z"
+    },
+    {
+      "id": "user-5c248afef980418ab3565385846ea370",
+      "email": "testadmin@example.com",
+      "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$ruCoFMJlBohPJj0f3MXeeA$dh7Ag/KvJ+9csWawiLUEzzWqmCbxRRf1gfoCPIlX8bs",
+      "first_name": "Test",
+      "last_name": "Admin",
+      "status": "active",
+      "roles": [
+        "admin"
+      ],
+      "group_memberships": [],
+      "mfa_secret": null,
+      "created_at": "+002025-11-03T19:45:23.061487657Z",
+      "updated_at": "+002025-11-03T19:45:23.061487657Z"
     }
   ]
 }

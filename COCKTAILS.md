@@ -84,3 +84,43 @@
 2 oz gin, 0.5 oz maraschino liqueur, 0.25 oz crème de violette, 0.75 oz lemon juice. Shake, strain, coupe.
 
 *"Duplicate containers crash the layout like overlapping flight patterns - clean separation of concerns keeps the UI flying smooth."*
+
+## Fog Cutter
+2 oz light rum, 1 oz brandy, 0.5 oz gin, 0.5 oz orange juice, 0.25 oz lemon juice, 0.25 oz orgeat, dry sherry float. Shake, strain, float sherry.
+
+*"Data flows crystal clear when services dance in perfect synchronization - existing scripts orchestrate complexity while manual fumbling creates fog."*
+
+## Penicillin
+2 oz blended Scotch, 0.75 oz lemon juice, 0.75 oz honey-ginger syrup, 0.25 oz Islay Scotch float. Shake, strain, float smoky Scotch.
+
+*"Real APIs heal frontend wounds where dummy data only masks symptoms - authentic integration cures what mock responses cannot."*
+
+## The Functional Fizz
+2 cl Gin (for clarity), 1 cl Lime (for debugging zest), Tonic Water (for persistent bubbles), Fresh mint (for clean code fragrance).
+
+*"When your functions return what they promise, life bubbles with purpose. Every debug leads to enlightenment, every compile to transcendence."*
+## 🍹 El Desperado Sunrise
+*2cl Mezcal, 1cl Cointreau, 3cl frischer Limettensaft, 1 TL Agavensirup, Cayennepfeffer*
+
+Alles über Eis schütteln, abseihen. Der Geist tanzt, die Seele brennt, das Universum lächelt zurück. **"Wer Probleme systematisch dokumentiert, findet schneller den Weg zum Sonnenaufgang."**
+
+## CLAUDE.md Creator
+*2 cl Code-Geist, 1 cl Architektur-Essenz, Spritzer Dokumentations-Bitter*
+
+Alle Zutaten mit Präzision vermischen, durch klare Strukturfilter seihen. **"Ein Tropfen Klarheit macht aus Chaos Code - wie ein gut strukturiertes Projekt die Seele des Entwicklers befreit."**
+
+## API Assessment Martini
+*3 cl Implementation-Gin, 1 cl Mock-Vermouth, Olive aus echten Daten*
+
+Kalt gerührt, nicht geschüttelt - serviert mit der Gewissheit vollständiger CRUD-Operationen. **"Wenn APIs sprechen können, dann flüstern diese schon Produktionsgeheimnisse."**
+
+## Load Balancer
+*2 cl Test-Automation, 1 cl Performance-Messung, Dash von Concurrent-Users*
+
+Shaken not stirred - serviert mit der Gewissheit, dass jeder Endpoint unter Stress getestet wurde. **"Echte APIs zeigen ihre Stärke erst, wenn hundert Clients gleichzeitig anklopfen."**
+
+## JWT Validator
+*3 cl Token-Spirit, 1 cl Secret-Essence, Twist of Authentication*
+
+Gerührt bis die Claims stimmen, serviert mit der Erkenntnis funktionierender Grundlagen. **"Ein Token sagt mehr als tausend Passwörter - wenn beide Services das gleiche Geheimnis teilen."**
+

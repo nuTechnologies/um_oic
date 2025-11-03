@@ -4,7 +4,7 @@
       <ChartSkeleton :height="height" />
     </div>
 
-    <div v-else-if="!data || data.length === 0" class="flex items-center justify-center h-full">
+    <div v-else-if="!data || !Array.isArray(data) || data.length === 0" class="flex items-center justify-center h-full">
       <div class="text-center">
         <ChartBarIcon class="mx-auto h-12 w-12 text-gray-400" />
         <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -93,7 +93,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const maxValue = computed(() => {
-  if (!props.data || props.data.length === 0) return 0
+  if (!props.data || !Array.isArray(props.data) || props.data.length === 0) return 0
 
   return Math.max(
     ...props.data.map(item => Math.max(item.logins, item.registrations))

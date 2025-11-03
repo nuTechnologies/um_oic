@@ -5,10 +5,6 @@
 - **admin-service**: Web-based admin interface (Port 8444 HTTPS)
 - **auth-ops**: CLI tool for user management
 
-## Quick Start
-```bash
-./start-local.sh
-```
 
 ## Ports
 - Auth: https://localhost:8443 (HTTPS)

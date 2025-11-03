@@ -1,6 +1,6 @@
 # Admin Service Configuration
 
-jwt_public_key = "your-secret-key-change-in-production-make-it-very-long-and-random"
+jwt_secret = "your-secret-key-change-in-production-make-it-very-long-and-random"
 
 [instance]
 name = "Grundschule Brandis Admin"

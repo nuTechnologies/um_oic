@@ -1,46 +1,70 @@
 {
-  "roles": {
-    "type": "array",
-    "items": {
-      "type": "string",
-      "enum": ["master", "editor", "staff", "guardian"]
-    },
-    "description": "Application roles",
-    "default_allowed": true,
-    "required": true
-  },
   "cohorts": {
     "type": "array",
-    "items": { "type": "string" },
+    "items": {
+      "type": "string"
+    },
     "description": "Class/cohort memberships",
     "default_allowed": true,
-    "required": false
+    "required": false,
+    "sensitive": null,
+    "admin_only": null
   },
-  "participant_ids": {
+  "permissions": {
     "type": "array",
-    "items": { "type": "string" },
-    "description": "Associated participant IDs",
+    "items": {
+      "type": "string"
+    },
+    "description": "Specific permissions",
     "default_allowed": false,
-    "sensitive": true,
+    "required": null,
+    "sensitive": null,
     "admin_only": true
   },
   "employee_id": {
     "type": "string",
+    "items": null,
     "description": "Employee identifier",
     "default_allowed": true,
-    "required": false
+    "required": false,
+    "sensitive": null,
+    "admin_only": null
+  },
+  "participant_ids": {
+    "type": "array",
+    "items": {
+      "type": "string"
+    },
+    "description": "Associated participant IDs",
+    "default_allowed": false,
+    "required": null,
+    "sensitive": true,
+    "admin_only": true
+  },
+  "roles": {
+    "type": "array",
+    "items": {
+      "enum": [
+        "master",
+        "editor",
+        "staff",
+        "guardian"
+      ],
+      "type": "string"
+    },
+    "description": "Application roles",
+    "default_allowed": true,
+    "required": true,
+    "sensitive": null,
+    "admin_only": null
   },
   "department": {
     "type": "string",
+    "items": null,
     "description": "Department or division",
     "default_allowed": true,
-    "required": false
-  },
-  "permissions": {
-    "type": "array",
-    "items": { "type": "string" },
-    "description": "Specific permissions",
-    "default_allowed": false,
-    "admin_only": true
+    "required": false,
+    "sensitive": null,
+    "admin_only": null
   }
 }

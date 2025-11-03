@@ -1,1 +1,44 @@
-{"clients":[]}
+{
+  "clients": [
+    {
+      "client_id": "webapp-frontend",
+      "name": "Web Application Frontend",
+      "client_type": "public",
+      "redirect_uris": [
+        "http://localhost:3000/auth/callback",
+        "https://app.example.com/auth/callback"
+      ],
+      "allowed_scopes": ["openid", "profile", "email", "roles"],
+      "require_pkce": true,
+      "grant_types": ["authorization_code"],
+      "created_at": "2024-10-30T10:00:00Z",
+      "updated_at": "2024-10-30T10:00:00Z"
+    },
+    {
+      "client_id": "mobile-app",
+      "name": "Mobile Application",
+      "client_type": "public",
+      "redirect_uris": [
+        "com.example.app://auth",
+        "http://localhost:8081/auth/callback"
+      ],
+      "allowed_scopes": ["openid", "profile", "email"],
+      "require_pkce": true,
+      "grant_types": ["authorization_code"],
+      "created_at": "2024-10-29T15:30:00Z",
+      "updated_at": "2024-10-29T15:30:00Z"
+    },
+    {
+      "client_id": "api-service",
+      "name": "Backend API Service",
+      "client_type": "confidential",
+      "client_secret": "$2b$12$example.hash.for.client.secret",
+      "redirect_uris": [],
+      "allowed_scopes": ["api:read", "api:write", "admin"],
+      "require_pkce": false,
+      "grant_types": ["client_credentials"],
+      "created_at": "2024-10-28T08:00:00Z",
+      "updated_at": "2024-10-28T08:00:00Z"
+    }
+  ]
+}

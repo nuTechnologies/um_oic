@@ -35,7 +35,7 @@ This is a minimalistic, production-ready dual-service authentication system impl
                 │ ├── all/user-admin.json   │
                 │ ├── org1/user-123.json    │
                 │ └── org2/user-456.json    │
-                │ groups.json               │
+                │ orgs.json                 │
                 │ clients.json              │
                 │ claims.conf               │
                 └───────────────────────────┘
@@ -121,7 +121,7 @@ This is a minimalistic, production-ready dual-service authentication system impl
 ```
 data/
 ├── claims.conf              # Claims registry and validation rules
-├── groups.json             # Group definitions (cross-org)
+├── orgs.json               # Org definitions (cross-org)
 ├── clients.json            # OAuth2 client configurations
 └── users/                  # Organization-based user storage
     ├── all/                # Global administrative users

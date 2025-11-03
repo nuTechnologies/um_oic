@@ -1,5 +1,4 @@
 pub mod users;
-pub mod roles;
 pub mod clients;
 pub mod organizations;
 pub mod system;
@@ -7,3 +6,5 @@ pub mod audit;
 pub mod claims;
 pub mod health;
 pub mod auth;
+pub mod sessions;
+pub mod stats;

@@ -13,7 +13,7 @@ use tracing::{info, warn};
 use crate::{
     config::Config,
     jwt::JwtVerifier,
-    models::{Claims, UserResponse},
+    models::{Claims, UserResponse, Organization, CreateOrganizationRequest, UpdateOrganizationRequest},
     storage::AdminStorage,
 };
 
@@ -22,17 +22,12 @@ type AppState = (Arc<RwLock<AdminStorage>>, Arc<JwtVerifier>, Config);
 pub async fn list(
     State((storage, _, _)): State<AppState>,
     Extension(claims): Extension<Claims>,
-) -> Result<Json<Vec<Value>>, StatusCode> {
-    let _storage_guard = storage.read().await;
+) -> Result<Json<Vec<Organization>>, StatusCode> {
+    let storage_guard = storage.read().await;
 
-    // Return placeholder organizations
-    let organizations = vec![
-        json!({
-            "id": "default",
-            "name": "Default Organization",
-            "domain": "default.local"
-        }),
-    ];
+    let organizations: Vec<Organization> = storage_guard.get_all_organizations()
+        .cloned()
+        .collect();
 
     info!(
         service = "admin-service",
@@ -73,62 +68,125 @@ pub async fn list_users(
 pub async fn create(
     State((storage, _, _)): State<AppState>,
     Extension(claims): Extension<Claims>,
-    Json(payload): Json<Value>,
-) -> Result<Json<Value>, StatusCode> {
+    Json(request): Json<CreateOrganizationRequest>,
+) -> Result<Json<Organization>, StatusCode> {
     info!(
         service = "admin-service",
         event = "organization_create_request",
-        requested_by = %claims.sub
+        org_id = %request.id,
+        created_by = %claims.sub
     );
 
-    // For now, return success but don't actually create (organizations are managed externally)
-    let response = json!({
-        "success": true,
-        "message": "Organization creation not implemented - organizations are managed externally"
-    });
+    let organization = Organization {
+        id: request.id.clone(),
+        name: request.name,
+        description: request.description,
+        metadata: request.metadata.unwrap_or_default(),
+        created_at: time::OffsetDateTime::now_utc(),
+    };
 
-    Ok(Json(response))
+    let mut storage_guard = storage.write().await;
+
+    // Check if organization already exists
+    if storage_guard.get_organization(&request.id).is_some() {
+        return Err(StatusCode::CONFLICT);
+    }
+
+    match storage_guard.add_organization(organization.clone()).await {
+        Ok(created_org) => {
+            info!(
+                service = "admin-service",
+                event = "organization_created",
+                org_id = %request.id,
+                created_by = %claims.sub
+            );
+            Ok(Json(created_org))
+        }
+        Err(e) => {
+            tracing::error!("Failed to create organization: {}", e);
+            Err(StatusCode::INTERNAL_SERVER_ERROR)
+        }
+    }
 }
 
 pub async fn update(
     Path(org_id): Path<String>,
     State((storage, _, _)): State<AppState>,
     Extension(claims): Extension<Claims>,
-    Json(payload): Json<Value>,
-) -> Result<Json<Value>, StatusCode> {
+    Json(request): Json<UpdateOrganizationRequest>,
+) -> Result<Json<Organization>, StatusCode> {
     info!(
         service = "admin-service",
         event = "organization_update_request",
         org_id = %org_id,
-        requested_by = %claims.sub
+        updated_by = %claims.sub
     );
 
-    // For now, return success but don't actually update
-    let response = json!({
-        "success": true,
-        "message": "Organization update not implemented - organizations are managed externally"
-    });
+    let mut storage_guard = storage.write().await;
 
-    Ok(Json(response))
+    // Get existing organization
+    let existing_org = storage_guard.get_organization(&org_id)
+        .ok_or(StatusCode::NOT_FOUND)?
+        .clone();
+
+    // Update organization with provided fields
+    let updated_org = Organization {
+        id: existing_org.id.clone(),
+        name: request.name.unwrap_or(existing_org.name),
+        description: request.description.unwrap_or(existing_org.description),
+        metadata: request.metadata.unwrap_or(existing_org.metadata),
+        created_at: existing_org.created_at,
+    };
+
+    match storage_guard.update_organization(&org_id, updated_org.clone()).await {
+        Ok(org) => {
+            info!(
+                service = "admin-service",
+                event = "organization_updated",
+                org_id = %org_id,
+                updated_by = %claims.sub
+            );
+            Ok(Json(org))
+        }
+        Err(e) => {
+            tracing::error!("Failed to update organization: {}", e);
+            Err(StatusCode::INTERNAL_SERVER_ERROR)
+        }
+    }
 }
 
 pub async fn delete(
     Path(org_id): Path<String>,
     State((storage, _, _)): State<AppState>,
     Extension(claims): Extension<Claims>,
-) -> Result<Json<Value>, StatusCode> {
+) -> Result<StatusCode, StatusCode> {
     info!(
         service = "admin-service",
         event = "organization_delete_request",
         org_id = %org_id,
-        requested_by = %claims.sub
+        deleted_by = %claims.sub
     );
 
-    // For now, return success but don't actually delete
-    let response = json!({
-        "success": true,
-        "message": "Organization deletion not implemented - organizations are managed externally"
-    });
+    let mut storage_guard = storage.write().await;
 
-    Ok(Json(response))
+    // Check if organization exists
+    if storage_guard.get_organization(&org_id).is_none() {
+        return Err(StatusCode::NOT_FOUND);
+    }
+
+    match storage_guard.delete_organization(&org_id).await {
+        Ok(_) => {
+            info!(
+                service = "admin-service",
+                event = "organization_deleted",
+                org_id = %org_id,
+                deleted_by = %claims.sub
+            );
+            Ok(StatusCode::NO_CONTENT)
+        }
+        Err(e) => {
+            tracing::error!("Failed to delete organization: {}", e);
+            Err(StatusCode::INTERNAL_SERVER_ERROR)
+        }
+    }
 }

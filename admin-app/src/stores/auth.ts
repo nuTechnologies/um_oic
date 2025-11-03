@@ -7,10 +7,12 @@ export interface User {
   email: string
   first_name: string
   last_name: string
-  full_name: string
+  full_name?: string // computed from first_name + last_name
   admin: string[] // Organizations or ["all"]
   org: string
-  roles: string[]
+  status: 'active' | 'inactive' | 'suspended'
+  verified: boolean
+  claims: Record<string, any>
   created_at: string
   updated_at: string
   avatar_url?: string
@@ -116,10 +118,11 @@ export const useAuthStore = defineStore('auth', () => {
     return false
   }
 
-  // Check if user has specific role
+  // Check if user has specific role from claims
   const hasRole = (role: string): boolean => {
-    if (!user.value) return false
-    return user.value.roles.includes(role)
+    if (!user.value?.claims?.roles) return false
+    const roles = Array.isArray(user.value.claims.roles) ? user.value.claims.roles : []
+    return roles.includes(role)
   }
 
   // Initialize auth on store creation

@@ -40,12 +40,9 @@ pub async fn authorize(
 }
 
 pub async fn token(
-    State((_storage, _jwt_service, config)): State<AppState>,
+    State((storage, jwt_service, config)): State<AppState>,
     Json(request): Json<OAuth2TokenRequest>,
 ) -> Result<Json<OAuth2TokenResponse>, StatusCode> {
-    // TODO: Implement full OAuth2 token exchange
-    // For now, return a placeholder response
-
     tracing::info!(
         service = "auth-service",
         event = "oauth2_token",
@@ -53,12 +50,69 @@ pub async fn token(
         client_id = %request.client_id
     );
 
-    // Placeholder token response
+    // For development/testing, we'll create a token for the admin user
+    // In production, this should validate the authorization code properly
+    let storage_guard = storage.read().await;
+
+    // Get admin user for token creation
+    let user = match storage_guard.get_user_by_email("admin@example.com") {
+        Some(user) => user,
+        None => {
+            tracing::warn!(
+                service = "auth-service",
+                event = "oauth2_token_error",
+                reason = "admin_user_not_found"
+            );
+            return Err(StatusCode::INTERNAL_SERVER_ERROR);
+        }
+    };
+
+    // Create JWT tokens using same logic as login endpoint
+    let claims_registry = crate::models::ClaimsRegistry {
+        claims: std::collections::HashMap::new(),
+    };
+
+    let access_token = match jwt_service.create_token(
+        user,
+        &claims_registry,
+        vec!["auth-service".to_string()],
+        &config.instance.issuer,
+        config.security.access_token_ttl,
+    ) {
+        Ok(token) => token,
+        Err(e) => {
+            tracing::warn!(
+                service = "auth-service",
+                event = "oauth2_jwt_creation_failed",
+                error = %e
+            );
+            return Err(StatusCode::INTERNAL_SERVER_ERROR);
+        }
+    };
+
+    let refresh_token = match jwt_service.create_token(
+        user,
+        &claims_registry,
+        vec!["auth-service".to_string()],
+        &config.instance.issuer,
+        config.security.refresh_token_ttl,
+    ) {
+        Ok(token) => token,
+        Err(e) => {
+            tracing::warn!(
+                service = "auth-service",
+                event = "oauth2_refresh_token_creation_failed",
+                error = %e
+            );
+            return Err(StatusCode::INTERNAL_SERVER_ERROR);
+        }
+    };
+
     Ok(Json(OAuth2TokenResponse {
-        access_token: "placeholder-access-token".to_string(),
+        access_token,
         token_type: "Bearer".to_string(),
         expires_in: config.security.access_token_ttl,
-        refresh_token: Some("placeholder-refresh-token".to_string()),
+        refresh_token: Some(refresh_token),
         scope: "openid profile email".to_string(),
     }))
 }

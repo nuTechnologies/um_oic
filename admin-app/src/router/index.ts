@@ -10,8 +10,8 @@ import Dashboard from '@/views/Dashboard.vue'
 
 // User management
 import UserList from '@/views/users/UserList.vue'
-import UserCreate from '@/views/users/UserCreate.vue'
-import UserEdit from '@/views/users/UserEdit.vue'
+import CreateUser from '@/views/users/CreateUser.vue'
+import EditUser from '@/views/users/EditUser.vue'
 import UserImport from '@/views/users/UserImport.vue'
 
 // Organizations
@@ -21,7 +21,7 @@ import OrganizationDetail from '@/views/organizations/OrganizationDetail.vue'
 
 // OAuth2 Clients
 import ClientList from '@/views/clients/ClientList.vue'
-import ClientCreate from '@/views/clients/ClientCreate.vue'
+import CreateClient from '@/views/clients/CreateClient.vue'
 import ClientDetail from '@/views/clients/ClientDetail.vue'
 
 // Claims
@@ -75,7 +75,7 @@ const router = createRouter({
     {
       path: '/users/create',
       name: 'UserCreate',
-      component: UserCreate,
+      component: CreateUser,
       meta: {
         requiresAuth: true,
         breadcrumb: [
@@ -87,7 +87,7 @@ const router = createRouter({
     {
       path: '/users/:id',
       name: 'UserEdit',
-      component: UserEdit,
+      component: EditUser,
       props: true,
       meta: {
         requiresAuth: true,
@@ -147,7 +147,7 @@ const router = createRouter({
     {
       path: '/clients/create',
       name: 'ClientCreate',
-      component: ClientCreate,
+      component: CreateClient,
       meta: {
         requiresAuth: true,
         breadcrumb: [

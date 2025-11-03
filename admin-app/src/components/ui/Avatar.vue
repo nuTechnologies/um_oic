@@ -92,6 +92,6 @@ const initials = computed(() => {
     return names[0].charAt(0).toUpperCase()
   }
 
-  return props.user.email.charAt(0).toUpperCase()
+  return props.user.email?.charAt(0).toUpperCase() || '?'
 })
 </script>

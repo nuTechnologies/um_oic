@@ -54,13 +54,6 @@ pub struct Organization {
     pub created_at: OffsetDateTime,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Role {
-    pub id: String,
-    pub name: String,
-    pub description: String,
-    pub permissions: Vec<String>,
-}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Client {
@@ -76,7 +69,7 @@ pub struct Client {
     pub created_at: OffsetDateTime,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
 pub enum ClientType {
     Public,
@@ -182,6 +175,21 @@ pub struct UpdateUserRequest {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct CreateOrganizationRequest {
+    pub id: String,
+    pub name: String,
+    pub description: String,
+    pub metadata: Option<HashMap<String, serde_json::Value>>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct UpdateOrganizationRequest {
+    pub name: Option<String>,
+    pub description: Option<String>,
+    pub metadata: Option<HashMap<String, serde_json::Value>>,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct CreateGroupRequest {
     pub id: String,
     pub name: String,
@@ -220,6 +228,35 @@ pub struct UpdateClientRequest {
     pub allowed_scopes: Option<Vec<String>>,
     pub require_pkce: Option<bool>,
     pub grant_types: Option<Vec<String>>,
+}
+
+
+#[derive(Debug, Deserialize)]
+pub struct UpdateClaimsRegistryRequest {
+    pub claims: HashMap<String, ClaimDefinition>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct CreateClaimRequest {
+    pub key: String,
+    pub claim_type: String,
+    pub items: Option<serde_json::Value>,
+    pub description: String,
+    pub default_allowed: bool,
+    pub required: Option<bool>,
+    pub sensitive: Option<bool>,
+    pub admin_only: Option<bool>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct UpdateClaimRequest {
+    pub claim_type: Option<String>,
+    pub items: Option<serde_json::Value>,
+    pub description: Option<String>,
+    pub default_allowed: Option<bool>,
+    pub required: Option<bool>,
+    pub sensitive: Option<bool>,
+    pub admin_only: Option<bool>,
 }
 
 
@@ -285,8 +322,6 @@ pub struct Claims {
     pub name: String,
     pub org: String, // Primary organization
     pub admin: Vec<String>, // Admin scopes
-    #[serde(flatten)]
-    pub user_claims: HashMap<String, serde_json::Value>, // Registry-validated claims
     pub iss: String, // issuer
     pub aud: Vec<String>, // audience
     pub exp: u64, // expiration

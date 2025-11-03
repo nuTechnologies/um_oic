@@ -10,20 +10,20 @@ export interface CreateUserRequest {
   password: string
   org: string
   admin?: string[]
-  roles?: string[]
+  claims?: Record<string, any>
 }
 
 export interface UpdateUserRequest {
   first_name?: string
   last_name?: string
   admin?: string[]
-  roles?: string[]
+  claims?: Record<string, any>
   org?: string
 }
 
 export interface UserFilters {
   org?: string
-  role?: string
+  status?: string
   admin_only?: boolean
   search?: string
 }
@@ -41,8 +41,8 @@ export const useUsersStore = defineStore('users', () => {
       result = result.filter(user => user.org === filters.value.org)
     }
 
-    if (filters.value.role) {
-      result = result.filter(user => user.roles.includes(filters.value.role!))
+    if (filters.value.status) {
+      result = result.filter(user => user.status === filters.value.status)
     }
 
     if (filters.value.admin_only) {
@@ -55,7 +55,7 @@ export const useUsersStore = defineStore('users', () => {
         user.email.toLowerCase().includes(search) ||
         user.first_name.toLowerCase().includes(search) ||
         user.last_name.toLowerCase().includes(search) ||
-        user.full_name.toLowerCase().includes(search)
+        `${user.first_name} ${user.last_name}`.toLowerCase().includes(search)
       )
     }
 
@@ -115,7 +115,7 @@ export const useUsersStore = defineStore('users', () => {
 
   const updateUser = async (userId: string, userData: UpdateUserRequest): Promise<User> => {
     try {
-      const response = await api.put(`/users/${userId}`, userData)
+      const response = await api.patch(`/users/${userId}`, userData)
       const updatedUser = response.data
 
       // Update in local users array

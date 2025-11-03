@@ -1,0 +1,16 @@
+{
+  "id": "user-1762206658",
+  "email": "validation@crud.test",
+  "password_hash": "$argon2id$v=19$m=19456,t=2,p=1$gezmJiOJOjZjFk0ktXCpjw$LkPoqOlsgz+6VWF9B3m8z3OoTmGE2gXP8Jqyr8TFY3M",
+  "first_name": "CRUD",
+  "last_name": "Test",
+  "status": "active",
+  "verified": false,
+  "authenticated": null,
+  "admin": [],
+  "org": "default",
+  "claims": {},
+  "mfa_secret": null,
+  "created_at": "+002025-11-03T21:50:58.024284958Z",
+  "updated_at": "+002025-11-03T21:50:58.024284958Z"
+}

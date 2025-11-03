@@ -121,9 +121,10 @@ pub async fn create(
         })?;
 
     // Create user
+    use time::OffsetDateTime;
     let now = OffsetDateTime::now_utc();
     let user = User {
-        id: format!("user-{}", Uuid::new_v4().simple()),
+        id: format!("user-{}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()),
         email: request.email,
         password_hash,
         first_name: request.first_name,
